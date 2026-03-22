@@ -236,6 +236,62 @@ tr:hover td { background: #fafcff; }
 }
 .eq-config-banner p { font-size: 12px; color: #2B6CB0; line-height: 1.7; font-weight: 500; }
 .eq-config-banner strong { font-weight: 700; }
+
+/* ── 모바일 하단 네비 ── */
+.mobile-nav {
+  display: none;
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: #1e2d3d; z-index: 100;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.mobile-nav-inner { display: flex; }
+.mobile-nav-btn {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 3px; padding: 10px 4px; border: none; background: none; cursor: pointer;
+  color: rgba(255,255,255,0.45); font-family: inherit; font-size: 10px; font-weight: 600;
+  transition: color 0.15s;
+}
+.mobile-nav-btn.active { color: #63B3ED; }
+.mobile-nav-btn span:first-child { font-size: 20px; }
+
+/* ── 반응형 ── */
+@media (max-width: 768px) {
+  .app { flex-direction: column; height: auto; min-height: 100vh; }
+
+  .sidebar { display: none; }
+
+  .mobile-nav { display: block; }
+
+  .main { flex: 1; padding-bottom: 70px; }
+
+  .topbar { padding: 0 1rem; height: 52px; }
+  .page-title { font-size: 15px; }
+
+  .content { padding: 1rem; }
+
+  .metrics { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .metric-card { padding: 1rem; }
+  .metric-val { font-size: 24px; }
+  .metric-icon { width: 32px; height: 32px; font-size: 15px; margin-bottom: 0.5rem; }
+
+  .section-header { padding: 12px 1rem; }
+  th { padding: 9px 0.75rem; }
+  td { padding: 10px 0.75rem; }
+
+  table { font-size: 12px; }
+
+  .cal-cell { min-height: 60px; padding: 4px; }
+  .cal-event { font-size: 9px; padding: 1px 4px; }
+
+  .modal { width: 95%; border-radius: 16px; }
+  .modal-body { padding: 1rem; }
+
+  .section { border-radius: 12px; }
+
+  /* 테이블 가로 스크롤 */
+  .section { overflow-x: auto; }
+}
 </style>
 </head>
 <body>
@@ -380,11 +436,6 @@ tr:hover td { background: #fafcff; }
 
       <!-- 장비 목록 관리 -->
       <div id="page-equipment" class="view-page">
-        <div class="eq-config-banner">
-          <div>💡</div>
-          <p><strong>장비 목록을 직접 수정하려면</strong> 이 HTML 파일을 텍스트 편집기로 열고,<br>
-          아래 코드 상단의 <code>equipmentList</code> 배열만 편집하면 모든 화면에 즉시 반영됩니다.</p>
-        </div>
         <div class="section">
           <div class="section-header">
             <div class="section-title">장비 목록</div>
@@ -459,6 +510,27 @@ tr:hover td { background: #fafcff; }
   </div>
 </div>
 
+<!-- 모바일 하단 네비 -->
+<nav class="mobile-nav">
+  <div class="mobile-nav-inner">
+    <button class="mobile-nav-btn active" onclick="showPage('dashboard', this)">
+      <span>🏠</span><span>대시보드</span>
+    </button>
+    <button class="mobile-nav-btn" onclick="showPage('reserve', this)">
+      <span>📋</span><span>예약신청</span>
+    </button>
+    <button class="mobile-nav-btn" onclick="showPage('status', this)">
+      <span>🔄</span><span>현황</span>
+    </button>
+    <button class="mobile-nav-btn" onclick="showPage('history', this)">
+      <span>📂</span><span>이력</span>
+    </button>
+    <button class="mobile-nav-btn" onclick="showPage('equipment', this)">
+      <span>🖥️</span><span>장비목록</span>
+    </button>
+  </div>
+</nav>
+
 <!-- 빠른 예약 모달 -->
 <div class="modal-overlay" id="reserveModal">
   <div class="modal">
@@ -517,7 +589,7 @@ tr:hover td { background: #fafcff; }
       <div class="form-group"><label class="form-label">시리얼 번호</label><input class="form-input" id="newEquipSN" type="text" placeholder="예: GS-X099"></div>
       <div class="form-group"><label class="form-label">카테고리</label>
         <select class="form-input" id="newEquipCat">
-          <option>스마트폰</option><option>태블릿</option><option>노트북</option><option>웨어러블</option><option>기타</option>
+          <option>장비</option><option>악세서리</option><option>기타</option>
         </select>
       </div>
     </div>
@@ -530,28 +602,15 @@ tr:hover td { background: #fafcff; }
 
 <script>
 /* ================================================================
-   ★ 장비 목록을 여기서 수정하세요 ★
-   - name: 장비명
-   - sn: 시리얼 번호
-   - cat: 카테고리 (장비 / 악세서리 / 기타)
-   - status: 'storage'(보관중) | 'out'(반출중) | 'reserved'(예약확정) | 'pending'(승인대기)
-   - lastOut: 마지막 반출일 (YYYY-MM-DD 형식)
+   장비 목록 — Google Sheets 'equipment' 시트에서 자동 로드됩니다.
+   아래 배열은 비워두세요.
 ================================================================ */
-const equipmentList = [
-  { name:'AIO-1',    sn:'20000059', cat:'장비',  status:'storage',  lastOut:'2026-01-01' },
-  { name:'AIO-2', sn:'20001039', cat:'장비',    status:'storage',      lastOut:'2026-01-01' },
-  { name:'AIO-3',    sn:'20001274', cat:'장비',    status:'storage',      lastOut:'2026-01-01' },
-  { name:'SummitX-1',       sn:'BHT2610054', cat:'장비',  status:'storage',  lastOut:'2026-01-01' },
-  { name:'SummitX-2',       sn:'??', cat:'장비',  status:'storage',  lastOut:'2026-01-01' },
-];
+const equipmentList = [];
 
 /* ================================================================
-   반입·반출 이벤트 데이터 (전체 이력 포함)
-   - out: 반출일, ret: 반입일 (YYYY-MM-DD)
-   - status: 'out'(반출중) | 'in'(반입완료) | 'reserved'(예약확정)
+   반입·반출 이벤트 데이터 — Google Sheets 'events' 시트에서 자동 로드
 ================================================================ */
-const events = [
-  ];
+const events = [];
 
 /* ─────────────────────── helpers ─────────────────────── */
 const statusLabel = { out:'반출 중', in:'반입 완료', reserved:'예약 확정', storage:'보관 중' };
@@ -570,8 +629,15 @@ function fmt(d) {
 function showPage(id, el) {
   document.querySelectorAll('.view-page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.mobile-nav-btn').forEach(n => n.classList.remove('active'));
   document.getElementById('page-' + id).classList.add('active');
   el.classList.add('active');
+  // 사이드바와 모바일 네비 동기화
+  const idx = ['dashboard','reserve','status','history','equipment'].indexOf(id);
+  const mbtns = document.querySelectorAll('.mobile-nav-btn');
+  if (idx >= 0 && mbtns[idx]) mbtns[idx].classList.add('active');
+  const sbtns = document.querySelectorAll('.nav-item');
+  if (idx >= 0 && sbtns[idx]) sbtns[idx].classList.add('active');
   const titles = { dashboard:'대시보드', reserve:'장비 예약/신청', status:'반입·반출 현황', history:'전체 이력', equipment:'장비 목록 관리' };
   document.getElementById('pageTitle').textContent = titles[id];
   if (id === 'status')    renderStatus();
@@ -579,6 +645,8 @@ function showPage(id, el) {
   if (id === 'dashboard') renderDashboard();
   if (id === 'reserve')   populateEquipSelect();
   if (id === 'history')   renderHistory();
+  // 모바일에서 페이지 이동 시 상단으로 스크롤
+  window.scrollTo(0, 0);
 }
 
 /* ─────────────────────── 대시보드 ─────────────────────── */
@@ -692,14 +760,21 @@ function renderEquipTable() {
 
 function openAddEquipModal() { document.getElementById('addEquipModal').classList.add('show'); }
 
-function addEquipment() {
+async function addEquipment() {
   const name = document.getElementById('newEquipName').value.trim();
   const sn   = document.getElementById('newEquipSN').value.trim();
   const cat  = document.getElementById('newEquipCat').value;
   if (!name || !sn) { alert('장비명과 시리얼 번호를 입력해 주세요.'); return; }
-  equipmentList.push({ name, sn, cat, status: 'storage', lastOut: '' });
+  const eq = { name, sn, cat, status: 'storage', lastOut: '' };
+  showLoading('장비 추가 중...');
+  await saveEquipmentToSheet(eq);
+  equipmentList.push(eq);
+  hideLoading();
   closeModal('addEquipModal');
   renderEquipTable();
+  renderDashboard();
+  document.getElementById('newEquipName').value = '';
+  document.getElementById('newEquipSN').value = '';
   alert(name + ' 이(가) 추가되었습니다.');
 }
 
@@ -781,8 +856,9 @@ async function loadEventsFromSheet() {
     const res = await fetch(GAS_URL);
     const json = await res.json();
     if (json.status === 'ok') {
+      // 이벤트 로드
       events.length = 0;
-      json.data.forEach(row => {
+      (json.events || []).forEach(row => {
         if (row.name) events.push({
           name:   row.name   || '',
           person: row.person || '',
@@ -793,6 +869,18 @@ async function loadEventsFromSheet() {
         });
       });
       events.reverse();
+
+      // 장비 목록 로드
+      equipmentList.length = 0;
+      (json.equipment || []).forEach(row => {
+        if (row.name) equipmentList.push({
+          name:    row.name    || '',
+          sn:      row.sn      || '',
+          cat:     row.cat     || '장비',
+          status:  row.status  || 'storage',
+          lastOut: String(row.lastOut || '').substring(0, 10)
+        });
+      });
     }
   } catch(e) {
     console.error('Sheets 불러오기 실패:', e);
@@ -807,7 +895,16 @@ async function saveEventToSheet(ev) {
     method: 'POST',
     mode: 'no-cors',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(ev)
+    body: JSON.stringify({ type: 'event', ...ev })
+  });
+}
+
+async function saveEquipmentToSheet(eq) {
+  await fetch(GAS_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ type: 'equipment', ...eq })
   });
 }
 
