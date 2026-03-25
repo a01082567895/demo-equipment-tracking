@@ -326,7 +326,6 @@ tr:hover td { background: #fafcff; }
     <button class="nav-item" onclick="showPage('equipment', this)"><span class="nav-icon">🖥️</span> 장비 목록 관리</button>
     <div class="sidebar-footer">
       <div class="user-badge">
-        <div class="avatar">HY</div>
         <div>
           <div class="user-name">MCS</div>
           <div class="user-role">Thermofisher</div>
@@ -692,9 +691,8 @@ function showPage(id, el) {
 function renderDashboard() {
   const todayStr = new Date().toISOString().substring(0, 10);
 
-  // 반출일 ≤ 오늘 이면 반출 중, 반출일 > 오늘 이면 예약 확정
   const outCount      = events.filter(e => e.status === 'reserved' && e.out && e.out <= todayStr).length;
-  const reservedCount = events.filter(e => e.status === 'reserved' && e.out && e.out > todayStr).length;
+  const reservedCount = events.filter(e => e.status === 'reserved').length;
 
   document.getElementById('m-total').textContent    = equipmentList.length;
   document.getElementById('m-out').textContent      = outCount;
@@ -706,13 +704,15 @@ function renderDashboard() {
     const retCell = e.ret
       ? `<div>${fmt(e.ret)}</div>`
       : `<span style="color:#c8d3df;font-size:12px;">—</span>`;
+    // 반출일 기준으로 실제 상태 계산
+    const displayStatus = e.status === 'reserved' && e.out && e.out <= todayStr ? 'out' : e.status;
     return `
     <tr>
       <td><div>${e.name}</div></td>
       <td>${e.person}</td>
       <td>${fmt(e.out)}</td>
       <td>${retCell}</td>
-      <td><span class="status ${statusClass[e.status]}">${statusLabel[e.status]}</span></td>
+      <td><span class="status ${statusClass[displayStatus]}">${statusLabel[displayStatus]}</span></td>
       <td><span style="color:#c8d3df;font-size:12px;">—</span></td>
     </tr>`;
   }).join('');
@@ -727,6 +727,7 @@ function renderStatus() {
 }
 
 function renderList() {
+  const todayStr = new Date().toISOString().substring(0, 10);
   const f = document.getElementById('statusFilter').value;
   // 반입반출 현황에서는 반입 완료(in) 건 제외, 필터 선택 시 해당 상태만
   const filtered = events.filter(e => {
@@ -742,12 +743,14 @@ function renderList() {
     const retCell = e.ret
       ? `<div>${fmt(e.ret)}</div><button class="btn-setret" onclick="openSetRetModal(${realIdx})">수정</button>`
       : `<button class="btn-setret" onclick="openSetRetModal(${realIdx})">📅 날짜 입력</button>`;
+    // 반출일 기준으로 실제 상태 계산
+    const displayStatus = e.status === 'reserved' && e.out && e.out <= todayStr ? 'out' : e.status;
     return `
     <tr>
       <td>${e.name}</td><td>${e.person}</td><td>${e.dest}</td>
       <td>${fmt(e.out)}</td>
       <td style="min-width:100px;">${retCell}</td>
-      <td><span class="status ${statusClass[e.status]}">${statusLabel[e.status]}</span></td>
+      <td><span class="status ${statusClass[displayStatus]}">${statusLabel[displayStatus]}</span></td>
       <td>${btnReturn}</td>
     </tr>`;
   }).join('');
