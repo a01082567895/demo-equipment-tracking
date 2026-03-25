@@ -855,9 +855,13 @@ async function addEquipment() {
 
 /* ─────────────────────── 예약 선택지 ─────────────────────── */
 function populateEquipSelect() {
-  const available = equipmentList.filter(e => e.status === 'storage');
-  const opts = available.map(e => `<option>${e.name} (${e.sn})</option>`).join('');
-  const emptyMsg = '<option disabled>현재 보관 중인 장비 없음 (전체 반출 중)</option>';
+  const opts = equipmentList.map(e => {
+    const label = e.status !== 'storage'
+      ? `${e.name} (${e.sn}) — 반출 중`
+      : `${e.name} (${e.sn})`;
+    return `<option value="${e.name} (${e.sn})">${label}</option>`;
+  }).join('');
+  const emptyMsg = '<option disabled>등록된 장비 없음</option>';
   document.getElementById('reserveEquipSelect').innerHTML = opts || emptyMsg;
   document.getElementById('modalEquipSelect').innerHTML   = opts || emptyMsg;
 }
