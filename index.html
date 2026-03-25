@@ -1035,6 +1035,7 @@ async function loadEventsFromSheet() {
   hideLoading();
   renderDashboard();
   renderList();
+  populateEquipSelect();
 }
 
 async function saveEventToSheet(ev) {
@@ -1061,6 +1062,7 @@ function getEquipName(mode, prefix) {
     return document.getElementById(prefix + 'DirectName').value.trim();
   } else {
     const sel = document.getElementById(prefix === 'page' ? 'reserveEquipSelect' : 'modalEquipSelect');
+    // value 형식: "장비명 (시리얼)" — split(' (')[0] 으로 장비명만 추출
     return sel.value.split(' (')[0];
   }
 }
