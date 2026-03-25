@@ -1,4 +1,4 @@
-<!DOCTYPE html>...
+<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -172,7 +172,7 @@ tr:hover td { background: #fafcff; }
   border: 2px solid #e8eef6;
 }
 .cal-dow { background: #f7faff; text-align: center; padding: 9px 4px; font-size: 11px; font-weight: 700; color: #718096; letter-spacing: 0.5px; }
-.cal-cell { background: #fff; min-height: 88px; padding: 7px; transition: background 0.1s; }
+.cal-cell { background: #fff; min-height: 88px; padding: 7px; transition: background 0.1s; overflow-y: auto; }
 .cal-cell:hover { background: #fafcff; }
 .cal-cell.other-month { background: #fafafa; }
 .cal-cell.other-month .cal-date { color: #cbd5e0; }
@@ -189,6 +189,22 @@ tr:hover td { background: #fafcff; }
 
 .view-page { display: none; }
 .view-page.active { display: block; }
+
+/* ── 반입 완료 버튼 ── */
+.btn-return {
+  padding: 5px 12px; border-radius: 8px; font-size: 12px; font-weight: 600;
+  cursor: pointer; border: 1.5px solid #c6f6d5; background: #f0fff4; color: #276749;
+  font-family: inherit; transition: all 0.15s; white-space: nowrap;
+}
+.btn-return:hover { background: #38A169; color: #fff; border-color: #38A169; }
+
+/* ── 반입일 입력 버튼 ── */
+.btn-setret {
+  padding: 5px 12px; border-radius: 8px; font-size: 12px; font-weight: 600;
+  cursor: pointer; border: 1.5px solid #bee3f8; background: #ebf8ff; color: #2b6cb0;
+  font-family: inherit; transition: all 0.15s; white-space: nowrap;
+}
+.btn-setret:hover { background: #3182CE; color: #fff; border-color: #3182CE; }
 
 /* ── 모달 ── */
 .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(10,20,40,0.45); z-index: 200; align-items: center; justify-content: center; }
@@ -361,7 +377,7 @@ tr:hover td { background: #fafcff; }
         <div class="section">
           <div class="section-header"><div class="section-title">최근 반입·반출 내역</div></div>
           <table>
-            <thead><tr><th>장비명</th><th>담당자</th><th>반출일</th><th>반입 예정</th><th>상태</th></tr></thead>
+            <thead><tr><th>장비명</th><th>담당자</th><th>반출일</th><th>반입 예정</th><th>상태</th><th>액션</th></tr></thead>
             <tbody id="dashboardTableBody"></tbody>
           </table>
         </div>
@@ -387,7 +403,7 @@ tr:hover td { background: #fafcff; }
           </div>
           <div id="listView">
             <table>
-              <thead><tr><th>장비명</th><th>담당자</th><th>목적지</th><th>반출일</th><th>반입 예정</th><th>상태</th></tr></thead>
+              <thead><tr><th>장비명</th><th>담당자</th><th>목적지</th><th>반출일</th><th>반입 예정</th><th>상태</th><th>액션</th></tr></thead>
               <tbody id="listBody"></tbody>
             </table>
           </div>
@@ -585,8 +601,8 @@ tr:hover td { background: #fafcff; }
   <div class="modal">
     <div class="modal-header"><div class="modal-title">장비 추가</div><button class="close-btn" onclick="closeModal('addEquipModal')">✕</button></div>
     <div class="modal-body">
-      <div class="form-group"><label class="form-label">장비명</label><input class="form-input" id="newEquipName" type="text" placeholder="예: Galaxy S25 Ultra"></div>
-      <div class="form-group"><label class="form-label">시리얼 번호</label><input class="form-input" id="newEquipSN" type="text" placeholder="예: GS-X099"></div>
+      <div class="form-group"><label class="form-label">장비명</label><input class="form-input" id="newEquipName" type="text" placeholder="예: Apex-1"></div>
+      <div class="form-group"><label class="form-label">시리얼 번호</label><input class="form-input" id="newEquipSN" type="text" placeholder="예: BHBxxxxxx"></div>
       <div class="form-group"><label class="form-label">카테고리</label>
         <select class="form-input" id="newEquipCat">
           <option>장비</option><option>악세서리</option><option>기타</option>
@@ -596,6 +612,29 @@ tr:hover td { background: #fafcff; }
     <div class="modal-footer">
       <button class="btn" onclick="closeModal('addEquipModal')">취소</button>
       <button class="btn btn-primary" onclick="addEquipment()">추가</button>
+    </div>
+  </div>
+</div>
+
+<!-- 반입 예정일 입력/수정 모달 -->
+<div class="modal-overlay" id="setRetModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">반입 예정일 설정</div>
+      <button class="close-btn" onclick="closeModal('setRetModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:#4a5568;margin-bottom:1rem;">
+        장비: <strong id="setRetEquipName" style="color:#1e2d3d;"></strong>
+      </p>
+      <div class="form-group">
+        <label class="form-label">반입 예정일</label>
+        <input class="form-input" id="setRetDateInput" type="date">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('setRetModal')">취소</button>
+      <button class="btn btn-primary" onclick="submitSetRet()">저장</button>
     </div>
   </div>
 </div>
@@ -657,14 +696,20 @@ function renderDashboard() {
   document.getElementById('m-month').textContent    = events.filter(e => e.out && e.out.startsWith('2026-03')).length;
 
   const tbody = document.getElementById('dashboardTableBody');
-  tbody.innerHTML = events.slice(0,5).map(e => `
+  tbody.innerHTML = events.slice(0,5).map(e => {
+    const retCell = e.ret
+      ? `<div>${fmt(e.ret)}</div>`
+      : `<span style="color:#c8d3df;font-size:12px;">—</span>`;
+    return `
     <tr>
       <td><div>${e.name}</div></td>
       <td>${e.person}</td>
       <td>${fmt(e.out)}</td>
-      <td>${fmt(e.ret)}</td>
+      <td>${retCell}</td>
       <td><span class="status ${statusClass[e.status]}">${statusLabel[e.status]}</span></td>
-    </tr>`).join('');
+      <td><span style="color:#c8d3df;font-size:12px;">—</span></td>
+    </tr>`;
+  }).join('');
 }
 
 /* ─────────────────────── 반입반출 현황 ─────────────────────── */
@@ -677,13 +722,29 @@ function renderStatus() {
 
 function renderList() {
   const f = document.getElementById('statusFilter').value;
-  const filtered = f ? events.filter(e => e.status === f) : events;
-  document.getElementById('listBody').innerHTML = filtered.map(e => `
+  // 반입반출 현황에서는 반입 완료(in) 건 제외, 필터 선택 시 해당 상태만
+  const filtered = events.filter(e => {
+    if (f) return e.status === f;
+    return e.status !== 'in';
+  });
+  document.getElementById('listBody').innerHTML = filtered.map((e, i) => {
+    const realIdx = events.indexOf(e);
+    const canComplete = e.status === 'out' || e.status === 'reserved';
+    const btnReturn = canComplete
+      ? `<button class="btn-return" onclick="markReturned(${realIdx})">📥 반입 완료</button>`
+      : `<span style="color:#c8d3df;font-size:12px;">—</span>`;
+    const retCell = e.ret
+      ? `<div>${fmt(e.ret)}</div><button class="btn-setret" onclick="openSetRetModal(${realIdx})">수정</button>`
+      : `<button class="btn-setret" onclick="openSetRetModal(${realIdx})">📅 날짜 입력</button>`;
+    return `
     <tr>
       <td>${e.name}</td><td>${e.person}</td><td>${e.dest}</td>
-      <td>${fmt(e.out)}</td><td>${fmt(e.ret)}</td>
+      <td>${fmt(e.out)}</td>
+      <td style="min-width:100px;">${retCell}</td>
       <td><span class="status ${statusClass[e.status]}">${statusLabel[e.status]}</span></td>
-    </tr>`).join('');
+      <td>${btnReturn}</td>
+    </tr>`;
+  }).join('');
 }
 
 document.getElementById('statusFilter').addEventListener('change', renderStatus);
@@ -718,8 +779,14 @@ function renderCalendar() {
     const dt = new Date(curYear, curMonth, d);
     return filtered.filter(e => {
       const o = parseLocal(e.out);
+      if (!o) return false;
       const r = parseLocal(e.ret);
-      return o && dt >= o && dt <= (r || o);
+      // 반입일이 있으면 반출일~반입일 범위
+      if (r) return dt >= o && dt <= r;
+      // 반입일이 없으면 반출일부터 6개월간 표시
+      const sixMonthsLater = new Date(o);
+      sixMonthsLater.setMonth(sixMonthsLater.getMonth() + 6);
+      return dt >= o && dt <= sixMonthsLater;
     });
   }
 
@@ -729,9 +796,8 @@ function renderCalendar() {
   for (let d = 1; d <= daysInMonth; d++) {
     const isToday = curYear === today.getFullYear() && curMonth === today.getMonth() && d === today.getDate();
     const evs = evOnDate(d);
-    const evHtml = evs.slice(0,3).map(e => `<div class="cal-event ${evClass[e.status]}" title="${e.name} — ${e.person}">${e.name.replace('Galaxy ','')}</div>`).join('');
-    const more = evs.length > 3 ? `<div style="font-size:10px;color:#aaa;">+${evs.length-3}개</div>` : '';
-    html += `<div class="cal-cell${isToday ? ' today' : ''}"><div class="cal-date">${d}</div>${evHtml}${more}</div>`;
+    const evHtml = evs.map(e => `<div class="cal-event ${evClass[e.status]}" title="${e.name} — ${e.person}">${e.name}</div>`).join('');
+    html += `<div class="cal-cell${isToday ? ' today' : ''}"><div class="cal-date">${d}</div>${evHtml}</div>`;
   }
   const total = first + daysInMonth;
   const rem = total % 7 === 0 ? 0 : 7 - (total % 7);
@@ -782,8 +848,9 @@ async function addEquipment() {
 function populateEquipSelect() {
   const available = equipmentList.filter(e => e.status === 'storage');
   const opts = available.map(e => `<option>${e.name} (${e.sn})</option>`).join('');
-  document.getElementById('reserveEquipSelect').innerHTML = opts || '<option>현재 예약 가능한 장비 없음</option>';
-  document.getElementById('modalEquipSelect').innerHTML   = opts || '<option>현재 예약 가능한 장비 없음</option>';
+  const emptyMsg = '<option disabled>현재 보관 중인 장비 없음 (전체 반출 중)</option>';
+  document.getElementById('reserveEquipSelect').innerHTML = opts || emptyMsg;
+  document.getElementById('modalEquipSelect').innerHTML   = opts || emptyMsg;
 }
 
 /* ─────────────────────── 장비 입력 방식 토글 ─────────────────────── */
@@ -800,6 +867,62 @@ function setModalEquipMode(mode) {
   document.getElementById('modalEquipDirect').style.display    = isList ? 'none' : '';
   document.getElementById('modalModeBtnList').classList.toggle('active', isList);
   document.getElementById('modalModeBtnDirect').classList.toggle('active', !isList);
+}
+
+/* ─────────────────────── 반입 완료 처리 ─────────────────────── */
+async function markReturned(idx) {
+  const e = events[idx];
+  if (!e) return;
+  if (!confirm(`"${e.name}" 을(를) 반입 완료로 변경할까요?`)) return;
+
+  const today = new Date().toISOString().substring(0, 10);
+  e.status = 'in';
+  e.ret = today;  // 버튼 누른 날짜를 반입일로 자동 기입 (기존값 덮어쓰기)
+
+  showLoading('반입 완료 처리 중...');
+  await fetch(GAS_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ type: 'updateStatus', name: e.name, out: e.out, status: 'in', ret: e.ret })
+  });
+  hideLoading();
+  renderDashboard();
+  renderList();
+  renderHistory();
+  alert(`✅ "${e.name}" 반입 완료 처리되었습니다. (반입일: ${today})`);
+}
+
+/* ─────────────────────── 반입 예정일 입력/수정 ─────────────────────── */
+let _setRetIdx = -1;
+
+function openSetRetModal(idx) {
+  _setRetIdx = idx;
+  const e = events[idx];
+  document.getElementById('setRetDateInput').value = e.ret || '';
+  document.getElementById('setRetEquipName').textContent = e.name;
+  document.getElementById('setRetModal').classList.add('show');
+}
+
+async function submitSetRet() {
+  const e = events[_setRetIdx];
+  if (!e) return;
+  const newRet = document.getElementById('setRetDateInput').value;
+  if (!newRet) { alert('날짜를 선택해 주세요.'); return; }
+
+  e.ret = newRet;
+  showLoading('저장 중...');
+  await fetch(GAS_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ type: 'updateStatus', name: e.name, out: e.out, status: e.status, ret: e.ret })
+  });
+  hideLoading();
+  closeModal('setRetModal');
+  renderDashboard();
+  renderList();
+  renderHistory();
 }
 
 /* ─────────────────────── 전체 이력 ─────────────────────── */
