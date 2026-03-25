@@ -877,19 +877,30 @@ async function markReturned(idx) {
 
   const today = new Date().toISOString().substring(0, 10);
   e.status = 'in';
-  e.ret = today;  // 버튼 누른 날짜를 반입일로 자동 기입 (기존값 덮어쓰기)
+  e.ret = today;
+
+  // equipmentList 상태도 storage로 업데이트
+  const eq = equipmentList.find(eq => eq.name === e.name);
+  if (eq) eq.status = 'storage';
 
   showLoading('반입 완료 처리 중...');
+  // events 시트 업데이트
   await fetch(GAS_URL, {
-    method: 'POST',
-    mode: 'no-cors',
+    method: 'POST', mode: 'no-cors',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ type: 'updateStatus', name: e.name, out: e.out, status: 'in', ret: e.ret })
+  });
+  // equipment 시트 상태 업데이트
+  await fetch(GAS_URL, {
+    method: 'POST', mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ type: 'updateEquipStatus', name: e.name, status: 'storage' })
   });
   hideLoading();
   renderDashboard();
   renderList();
   renderHistory();
+  renderEquipTable();
   alert(`✅ "${e.name}" 반입 완료 처리되었습니다. (반입일: ${today})`);
 }
 
@@ -1057,9 +1068,20 @@ async function submitPageReservation() {
   showLoading('저장 중...');
   await saveEventToSheet(ev);
   events.unshift(ev);
+
+  // equipmentList 상태 업데이트
+  const eq = equipmentList.find(eq => eq.name === name);
+  if (eq) { eq.status = 'reserved'; eq.lastOut = outD; }
+  await fetch(GAS_URL, {
+    method: 'POST', mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ type: 'updateEquipStatus', name, status: 'reserved', lastOut: outD })
+  });
+
   hideLoading();
   renderDashboard();
   renderList();
+  renderEquipTable();
   alert('신청이 완료되었습니다.');
   resetPageForm();
 }
@@ -1080,9 +1102,20 @@ async function submitModalReservation() {
   showLoading('저장 중...');
   await saveEventToSheet(ev);
   events.unshift(ev);
+
+  // equipmentList 상태 업데이트
+  const eq = equipmentList.find(eq => eq.name === name);
+  if (eq) { eq.status = 'reserved'; eq.lastOut = outD; }
+  await fetch(GAS_URL, {
+    method: 'POST', mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ type: 'updateEquipStatus', name, status: 'reserved', lastOut: outD })
+  });
+
   hideLoading();
   renderDashboard();
   renderList();
+  renderEquipTable();
   closeModal('reserveModal');
   alert('신청이 완료되었습니다.');
 
