@@ -690,9 +690,15 @@ function showPage(id, el) {
 
 /* ─────────────────────── 대시보드 ─────────────────────── */
 function renderDashboard() {
+  const todayStr = new Date().toISOString().substring(0, 10);
+
+  // 반출일 ≤ 오늘 이면 반출 중, 반출일 > 오늘 이면 예약 확정
+  const outCount      = events.filter(e => e.status === 'reserved' && e.out && e.out <= todayStr).length;
+  const reservedCount = events.filter(e => e.status === 'reserved' && e.out && e.out > todayStr).length;
+
   document.getElementById('m-total').textContent    = equipmentList.length;
-  document.getElementById('m-out').textContent      = equipmentList.filter(e => e.status === 'out').length;
-  document.getElementById('m-reserved').textContent = equipmentList.filter(e => e.status === 'reserved').length;
+  document.getElementById('m-out').textContent      = outCount;
+  document.getElementById('m-reserved').textContent = reservedCount;
   document.getElementById('m-month').textContent    = events.filter(e => e.out && e.out.startsWith('2026-03')).length;
 
   const tbody = document.getElementById('dashboardTableBody');
