@@ -420,8 +420,18 @@ tr:hover td { background: #fafcff; }
   /* 섹션 헤더 버튼 작게 */
   #page-aio .section-header .btn { font-size: 11px; padding: 5px 8px; }
   #page-aio .section-header { flex-wrap: wrap; gap: 6px; }
-  /* 간트 바 텍스트 작게 */
-  .gantt-bar { font-size: 10px !important; }
+  /* 모바일 간트 바 슬림하게 */
+  .gantt-bar {
+    height: 16px !important;
+    font-size: 9px !important;
+    padding: 0 4px !important;
+    border-radius: 3px !important;
+    line-height: 16px !important;
+  }
+  /* 헤더 날짜 폰트 최소화 */
+  .gantt-date-th { font-size: 8px !important; padding: 2px 1px !important; }
+  /* 고정 컬럼 텍스트 작게 */
+  .gantt-fixed-col { font-size: 10px !important; padding: 4px 4px !important; }
 }
 </style>
 </head>
@@ -1691,9 +1701,10 @@ function isAioEquipment(e) {
 
 function renderEquipTable() {
   const isMobile = window.innerWidth <= 768;
-  const CELL_W = isMobile ? 28 : 36;
+  const CELL_W = isMobile ? 22 : 36;
+  const BAR_H  = isMobile ? 20 : 26; // 바 한 개당 차지하는 높이
   const FIXED_COLS_W = isMobile
-    ? { sn: 90, model: 60, current: 70, op: 50, actions: 80 }
+    ? { sn: 75, model: 50, current: 60, op: 42, actions: 48 }
     : { sn: 140, model: 90, current: 110, op: 72, actions: 116 };
   const todayStr = new Date().toISOString().substring(0, 10);
 
@@ -1867,7 +1878,7 @@ function renderEquipTable() {
         const left = si_ * CELL_W;
         const width = Math.max((ei_ - si_) * CELL_W - 2, 4);
         const label = s.customer + (s.note ? ' · ' + s.note : '');
-        const topOffset = si * 26;
+        const topOffset = si * BAR_H;
         const realIdx = aioDemoRows.findIndex(r => r.sn === row.sn);
         return `<div class="gantt-bar ${barColor}"
           style="left:${left}px;width:${width}px;top:${4 + topOffset}px;"
@@ -1877,7 +1888,7 @@ function renderEquipTable() {
       }).join('');
 
       // 행 높이: 일정 수에 따라 동적으로
-      const rowH = Math.max(40, schedules.length * 26 + 8);
+      const rowH = Math.max(isMobile ? 26 : 40, schedules.length * BAR_H + (isMobile ? 6 : 8));
       const timelineCell = `<td class="gantt-row-td" colspan="${aioDateHeaders.length}"
         style="height:${rowH}px;width:${totalTimeline}px;min-width:${totalTimeline}px;">
         <div class="gantt-timeline-wrap" style="height:${rowH}px;width:${totalTimeline}px;">
@@ -1899,8 +1910,7 @@ function renderEquipTable() {
           <td class="gantt-fixed-col aio-actions-cell" style="right:0;">
             <div class="aio-actions">
               <button class="mini-btn primary" onclick="openAioScheduleModal(${rowRealIdx})">📅</button>
-              ${isMobile ? '' : `<button class="mini-btn" onclick="openAioEditModal('demo', ${rowRealIdx})">수정</button>`}
-              <button class="mini-btn danger" onclick="deleteAioDemoRow(${rowRealIdx})">삭제</button>
+              ${isMobile ? '' : `<button class="mini-btn" onclick="openAioEditModal('demo', ${rowRealIdx})">수정</button><button class="mini-btn danger" onclick="deleteAioDemoRow(${rowRealIdx})">삭제</button>`}
             </div>
           </td>
         </tr>`;
