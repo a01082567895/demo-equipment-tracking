@@ -65,7 +65,7 @@ body { font-family: 'Nunito', -apple-system, sans-serif; background: #F0F4FF; co
 .topbar {
   background: #fff;
   border-bottom: 1px solid #e8eef6;
-  padding: 0 1.75rem; height: 58px;
+  padding: 0 1.25rem; height: 50px;
   display: flex; align-items: center; justify-content: space-between;
   position: sticky; top: 0; z-index: 10;
 }
@@ -84,12 +84,12 @@ body { font-family: 'Nunito', -apple-system, sans-serif; background: #F0F4FF; co
 }
 .btn-primary:hover { background: linear-gradient(135deg, #2B6CB0, #2C5282); box-shadow: 0 4px 12px rgba(49,130,206,0.4); }
 
-.content { padding: 1.5rem 1.75rem; flex: 1; }
+.content { padding: 1rem 1.25rem; flex: 1; }
 
 /* ── 메트릭 카드 ── */
-.metrics { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 14px; margin-bottom: 1.5rem; }
+.metrics { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; margin-bottom: 1rem; }
 .metric-card {
-  border-radius: 16px; padding: 1.25rem 1.25rem 1.1rem;
+  border-radius: 14px; padding: 1rem 1rem 0.85rem;
   position: relative; overflow: hidden;
   box-shadow: 0 2px 12px rgba(0,0,0,0.08);
 }
@@ -103,25 +103,25 @@ body { font-family: 'Nunito', -apple-system, sans-serif; background: #F0F4FF; co
 .mc-green { background: linear-gradient(135deg, #38A169, #276749); }
 .mc-amber { background: linear-gradient(135deg, #D69E2E, #B7791F); }
 .metric-icon {
-  width: 38px; height: 38px; border-radius: 10px;
+  width: 32px; height: 32px; border-radius: 8px;
   background: rgba(255,255,255,0.2);
   display: flex; align-items: center; justify-content: center;
-  font-size: 18px; margin-bottom: 0.75rem;
+  font-size: 15px; margin-bottom: 0.5rem;
 }
-.metric-label { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.75); margin-bottom: 4px; letter-spacing: 0.3px; }
-.metric-val { font-size: 28px; font-weight: 700; color: #fff; line-height: 1; }
-.metric-sub { font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 5px; }
+.metric-label { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.75); margin-bottom: 3px; letter-spacing: 0.3px; }
+.metric-val { font-size: 24px; font-weight: 700; color: #fff; line-height: 1; }
+.metric-sub { font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 4px; }
 
 /* ── 섹션 카드 ── */
 .section {
-  background: #fff; border-radius: 16px;
+  background: #fff; border-radius: 14px;
   border: 1px solid #e8eef6;
-  margin-bottom: 1.25rem; overflow: hidden;
+  margin-bottom: 0.85rem; overflow: hidden;
   box-shadow: 0 1px 6px rgba(0,0,0,0.05);
 }
 .section-header {
-  padding: 16px 1.5rem; border-bottom: 1px solid #f0f4fa;
-  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+  padding: 10px 1.25rem; border-bottom: 1px solid #f0f4fa;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px;
 }
 .section-title { font-size: 14px; font-weight: 700; color: #1e2d3d; }
 .controls-row { display: flex; gap: 8px; align-items: center; }
@@ -141,10 +141,10 @@ body { font-family: 'Nunito', -apple-system, sans-serif; background: #F0F4FF; co
 /* ── 테이블 ── */
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
 th {
-  padding: 11px 1.5rem; text-align: left; font-size: 11px; font-weight: 700;
+  padding: 7px 1rem; text-align: left; font-size: 11px; font-weight: 700;
   color: #718096; background: #f7faff; letter-spacing: 0.4px; text-transform: uppercase;
 }
-td { padding: 13px 1.5rem; color: #2d3748; border-top: 1px solid #f0f4fa; }
+td { padding: 7px 1rem; color: #2d3748; border-top: 1px solid #f0f4fa; }
 tr:hover td { background: #fafcff; }
 .eq-tag { font-size: 11px; color: #a0aec0; margin-top: 1px; }
 
@@ -246,12 +246,110 @@ tr:hover td { background: #fafcff; }
 /* ── 배너 ── */
 .eq-config-banner {
   background: linear-gradient(135deg, #EBF8FF, #E6FFFA);
-  border: 1.5px solid #bee3f8; border-radius: 14px;
-  padding: 1rem 1.25rem; margin-bottom: 1.25rem;
+  border: 1.5px solid #bee3f8; border-radius: 12px;
+  padding: 0.75rem 1rem; margin-bottom: 0.85rem;
   display: flex; align-items: flex-start; gap: 10px;
 }
 .eq-config-banner p { font-size: 12px; color: #2B6CB0; line-height: 1.7; font-weight: 500; }
 .eq-config-banner strong { font-weight: 700; }
+.op-badge { display:inline-flex; align-items:center; gap:5px; padding:2px 8px; border-radius:999px; font-size:11px; font-weight:700; white-space:nowrap; }
+.op-badge::before { content:''; width:6px; height:6px; border-radius:50%; }
+.op-sky { background:#EBF8FF; color:#2B6CB0; }
+.op-sky::before { background:#63B3ED; }
+.op-pink { background:#FFF0F6; color:#B83280; }
+.op-pink::before { background:#F687B3; }
+.timeline-cell { min-width:68px; vertical-align:top; padding:4px 4px; }
+.timeline-fill { border-radius:6px; padding:3px 5px; min-height:24px; display:flex; align-items:center; justify-content:center; text-align:center; font-size:10px; line-height:1.25; font-weight:600; white-space:normal; }
+.timeline-fill.sky { background:#EBF8FF; color:#2B6CB0; box-shadow: inset 0 0 0 1px rgba(49,130,206,0.15); }
+.timeline-fill.pink { background:#FFF0F6; color:#B83280; box-shadow: inset 0 0 0 1px rgba(237,100,166,0.15); }
+.timeline-fill.muted { background:#F7FAFC; color:#A0AEC0; }
+.aio-actions { display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
+.aio-actions-cell { min-width: 128px; }
+.mini-btn { padding:4px 8px; border-radius:8px; font-size:11px; font-weight:700; cursor:pointer; border:1px solid #d1dce8; background:#fff; color:#4a5568; font-family:inherit; transition:all 0.15s; }
+.mini-btn:hover { background:#f7faff; border-color:#b0c4d8; }
+.mini-btn.primary { background:#3182CE; color:#fff; border-color:#3182CE; }
+.mini-btn.primary:hover { background:#2B6CB0; border-color:#2B6CB0; }
+.mini-btn.danger { background:#fff5f5; color:#C53030; border-color:#fed7d7; }
+.mini-btn.danger:hover { background:#FED7D7; }
+
+.aio-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.aio-table th, .aio-table td { text-align: left; }
+.aio-table thead th { white-space: nowrap; overflow: hidden; }
+.aio-table td { white-space: nowrap; overflow: hidden; }
+
+/* ── 간트 바 타임라인 ── */
+.gantt-fixed-col { position: sticky; background: #fff; z-index: 2; }
+.gantt-fixed-col.th { background: #f7faff; }
+.aio-table tr:hover .gantt-fixed-col { background: #fafcff; }
+.gantt-timeline-wrap {
+  position: relative;
+  height: 30px;
+}
+.gantt-bar {
+  position: absolute;
+  top: 4px;
+  height: 22px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  padding: 0 7px;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  transition: opacity 0.15s, filter 0.15s;
+  z-index: 1;
+  min-width: 4px;
+}
+.gantt-bar:hover { opacity: 0.85; filter: brightness(0.95); }
+.gantt-bar.sky    { background: #BEE3F8; color: #1A4971; box-shadow: inset 0 0 0 1px rgba(49,130,206,0.3); }
+.gantt-bar.pink   { background: #FED7EF; color: #7D2060; box-shadow: inset 0 0 0 1px rgba(237,100,166,0.3); }
+.gantt-bar.green  { background: #C6F6D5; color: #1A5336; box-shadow: inset 0 0 0 1px rgba(56,161,105,0.3); }
+.gantt-bar.amber  { background: #FEFCBF; color: #744210; box-shadow: inset 0 0 0 1px rgba(217,119,6,0.3); }
+.gantt-bar.purple { background: #E9D8FD; color: #44337A; box-shadow: inset 0 0 0 1px rgba(139,92,246,0.3); }
+.gantt-date-col { border-left: 1px solid #f0f4fa; padding: 0 !important; }
+.gantt-date-th { text-align: center !important; font-size: 10px !important; padding: 4px 2px !important; border-left: 1px solid #e8eef6; }
+.gantt-date-th.weekend { background: #fdf8f0 !important; color: #b7791f !important; }
+.gantt-date-th.today-col { background: #EBF8FF !important; color: #2B6CB0 !important; font-weight: 800 !important; }
+.gantt-row-td { padding: 0 !important; vertical-align: middle; border-left: 1px solid #f0f4fa; }
+.gantt-today-line { position: absolute; top: 0; bottom: 0; width: 2px; background: #3182CE; opacity: 0.5; z-index: 3; pointer-events: none; }
+
+/* ── 다중 일정 타임라인 ── */
+.timeline-cell { position: relative; }
+.timeline-slot { border-radius: 5px; padding: 2px 5px; margin-bottom: 2px; min-height: 20px; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 10px; font-weight: 600; white-space: normal; line-height: 1.2; cursor: pointer; transition: opacity 0.15s; }
+.timeline-slot:hover { opacity: 0.8; }
+.timeline-slot.sky { background: #EBF8FF; color: #2B6CB0; box-shadow: inset 0 0 0 1px rgba(49,130,206,0.2); }
+.timeline-slot.pink { background: #FFF0F6; color: #B83280; box-shadow: inset 0 0 0 1px rgba(237,100,166,0.2); }
+.timeline-slot.green { background: #F0FFF4; color: #276749; box-shadow: inset 0 0 0 1px rgba(56,161,105,0.2); }
+.timeline-slot.amber { background: #FFFBEB; color: #92400E; box-shadow: inset 0 0 0 1px rgba(217,119,6,0.2); }
+.timeline-slot.purple { background: #F5F3FF; color: #6B21A8; box-shadow: inset 0 0 0 1px rgba(139,92,246,0.2); }
+.timeline-slot.muted { background: #F7FAFC; color: #A0AEC0; }
+.sched-badge { display:inline-flex; align-items:center; gap:4px; padding:1px 7px; border-radius:20px; font-size:10px; font-weight:700; margin-right:3px; margin-bottom:2px; cursor:pointer; border:1px solid transparent; transition:all 0.15s; }
+.sched-badge:hover { opacity: 0.8; }
+.sched-badge.sky { background:#EBF8FF; color:#2B6CB0; border-color:rgba(49,130,206,0.25); }
+.sched-badge.pink { background:#FFF0F6; color:#B83280; border-color:rgba(237,100,166,0.25); }
+.sched-badge.green { background:#F0FFF4; color:#276749; border-color:rgba(56,161,105,0.25); }
+.sched-badge.amber { background:#FFFBEB; color:#92400E; border-color:rgba(217,119,6,0.25); }
+.sched-badge.purple { background:#F5F3FF; color:#6B21A8; border-color:rgba(139,92,246,0.25); }
+.sched-list-wrap { display:flex; flex-wrap:wrap; align-items:center; margin-top:2px; }
+.modal-wide { width: 600px !important; }
+.schedule-item-row { display:flex; align-items:center; gap:8px; padding:10px 12px; border:1.5px solid #e8eef6; border-radius:10px; margin-bottom:8px; background:#f7faff; }
+.schedule-item-row:hover { border-color:#bee3f8; background:#EBF8FF; }
+.schedule-item-info { flex:1; min-width:0; }
+.schedule-item-name { font-size:13px; font-weight:700; color:#1e2d3d; }
+.schedule-item-meta { font-size:11px; color:#718096; margin-top:2px; }
+.schedule-item-actions { display:flex; gap:4px; flex-shrink:0; }
+.color-picker-row { display:flex; gap:8px; flex-wrap:wrap; margin-top:6px; }
+.color-opt { width:28px; height:28px; border-radius:50%; cursor:pointer; border:3px solid transparent; transition:all 0.15s; }
+.color-opt:hover { transform:scale(1.15); }
+.color-opt.selected { border-color:#1e2d3d; }
+.color-opt.sky { background:#63B3ED; }
+.color-opt.pink { background:#F687B3; }
+.color-opt.green { background:#68D391; }
+.color-opt.amber { background:#F6AD55; }
+.color-opt.purple { background:#B794F4; }
 
 /* ── 모바일 하단 네비 ── */
 .mobile-nav {
@@ -323,7 +421,7 @@ tr:hover td { background: #fafcff; }
     <button class="nav-item" onclick="showPage('reserve', this)"><span class="nav-icon">📋</span> 장비 예약/신청</button>
     <button class="nav-item" onclick="showPage('status', this)"><span class="nav-icon">🔄</span> 반입·반출 현황</button>
     <button class="nav-item" onclick="showPage('history', this)"><span class="nav-icon">📂</span> 전체 이력</button>
-    <button class="nav-item" onclick="showPage('equipment', this)"><span class="nav-icon">🖥️</span> 장비 목록 관리</button>
+    <button class="nav-item" onclick="showPage('aio', this)"><span class="nav-icon">🖥️</span> AIO 데모장비 관리</button>
     <div class="sidebar-footer">
       <div class="user-badge">
         <div>
@@ -339,7 +437,7 @@ tr:hover td { background: #fafcff; }
     <div class="topbar">
       <div id="pageTitle" class="page-title">대시보드</div>
       <div class="topbar-actions">
-        <button class="btn btn-primary" onclick="openModal()">+ 예약 신청</button>
+        <button id="topActionBtn" class="btn btn-primary" onclick="openModal()">+ 예약 신청</button>
       </div>
     </div>
 
@@ -402,7 +500,7 @@ tr:hover td { background: #fafcff; }
           </div>
           <div id="listView">
             <table>
-              <thead><tr><th>장비명</th><th>담당자</th><th>목적지</th><th>반출일</th><th>반입 예정</th><th>상태</th><th>액션</th></tr></thead>
+              <thead><tr><th>장비명</th><th>담당자</th><th>고객사</th><th>반출일</th><th>반입 예정</th><th>상태</th><th>액션</th></tr></thead>
               <tbody id="listBody"></tbody>
             </table>
           </div>
@@ -449,16 +547,80 @@ tr:hover td { background: #fafcff; }
         </div>
       </div>
 
-      <!-- 장비 목록 관리 -->
-      <div id="page-equipment" class="view-page">
+      <!-- AIO 데모장비 관리 -->
+      <div id="page-aio" class="view-page">
+        <div class="eq-config-banner">
+          <p><strong>AIO 전용 페이지</strong>입니다. 위에는 데모 진행 현황을, 아래에는 대기중인 리스트를 따로 관리합니다. 각 행은 수정 버튼으로 바로 편집할 수 있습니다.</p>
+        </div>
+
         <div class="section">
           <div class="section-header">
-            <div class="section-title">장비 목록</div>
-            <button class="btn btn-primary" onclick="openAddEquipModal()">+ 장비 추가</button>
+            <div class="section-title">AIO 데모 진행 현황</div>
+            <div class="controls-row" style="gap:10px; flex-wrap:wrap;">
+              <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+                <span class="op-badge op-sky">승목</span>
+                <span class="op-badge op-pink">현수</span>
+              </div>
+              <div class="aio-actions">
+                <button class="btn btn-primary" onclick="openAddAioModal()">+ AIO 장비 추가</button>
+                <button class="btn" style="background:linear-gradient(135deg,#38A169,#276749);color:#fff;border-color:transparent;" onclick="openAddAioDemoRow()">+ 진행 현황 추가</button>
+                <button class="btn" onclick="renderEquipTable()">↻ 새로고침</button>
+                <button class="btn" style="color:#C53030; border-color:#fed7d7;" onclick="resetAioDefaults()">초기화</button>
+              </div>
+            </div>
+          </div>
+          <div id="aioDemoScroll" style="overflow-x:auto; overflow-y:visible; position:relative;">
+            <table class="aio-table" style="min-width:max-content;">
+              <thead id="aioDemoThead"></thead>
+              <tbody id="aioDemoBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-header">
+            <div class="section-title">Demo 대기중인 리스트</div>
+            <div class="aio-actions">
+              <button class="btn" onclick="openAddAioWaitModal()">+ 대기 항목 추가</button>
+            </div>
           </div>
           <table>
-            <thead><tr><th>장비명</th><th>시리얼 번호</th><th>카테고리</th><th>상태</th><th>마지막 반출</th></tr></thead>
-            <tbody id="equipTableBody"></tbody>
+            <thead><tr><th>#</th><th>항목</th><th>비고</th><th>액션</th></tr></thead>
+            <tbody id="aioWaitBody"></tbody>
+          </table>
+        </div>
+
+        <div class="section">
+          <div class="section-header">
+            <div class="section-title">등록된 AIO 장비 목록</div>
+            <div class="aio-actions">
+              <button class="btn" onclick="renderEquipTable()">↻ 새로고침</button>
+            </div>
+          </div>
+          <table>
+            <thead><tr><th>장비명 / 담당자</th><th>시리얼 번호</th><th>Model</th><th>상태</th><th>마지막 반출</th><th>액션</th></tr></thead>
+            <tbody id="aioEquipBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- AIO 데모악세서리 -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">AIO 데모악세서리</div>
+          <div class="aio-actions">
+            <button class="btn btn-primary" onclick="openAccessoryModal()">+ AIO 데모악세서리</button>
+          </div>
+        </div>
+        <div style="padding: 0.75rem 1.25rem 0; font-size:12px; color:#718096; line-height:1.6;">
+          악세서리도 장비처럼 예약, 반출, 반입 완료를 관리합니다.
+        </div>
+        <div style="overflow-x:auto;">
+          <table>
+            <thead>
+              <tr><th>악세서리명</th><th>담당자</th><th>고객사</th><th>반출일</th><th>반입 예정</th><th>상태</th><th>액션</th></tr>
+            </thead>
+            <tbody id="aioAccessoryBody"></tbody>
           </table>
         </div>
       </div>
@@ -499,7 +661,7 @@ tr:hover td { background: #fafcff; }
               <div class="form-group">
                 <label class="form-label">카테고리</label>
                 <select class="form-input" id="pageDirectCat">
-                  <option>장비</option><option>악세서리</option><option>기타</option>
+                  <option>장비</option><option>AIO</option><option>악세서리</option><option>기타</option>
                 </select>
               </div>
               <p class="direct-hint">※ 직접 입력한 장비는 신청 후 관리자가 장비 목록에 추가할 수 있습니다.</p>
@@ -540,8 +702,8 @@ tr:hover td { background: #fafcff; }
     <button class="mobile-nav-btn" onclick="showPage('history', this)">
       <span>📂</span><span>이력</span>
     </button>
-    <button class="mobile-nav-btn" onclick="showPage('equipment', this)">
-      <span>🖥️</span><span>장비목록</span>
+    <button class="mobile-nav-btn" onclick="showPage('aio', this)">
+      <span>🖥️</span><span>AIO</span>
     </button>
   </div>
 </nav>
@@ -578,6 +740,12 @@ tr:hover td { background: #fafcff; }
             <input class="form-input" id="modalDirectSN" type="text" placeholder="예: GS-X099">
           </div>
         </div>
+        <div class="form-group">
+          <label class="form-label">카테고리</label>
+          <select class="form-input" id="modalDirectCat">
+            <option>장비</option><option>AIO</option><option>악세서리</option><option>기타</option>
+          </select>
+        </div>
         <p class="direct-hint" style="margin-bottom:0.75rem;">※ 목록에 없는 장비를 직접 입력할 수 있습니다.</p>
       </div>
 
@@ -595,17 +763,199 @@ tr:hover td { background: #fafcff; }
   </div>
 </div>
 
+<!-- AIO 일정 관리 모달 -->
+<div class="modal-overlay" id="aioScheduleModal">
+  <div class="modal modal-wide" style="max-height:90vh; overflow:hidden; display:flex; flex-direction:column;">
+    <div class="modal-header">
+      <div class="modal-title" id="aioScheduleModalTitle">일정 관리</div>
+      <button class="close-btn" onclick="closeModal('aioScheduleModal')">✕</button>
+    </div>
+    <div class="modal-body" style="overflow-y:auto; flex:1;">
+      <div id="aioScheduleRowInfo" style="font-size:13px; color:#4a5568; margin-bottom:1rem; padding:10px 12px; background:#f7faff; border-radius:10px; border:1.5px solid #e8eef6;"></div>
+
+      <!-- 기존 일정 목록 -->
+      <div style="margin-bottom:1rem;">
+        <div style="font-size:12px; font-weight:700; color:#4a5568; margin-bottom:8px; letter-spacing:0.2px;">등록된 일정</div>
+        <div id="aioScheduleList"></div>
+      </div>
+
+      <hr style="border:none; border-top:1.5px solid #f0f4fa; margin:1rem 0;">
+
+      <!-- 일정 추가/수정 폼 -->
+      <div style="font-size:12px; font-weight:700; color:#4a5568; margin-bottom:10px; letter-spacing:0.2px;" id="aioSchedFormTitle">새 일정 추가</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div class="form-group">
+          <label class="form-label">고객사명</label>
+          <input class="form-input" id="schedCustomer" type="text" placeholder="예: LG Chem">
+        </div>
+        <div class="form-group">
+          <label class="form-label">담당자</label>
+          <select class="form-input" id="schedOperator">
+            <option value="승목">승목</option>
+            <option value="현수">현수</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div class="form-group">
+          <label class="form-label">시작일</label>
+          <input class="form-input" id="schedStart" type="date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">종료일</label>
+          <input class="form-input" id="schedEnd" type="date">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">메모 (선택)</label>
+        <input class="form-input" id="schedNote" type="text" placeholder="예: upstream #1">
+      </div>
+      <div class="form-group">
+        <label class="form-label">색상</label>
+        <div class="color-picker-row">
+          <div class="color-opt sky selected" data-color="sky" onclick="selectSchedColor('sky', this)"></div>
+          <div class="color-opt pink" data-color="pink" onclick="selectSchedColor('pink', this)"></div>
+          <div class="color-opt green" data-color="green" onclick="selectSchedColor('green', this)"></div>
+          <div class="color-opt amber" data-color="amber" onclick="selectSchedColor('amber', this)"></div>
+          <div class="color-opt purple" data-color="purple" onclick="selectSchedColor('purple', this)"></div>
+        </div>
+      </div>
+      <input type="hidden" id="schedColor" value="sky">
+      <input type="hidden" id="schedEditIndex" value="-1">
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="cancelSchedEdit()">취소</button>
+      <button class="btn btn-primary" id="schedSaveBtn" onclick="saveScheduleEntry()">+ 일정 추가</button>
+    </div>
+  </div>
+</div>
+
+<!-- AIO 편집 모달 -->
+<div class="modal-overlay" id="aioEditModal">
+  <div class="modal" style="width:560px;">
+    <div class="modal-header">
+      <div class="modal-title" id="aioEditModalTitle">AIO 항목 수정</div>
+      <button class="close-btn" onclick="closeModal('aioEditModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">구분</label>
+        <select class="form-input" id="aioEditType" onchange="toggleAioEditType()">
+          <option value="demo">AIO 진행 현황</option>
+          <option value="wait">Demo 대기 리스트</option>
+        </select>
+      </div>
+
+      <div id="aioDemoEditFields">
+        <!-- 장비 선택 방식 토글 -->
+        <div class="form-group">
+          <label class="form-label">장비 입력 방식</label>
+          <div class="equip-mode-toggle">
+            <button class="equip-mode-btn active" id="aioSnModeBtnList" onclick="setAioSnMode('list')">등록 장비에서 선택</button>
+            <button class="equip-mode-btn" id="aioSnModeBtnDirect" onclick="setAioSnMode('direct')">직접 입력</button>
+          </div>
+        </div>
+        <!-- 목록에서 선택 -->
+        <div id="aioSnFromList" class="form-group">
+          <label class="form-label">AIO 장비 선택</label>
+          <select class="form-input" id="aioEquipSelect" onchange="onAioEquipSelect()">
+            <option value="">— 선택 —</option>
+          </select>
+        </div>
+        <!-- 직접 입력 -->
+        <div id="aioSnDirect" style="display:none;">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <div class="form-group">
+              <label class="form-label">Demo SN</label>
+              <input class="form-input" id="aioEditSn" type="text">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Model name</label>
+              <input class="form-input" id="aioEditModel" type="text">
+            </div>
+          </div>
+        </div>
+        <!-- 선택된 장비 정보 표시 (목록 선택 시) -->
+        <div id="aioSelectedEquipInfo" style="display:none; font-size:12px; color:#3182CE; background:#EBF8FF; border-radius:8px; padding:8px 12px; margin-bottom:10px;">
+          <span id="aioSelectedEquipText"></span>
+        </div>
+        <!-- 숨겨진 실제 sn/model 값 (목록 선택 시 자동 세팅) -->
+        <input type="hidden" id="aioEditSn">
+        <input type="hidden" id="aioEditModel">
+        <div class="form-group">
+          <label class="form-label">현재위치</label>
+          <input class="form-input" id="aioEditCurrent" type="text">
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <div class="form-group">
+            <label class="form-label">운용 담당자</label>
+            <select class="form-input" id="aioEditOperator">
+              <option value="승목">승목 (하늘색)</option>
+              <option value="현수">현수 (분홍색)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">운용기간 시작</label>
+            <input class="form-input" id="aioEditStart" type="date">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">운용기간 종료</label>
+          <input class="form-input" id="aioEditEnd" type="date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">달력 표시 고객사</label>
+          <input class="form-input" id="aioEditCells" type="text" placeholder="예: Celltrion upstream #1">
+          <div class="direct-hint">운용기간 시작~종료 날짜에 맞춰 달력에 표시됩니다.</div>
+        </div>
+      </div>
+
+      <div id="aioWaitEditFields" style="display:none;">
+        <div class="form-group">
+          <label class="form-label">항목</label>
+          <input class="form-input" id="aioWaitTitle" type="text">
+        </div>
+        <div class="form-group">
+          <label class="form-label">비고</label>
+          <textarea class="form-input" id="aioWaitNote" rows="5"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('aioEditModal')">취소</button>
+      <button class="btn btn-primary" onclick="saveAioEdit()">저장</button>
+    </div>
+  </div>
+</div>
+
 <!-- 장비 추가 모달 -->
 <div class="modal-overlay" id="addEquipModal">
   <div class="modal">
     <div class="modal-header"><div class="modal-title">장비 추가</div><button class="close-btn" onclick="closeModal('addEquipModal')">✕</button></div>
     <div class="modal-body">
       <div class="form-group"><label class="form-label">장비명</label><input class="form-input" id="newEquipName" type="text" placeholder="예: Apex-1"></div>
-      <div class="form-group"><label class="form-label">시리얼 번호</label><input class="form-input" id="newEquipSN" type="text" placeholder="예: BHBxxxxxx"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div class="form-group"><label class="form-label">Demo SN (시리얼 번호)</label><input class="form-input" id="newEquipSN" type="text" placeholder="예: BHBxxxxxx"></div>
+        <div class="form-group"><label class="form-label">Model name</label><input class="form-input" id="newEquipModel" type="text" placeholder="예: M75"></div>
+      </div>
       <div class="form-group"><label class="form-label">카테고리</label>
-        <select class="form-input" id="newEquipCat">
-          <option>장비</option><option>악세서리</option><option>기타</option>
+        <select class="form-input" id="newEquipCat" onchange="toggleEquipOperatorField()">
+          <option>장비</option><option>AIO</option><option>악세서리</option><option>기타</option>
         </select>
+      </div>
+      <!-- 담당자: AIO 카테고리일 때만 표시 -->
+      <div class="form-group" id="equipOperatorGroup" style="display:none;">
+        <label class="form-label">담당자</label>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;font-weight:600;">
+            <input type="radio" name="equipOperator" value="승목" style="accent-color:#63B3ED;">
+            <span style="color:#2B6CB0;">● 승목</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;font-weight:600;">
+            <input type="radio" name="equipOperator" value="현수" style="accent-color:#ED64A6;">
+            <span style="color:#97266D;">● 현수</span>
+          </label>
+        </div>
       </div>
     </div>
     <div class="modal-footer">
@@ -638,6 +988,57 @@ tr:hover td { background: #fafcff; }
   </div>
 </div>
 
+<!-- 반입·반출 이벤트 수정 모달 -->
+<div class="modal-overlay" id="eventEditModal">
+  <div class="modal" style="width:480px;">
+    <div class="modal-header">
+      <div class="modal-title">반입·반출 항목 수정</div>
+      <button class="close-btn" onclick="closeModal('eventEditModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div class="form-group">
+          <label class="form-label">장비명 / SN</label>
+          <input class="form-input" id="evEditName" type="text">
+        </div>
+        <div class="form-group">
+          <label class="form-label">담당자</label>
+          <input class="form-input" id="evEditPerson" type="text">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">고객사 / 목적</label>
+        <input class="form-input" id="evEditDest" type="text">
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div class="form-group">
+          <label class="form-label">반출일</label>
+          <input class="form-input" id="evEditOut" type="date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">반입 예정일</label>
+          <input class="form-input" id="evEditRet" type="date">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">상태</label>
+        <select class="form-input" id="evEditStatus">
+          <option value="reserved">예약 확정</option>
+          <option value="out">반출 중</option>
+          <option value="in">반입 완료</option>
+        </select>
+      </div>
+      <div id="evEditAioNote" style="display:none; font-size:12px; color:#3182CE; background:#EBF8FF; border-radius:8px; padding:8px 12px; margin-top:4px;">
+        ⚡ AIO 연동 항목입니다. 저장 시 AIO 타임라인도 함께 업데이트됩니다.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('eventEditModal')">취소</button>
+      <button class="btn btn-primary" onclick="saveEventEdit()">저장</button>
+    </div>
+  </div>
+</div>
+
 <script>
 /* ================================================================
    장비 목록 — Google Sheets 'equipment' 시트에서 자동 로드됩니다.
@@ -649,6 +1050,200 @@ const equipmentList = [];
    반입·반출 이벤트 데이터 — Google Sheets 'events' 시트에서 자동 로드
 ================================================================ */
 const events = [];
+
+/* ================================================================
+   AIO 전용 페이지 데이터 (필요하면 여기만 수정)
+================================================================ */
+const aioTimelineYear = 2026;
+const AIO_DEMO_STORAGE_KEY = 'aioDemoRows_v4';
+const AIO_WAIT_STORAGE_KEY = 'aioWaitingRows_v4';
+
+const aioDateHeaders = [
+  { label: '3/1',  dow: '일', date: '2026-03-01' },
+  { label: '3/2',  dow: '월', date: '2026-03-02' },
+  { label: '3/3',  dow: '화', date: '2026-03-03' },
+  { label: '3/4',  dow: '수', date: '2026-03-04' },
+  { label: '3/5',  dow: '목', date: '2026-03-05' },
+  { label: '3/6',  dow: '금', date: '2026-03-06' },
+  { label: '3/9',  dow: '월', date: '2026-03-09' },
+  { label: '3/10', dow: '화', date: '2026-03-10' },
+  { label: '3/11', dow: '수', date: '2026-03-11' },
+  { label: '3/12', dow: '목', date: '2026-03-12' },
+  { label: '3/13', dow: '금', date: '2026-03-13' },
+  { label: '3/16', dow: '월', date: '2026-03-16' },
+  { label: '3/17', dow: '화', date: '2026-03-17' },
+  { label: '3/18', dow: '수', date: '2026-03-18' },
+  { label: '3/19', dow: '목', date: '2026-03-19' },
+  { label: '3/20', dow: '금', date: '2026-03-20' },
+  { label: '3/23', dow: '월', date: '2026-03-23' },
+  { label: '3/24', dow: '화', date: '2026-03-24' },
+  { label: '3/25', dow: '수', date: '2026-03-25' },
+  { label: '3/26', dow: '목', date: '2026-03-26' },
+  { label: '3/27', dow: '금', date: '2026-03-27' },
+  { label: '3/30', dow: '월', date: '2026-03-30' },
+  { label: '3/31', dow: '화', date: '2026-03-31' },
+  { label: '4/1',  dow: '수', date: '2026-04-01' },
+  { label: '4/2',  dow: '목', date: '2026-04-02' },
+  { label: '4/3',  dow: '금', date: '2026-04-03' },
+  { label: '4/6',  dow: '월', date: '2026-04-06' },
+  { label: '4/7',  dow: '화', date: '2026-04-07' },
+  { label: '4/8',  dow: '수', date: '2026-04-08' },
+  { label: '4/9',  dow: '목', date: '2026-04-09' },
+  { label: '4/10', dow: '금', date: '2026-04-10' },
+  { label: '4/13', dow: '월', date: '2026-04-13' },
+  { label: '4/14', dow: '화', date: '2026-04-14' },
+  { label: '4/15', dow: '수', date: '2026-04-15' },
+  { label: '4/16', dow: '목', date: '2026-04-16' },
+  { label: '4/17', dow: '금', date: '2026-04-17' },
+  { label: '4/20', dow: '월', date: '2026-04-20' },
+  { label: '4/21', dow: '화', date: '2026-04-21' },
+  { label: '4/22', dow: '수', date: '2026-04-22' },
+  { label: '4/23', dow: '목', date: '2026-04-23' },
+  { label: '4/24', dow: '금', date: '2026-04-24' },
+  { label: '4/27', dow: '월', date: '2026-04-27' },
+  { label: '4/28', dow: '화', date: '2026-04-28' },
+  { label: '4/29', dow: '수', date: '2026-04-29' },
+  { label: '4/30', dow: '목', date: '2026-04-30' },
+  { label: '5/1',  dow: '금', date: '2026-05-01' },
+  { label: '5/4',  dow: '월', date: '2026-05-04' },
+  { label: '5/7',  dow: '목', date: '2026-05-07' },
+  { label: '5/11', dow: '월', date: '2026-05-11' },
+  { label: '5/14', dow: '목', date: '2026-05-14' },
+  { label: '5/18', dow: '월', date: '2026-05-18' },
+  { label: '5/21', dow: '목', date: '2026-05-21' },
+  { label: '5/25', dow: '월', date: '2026-05-25' },
+  { label: '5/29', dow: '금', date: '2026-05-29' },
+  { label: '6/1',  dow: '월', date: '2026-06-01' },
+  { label: '6/5',  dow: '금', date: '2026-06-05' },
+  { label: '6/12', dow: '금', date: '2026-06-12' },
+  { label: '6/19', dow: '금', date: '2026-06-19' },
+  { label: '6/26', dow: '금', date: '2026-06-26' },
+  { label: '6/30', dow: '화', date: '2026-06-30' },
+  { label: '7/31', dow: '금', date: '2026-07-31' },
+  { label: '8/31', dow: '월', date: '2026-08-31' },
+  { label: '9/30', dow: '수', date: '2026-09-30' },
+  { label: '10/30',dow: '금', date: '2026-10-30' },
+  { label: '11/30',dow: '월', date: '2026-11-30' },
+  { label: '12/31',dow: '목', date: '2026-12-31' },
+];
+
+const aioDemoDefaults = [];
+
+const aioWaitingDefaults = [];
+
+function cloneDeep(value) {
+  return JSON.parse(JSON.stringify(value));
+}
+
+function normalizeDemoRow(row) {
+  const op = String(row?.operator || '승목').trim();
+  // schedules: [{customer, operator, start, end, note, color}]
+  let schedules = [];
+  if (Array.isArray(row?.schedules)) {
+    schedules = row.schedules.map(s => ({
+      customer: String(s?.customer || '').trim(),
+      operator: String(s?.operator || op || '승목').trim(),
+      start: String(s?.start || '').trim(),
+      end: String(s?.end || '').trim(),
+      note: String(s?.note || '').trim(),
+      color: String(s?.color || 'sky').trim(),
+    })).filter(s => s.customer || s.start);
+  }
+  // 하위호환: cells + start/end 가 있고 schedules 가 비어있으면 자동 마이그레이션
+  const baseStart = String(row?.start || '').trim();
+  const baseEnd   = String(row?.end || '').trim();
+  if (schedules.length === 0 && baseStart) {
+    const cells = row?.cells && typeof row.cells === 'object' ? row.cells : {};
+    // cells 에서 메모를 첫 번째 일정의 고객사명으로
+    const firstNote = Object.values(cells)[0] || '';
+    schedules.push({
+      customer: firstNote || String(row?.current || '').trim(),
+      operator: op || '승목',
+      start: baseStart,
+      end: baseEnd,
+      note: '',
+      color: (op === '현수') ? 'pink' : 'sky',
+    });
+  }
+  return {
+    sn: String(row?.sn || '').trim(),
+    model: String(row?.model || '').trim(),
+    current: String(row?.current || '').trim(),
+    operator: op || '승목',
+    start: baseStart,
+    end: baseEnd,
+    cells: row?.cells && typeof row.cells === 'object' ? row.cells : {},
+    linkedName: String(row?.linkedName || '').trim(),
+    linkedSn: String(row?.linkedSn || '').trim(),
+    schedules,
+  };
+}
+
+function normalizeWaitRow(row) {
+  return {
+    title: String(row?.title || '').trim(),
+    note: String(row?.note || '').trim(),
+  };
+}
+
+function loadAioRows(storageKey, fallback, normalizer) {
+  // Google Sheets에서 로드하므로 fallback만 반환 (실제 데이터는 loadEventsFromSheet에서 채움)
+  return cloneDeep(fallback).map(normalizer).filter(Boolean);
+}
+
+function resetAioDefaults() {
+  if (!confirm('저장된 AIO 데이터를 초기값으로 되돌릴까요?\n(추가/수정한 내용이 모두 사라집니다)')) return;
+  aioDemoRows = cloneDeep(aioDemoDefaults).map(normalizeDemoRow).filter(Boolean);
+  aioWaitingRows = cloneDeep(aioWaitingDefaults).map(normalizeWaitRow).filter(Boolean);
+  saveAioRows();
+  renderEquipTable();
+  alert('초기값으로 복원되었습니다.');
+}
+
+let aioDemoRows = loadAioRows(AIO_DEMO_STORAGE_KEY, aioDemoDefaults, normalizeDemoRow);
+let aioWaitingRows = loadAioRows(AIO_WAIT_STORAGE_KEY, aioWaitingDefaults, normalizeWaitRow);
+
+async function saveAioRows() {
+  // 데이터 변경 시 캐시 무효화
+  try { sessionStorage.removeItem(CACHE_KEY); } catch(e) {}
+  try {
+    await fetch(GAS_URL, {
+      method: 'POST', mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'saveAioDemo',
+        rows: aioDemoRows.map(r => ({
+          sn:        r.sn        || '',
+          model:     r.model     || '',
+          current:   r.current   || '',
+          operator:  r.operator  || '',
+          start:     r.start     || '',
+          end:       r.end       || '',
+          schedules: JSON.stringify(r.schedules || [])
+        }))
+      })
+    });
+    await fetch(GAS_URL, {
+      method: 'POST', mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'saveAioWaiting',
+        rows: aioWaitingRows.map(r => ({ title: r.title || '', note: r.note || '' }))
+      })
+    });
+  } catch (err) {
+    console.warn('AIO Sheets save failed:', err);
+  }
+}
+
+const aioOperators = {
+  '승목': { label: '승목', className: 'sky' },
+  '현수': { label: '현수', className: 'pink' },
+  sungh: { label: '승목', className: 'sky' },
+  hyunsu: { label: '현수', className: 'pink' },
+};
+
+
 
 /* ─────────────────────── helpers ─────────────────────── */
 const statusLabel = { out:'반출 중', in:'반입 완료', reserved:'예약 확정', storage:'보관 중' };
@@ -663,6 +1258,139 @@ function fmt(d) {
   return parts[1] + '/' + parts[2];
 }
 
+function parseIsoDate(value) {
+  if (!value) return null;
+  const s = String(value).substring(0, 10);
+  const m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!m) return null;
+  return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+}
+
+function parseAioHeaderDate(label) {
+  const [m, d] = String(label || '').split('/').map(Number);
+  if (!m || !d) return null;
+  return new Date(aioTimelineYear, m - 1, d);
+}
+
+function getOperatorMeta(name) {
+  const key = String(name || '').trim();
+  if (!key) return { label: '-', className: 'sky' };
+  return aioOperators[key] || aioOperators[key.toLowerCase()] || { label: key, className: 'sky' };
+}
+
+function syncAioReservationToTable({ equipmentName, equipmentSn, person, outD, retD, purpose }) {
+  const op = getOperatorMeta(person);
+  const targetName = String(equipmentName || '').trim();
+  const targetSn = String(equipmentSn || '').trim();
+  const color = op.className === 'pink' ? 'pink' : 'sky';
+
+  // 이미 같은 SN 행이 있으면 schedules에 추가, 없으면 새 행 추가
+  const existingRow = aioDemoRows.find(r => r.sn === targetSn || r.sn === targetName);
+  const newSched = {
+    customer: purpose || targetName || '-',
+    operator: op.label,
+    start: outD || '',
+    end: retD || outD || '',
+    note: '',
+    color,
+    _eventLinked: true,  // 연동된 일정 표시
+  };
+
+  if (existingRow) {
+    if (!Array.isArray(existingRow.schedules)) existingRow.schedules = [];
+    // 중복 체크 (같은 시작일 이미 있으면 업데이트)
+    const dupIdx = existingRow.schedules.findIndex(s => s.start === outD && s._eventLinked);
+    if (dupIdx >= 0) existingRow.schedules[dupIdx] = newSched;
+    else existingRow.schedules.push(newSched);
+    syncRowPeriodFromSchedules(existingRow);
+  } else {
+    aioDemoRows.push({
+      sn: targetSn || targetName || '-',
+      model: 'AIO',
+      current: purpose || targetName || '-',
+      operator: op.label,
+      start: outD || '',
+      end: retD || outD || '',
+      linkedName: targetName || '',
+      linkedSn: targetSn || '',
+      cells: {},
+      schedules: [newSched],
+    });
+  }
+  saveAioRows();
+}
+
+/* ── AIO 일정 → events 동기화 ── */
+function syncSchedToEvents(row, sched, editIdx) {
+  // events에서 같은 장비+시작일로 연동된 항목 찾기
+  const snKey = row.sn;
+  const linkedIdx = events.findIndex(e =>
+    (e.name === snKey || e.name === row.current || e.name === row.linkedName) &&
+    e.out === sched.start && e._aioLinked
+  );
+
+  const ev = {
+    name: row.sn,
+    person: sched.operator,
+    dest: sched.customer + (sched.note ? ' · ' + sched.note : ''),
+    out: sched.start,
+    ret: sched.end || '',
+    status: 'reserved',
+    _aioLinked: true,
+  };
+
+  if (linkedIdx >= 0) {
+    // 수정
+    events[linkedIdx] = ev;
+  } else {
+    // 새로 추가
+    events.unshift(ev);
+  }
+  renderList();
+  renderDashboard();
+}
+
+function removeSchedFromEvents(row, sched) {
+  const snKey = row.sn;
+  const idx = events.findIndex(e =>
+    (e.name === snKey || e.name === row.linkedName) &&
+    e.out === sched.start && e._aioLinked
+  );
+  if (idx >= 0) {
+    events.splice(idx, 1);
+    renderList();
+    renderDashboard();
+  }
+}
+
+/* ── 반입 완료 → AIO 일정 종료 동기화 ── */
+function syncReturnToAio(eventName, outDate, retDate) {
+  let changed = false;
+  aioDemoRows.forEach(row => {
+    const snMatch = row.sn === eventName || row.linkedName === eventName || row.current === eventName;
+    if (!snMatch) return;
+    if (!Array.isArray(row.schedules)) return;
+    row.schedules.forEach(s => {
+      if (s.start === outDate) {
+        s.end = retDate;
+        changed = true;
+      }
+    });
+    if (changed) syncRowPeriodFromSchedules(row);
+  });
+  if (changed) {
+    saveAioRows();
+    renderEquipTable();
+  }
+}
+
+function isDateInRange(dateObj, startStr, endStr) {
+  const start = parseIsoDate(startStr);
+  if (!start || !dateObj) return false;
+  const end = parseIsoDate(endStr) || start;
+  return dateObj >= start && dateObj <= end;
+}
+
 /* ─────────────────────── 페이지 전환 ─────────────────────── */
 function showPage(id, el) {
   document.querySelectorAll('.view-page').forEach(p => p.classList.remove('active'));
@@ -671,15 +1399,15 @@ function showPage(id, el) {
   document.getElementById('page-' + id).classList.add('active');
   el.classList.add('active');
   // 사이드바와 모바일 네비 동기화
-  const idx = ['dashboard','reserve','status','history','equipment'].indexOf(id);
+  const idx = ['dashboard','reserve','status','history','aio'].indexOf(id);
   const mbtns = document.querySelectorAll('.mobile-nav-btn');
   if (idx >= 0 && mbtns[idx]) mbtns[idx].classList.add('active');
   const sbtns = document.querySelectorAll('.nav-item');
   if (idx >= 0 && sbtns[idx]) sbtns[idx].classList.add('active');
-  const titles = { dashboard:'대시보드', reserve:'장비 예약/신청', status:'반입·반출 현황', history:'전체 이력', equipment:'장비 목록 관리' };
+  const titles = { dashboard:'대시보드', reserve:'장비 예약/신청', status:'반입·반출 현황', history:'전체 이력', aio:'AIO 데모장비 관리' };
   document.getElementById('pageTitle').textContent = titles[id];
   if (id === 'status')    renderStatus();
-  if (id === 'equipment') renderEquipTable();
+  if (id === 'aio') renderEquipTable();
   if (id === 'dashboard') renderDashboard();
   if (id === 'reserve')   populateEquipSelect();
   if (id === 'history')   renderHistory();
@@ -729,34 +1457,152 @@ function renderStatus() {
 function renderList() {
   const todayStr = new Date().toISOString().substring(0, 10);
   const f = document.getElementById('statusFilter').value;
-  // 반입반출 현황에서는 반입 완료(in) 건 제외, 필터 선택 시 해당 상태만
   const filtered = events.filter(e => {
     if (f) return e.status === f;
     return e.status !== 'in';
   });
-  document.getElementById('listBody').innerHTML = filtered.map((e, i) => {
+  document.getElementById('listBody').innerHTML = filtered.map(e => {
     const realIdx = events.indexOf(e);
     const canComplete = e.status === 'out' || e.status === 'reserved';
     const btnReturn = canComplete
-      ? `<button class="btn-return" onclick="markReturned(${realIdx})">📥 반입 완료</button>`
+      ? `<button class="btn-return" onclick="markReturned(${realIdx})">📥 반입완료</button>`
       : `<span style="color:#c8d3df;font-size:12px;">—</span>`;
     const retCell = e.ret
-      ? `<div>${fmt(e.ret)}</div><button class="btn-setret" onclick="openSetRetModal(${realIdx})">수정</button>`
-      : `<button class="btn-setret" onclick="openSetRetModal(${realIdx})">📅 날짜 입력</button>`;
-    // 반출일 기준으로 실제 상태 계산
+      ? `${fmt(e.ret)}`
+      : `<span style="color:#c8d3df;">—</span>`;
     const displayStatus = e.status === 'reserved' && e.out && e.out <= todayStr ? 'out' : e.status;
+    const aioTag = e._aioLinked
+      ? `<span style="font-size:10px;color:#3182CE;background:#EBF8FF;padding:1px 5px;border-radius:4px;margin-left:4px;">AIO</span>`
+      : '';
+    // AIO 장비인 경우 equipmentList에서 장비명 찾아 "장비명_SN" 형식으로 표기
+    let displayName = e.name;
+    if (e._aioLinked) {
+      const linkedEquip = equipmentList.find(eq =>
+        eq.name === e.name ||
+        String(eq.sn) === String(e.name) ||
+        String(eq.sn).endsWith(String(e.name))
+      );
+      if (linkedEquip) {
+        displayName = `${linkedEquip.name}_${linkedEquip.sn}`;
+      }
+    }
     return `
-    <tr>
-      <td>${e.name}</td><td>${e.person}</td><td>${e.dest}</td>
+    <tr data-ev-idx="${realIdx}">
+      <td>${displayName}${aioTag}</td>
+      <td>${e.person || '-'}</td>
+      <td>${e.dest || '-'}</td>
       <td>${fmt(e.out)}</td>
-      <td style="min-width:100px;">${retCell}</td>
+      <td>${retCell}</td>
       <td><span class="status ${statusClass[displayStatus]}">${statusLabel[displayStatus]}</span></td>
-      <td>${btnReturn}</td>
+      <td>
+        <div class="aio-actions">
+          ${btnReturn}
+          <button class="mini-btn primary" onclick="openEventEditModal(${realIdx})">✏️ 수정</button>
+        </div>
+      </td>
     </tr>`;
   }).join('');
 }
 
 document.getElementById('statusFilter').addEventListener('change', renderStatus);
+
+/* ─────────────────────── 반입·반출 수정 / 삭제 ─────────────────────── */
+let _eventEditIdx = -1;
+
+function openEventEditModal(idx) {
+  _eventEditIdx = idx;
+  const e = events[idx];
+  if (!e) return;
+  document.getElementById('evEditName').value   = e.name   || '';
+  document.getElementById('evEditPerson').value = e.person || '';
+  document.getElementById('evEditDest').value   = e.dest   || '';
+  document.getElementById('evEditOut').value    = e.out    || '';
+  document.getElementById('evEditRet').value    = e.ret    || '';
+  document.getElementById('evEditStatus').value = e.status || 'reserved';
+  document.getElementById('evEditAioNote').style.display = e._aioLinked ? '' : 'none';
+  document.getElementById('eventEditModal').classList.add('show');
+}
+
+async function saveEventEdit() {
+  const e = events[_eventEditIdx];
+  if (!e) return;
+  const oldOut  = e.out;
+  const oldName = e.name;
+  e.name   = document.getElementById('evEditName').value.trim();
+  e.person = document.getElementById('evEditPerson').value.trim();
+  e.dest   = document.getElementById('evEditDest').value.trim();
+  e.out    = document.getElementById('evEditOut').value;
+  e.ret    = document.getElementById('evEditRet').value;
+  e.status = document.getElementById('evEditStatus').value;
+
+  // Google Sheets 업데이트
+  showLoading('저장 중...');
+  try {
+    await fetch(GAS_URL, {
+      method: 'POST', mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'updateStatus', name: e.name, out: e.out, status: e.status, ret: e.ret })
+    });
+  } catch(err) { console.warn('Sheets 업데이트 실패:', err); }
+  hideLoading();
+
+  // AIO 타임라인 동기화 — _aioLinked 여부 무관하게 이름+날짜 기준 매칭
+  syncReturnToAio(oldName, oldOut, e.ret);
+
+  closeModal('eventEditModal');
+  renderDashboard();
+  renderList();
+  renderHistory();
+  renderEquipTable();
+}
+
+async function deleteEvent(idx) {
+  // idx가 현재도 유효한지 확인 (렌더 후 밀렸을 수 있음)
+  const e = events[idx];
+  if (!e) { alert('항목을 찾을 수 없습니다. 목록을 새로고침해 주세요.'); renderList(); return; }
+
+  if (!confirm(`"${e.name}" 항목을 삭제할까요?\n고객사: ${e.dest || '-'} / 반출일: ${fmt(e.out)}\n(이 작업은 취소할 수 없습니다)`)) return;
+
+  // 삭제 전에 참조값 저장 (splice 후 e가 변할 수 있으므로)
+  const evName = e.name;
+  const evOut  = e.out;
+  const evLinked = !!e._aioLinked;
+
+  // ── AIO 타임라인에서 연동 일정 제거 ──
+  // _aioLinked 여부와 관계없이 SN/이름 + 시작일 기준으로 매칭 시도
+  aioDemoRows.forEach(row => {
+    if (!Array.isArray(row.schedules)) return;
+    // 이름/SN 매칭
+    const snMatch = row.sn === evName || row.linkedName === evName || row.current === evName;
+    if (!snMatch) return;
+    const si = row.schedules.findIndex(s => s.start === evOut);
+    if (si >= 0) {
+      row.schedules.splice(si, 1);
+      syncRowPeriodFromSchedules(row);
+      syncEquipStatusFromRow(row);
+    }
+  });
+  saveAioRows();
+
+  // ── events 배열에서 제거 ──
+  events.splice(idx, 1);
+
+  // ── Google Sheets 삭제 요청 ──
+  showLoading('삭제 중...');
+  try {
+    await fetch(GAS_URL, {
+      method: 'POST', mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'deleteEvent', name: evName, out: evOut })
+    });
+  } catch(err) { console.warn('Sheets 삭제 실패:', err); }
+  hideLoading();
+
+  renderDashboard();
+  renderList();
+  renderHistory();
+  renderEquipTable();
+}
 
 function switchView(v) {
   curView = v;
@@ -821,36 +1667,973 @@ function changeMonth(dir) {
   renderCalendar();
 }
 
-/* ─────────────────────── 장비 목록 ─────────────────────── */
-function renderEquipTable() {
-  document.getElementById('equipTableBody').innerHTML = equipmentList.map((e, i) => `
-    <tr>
-      <td>${e.name}</td>
-      <td class="eq-tag">${e.sn}</td>
-      <td>${e.cat}</td>
-      <td><span class="status ${statusClass[e.status]}">${statusLabel[e.status]}</span></td>
-      <td>${fmt(e.lastOut)}</td>
-    </tr>`).join('');
+/* ─────────────────────── AIO 데모장비 관리 ─────────────────────── */
+function isAioEquipment(e) {
+  return String(e.cat || '').trim().toUpperCase() === 'AIO';
 }
 
-function openAddEquipModal() { document.getElementById('addEquipModal').classList.add('show'); }
+function renderEquipTable() {
+  const CELL_W = 36;
+  const FIXED_COLS_W = { sn: 140, model: 90, current: 110, op: 72, actions: 116 };
+  const todayStr = new Date().toISOString().substring(0, 10);
+
+  // 활성 스케줄(반입완료 아니고 종료일 안 지난 것) 중 가장 빠른 시작일 계산
+  let earliestDate = null;
+  aioDemoRows.forEach(row => {
+    (row.schedules || []).forEach(s => {
+      if (s.status === 'in') return;
+      if (s.end && s.end < todayStr) return;
+      if (s.start && (!earliestDate || s.start < earliestDate)) {
+        earliestDate = s.start;
+      }
+    });
+  });
+
+  // 가장 빠른 날짜가 aioDateHeaders 범위 내에 있으면 그 컬럼부터 시작, 없으면 0부터
+  // visibleStartIdx: 달력에서 스크롤 없이 보여줄 첫 컬럼 인덱스 (렌더링은 전체 다 함)
+  // → 실제로는 전체 달력을 렌더하되, 자동 스크롤로 해당 위치로 이동
+
+  const totalTimeline = CELL_W * aioDateHeaders.length;
+
+  // 날짜 인덱스 맵
+  const dateIndexMap = {};
+  aioDateHeaders.forEach((d, i) => { dateIndexMap[d.date] = i; });
+
+  // 가장 빠른 활성 스케줄 날짜의 인덱스 (스크롤 위치용)
+  let scrollToIdx = 0;
+  if (earliestDate) {
+    if (dateIndexMap[earliestDate] !== undefined) {
+      scrollToIdx = dateIndexMap[earliestDate];
+    } else if (earliestDate < aioDateHeaders[0].date) {
+      scrollToIdx = 0;
+    } else {
+      let closest = 0;
+      for (let i = 0; i < aioDateHeaders.length; i++) {
+        if (aioDateHeaders[i].date <= earliestDate) closest = i;
+      }
+      scrollToIdx = closest;
+    }
+  }
+
+  // 날짜 → 인덱스 (범위 포함 보간)
+  function dateToIndex(isoDate) {
+    if (!isoDate) return -1;
+    // 정확히 있으면 그 인덱스
+    if (dateIndexMap[isoDate] !== undefined) return dateIndexMap[isoDate];
+    // 달력 첫 날짜보다 이전이면 → 0번째 컬럼부터 표시
+    if (isoDate < aioDateHeaders[0].date) return 0;
+    // 없으면 가장 가까운 이전 날짜 인덱스 찾기 (범위 표시용)
+    let closest = -1;
+    for (let i = 0; i < aioDateHeaders.length; i++) {
+      if (aioDateHeaders[i].date <= isoDate) closest = i;
+    }
+    return closest;
+  }
+
+  function dateToIndexNext(isoDate) {
+    // 종료일 다음 위치 (바의 오른쪽 끝) — 해당 날짜 컬럼까지 포함
+    if (!isoDate) return -1;
+    if (dateIndexMap[isoDate] !== undefined) return dateIndexMap[isoDate] + 1;
+    let closest = -1;
+    for (let i = 0; i < aioDateHeaders.length; i++) {
+      if (aioDateHeaders[i].date <= isoDate) closest = i + 1;
+    }
+    return closest;
+  }
+
+  // ── 헤더 ──
+  const thead = document.getElementById('aioDemoThead');
+  if (thead) {
+    const weekendDows = ['토', '일'];
+    const dowRow = aioDateHeaders.map((d, i) => {
+      const isWknd = weekendDows.includes(d.dow);
+      const isToday = d.date === todayStr;
+      const cls = isToday ? 'gantt-date-th today-col' : isWknd ? 'gantt-date-th weekend' : 'gantt-date-th';
+      return `<th class="${cls}" style="width:${CELL_W}px;min-width:${CELL_W}px;">${d.dow}</th>`;
+    }).join('');
+    const dateRow = aioDateHeaders.map((d, i) => {
+      const isWknd = weekendDows.includes(d.dow);
+      const isToday = d.date === todayStr;
+      const cls = isToday ? 'gantt-date-th today-col' : isWknd ? 'gantt-date-th weekend' : 'gantt-date-th';
+      return `<th class="${cls}" style="width:${CELL_W}px;min-width:${CELL_W}px;">${d.label}</th>`;
+    }).join('');
+    thead.innerHTML = `
+      <tr>
+        <th class="gantt-fixed-col th" style="width:${FIXED_COLS_W.sn}px;min-width:${FIXED_COLS_W.sn}px;left:0;">장비명</th>
+        <th class="gantt-fixed-col th" style="width:${FIXED_COLS_W.model}px;min-width:${FIXED_COLS_W.model}px;left:${FIXED_COLS_W.sn}px;">Model</th>
+        <th class="gantt-fixed-col th" style="width:${FIXED_COLS_W.current}px;min-width:${FIXED_COLS_W.current}px;left:${FIXED_COLS_W.sn+FIXED_COLS_W.model}px;">현재위치</th>
+        <th class="gantt-fixed-col th" style="width:${FIXED_COLS_W.op}px;min-width:${FIXED_COLS_W.op}px;left:${FIXED_COLS_W.sn+FIXED_COLS_W.model+FIXED_COLS_W.current}px;">담당</th>
+        ${dowRow}
+        <th class="gantt-fixed-col th" style="width:${FIXED_COLS_W.actions}px;min-width:${FIXED_COLS_W.actions}px;right:0;">액션</th>
+      </tr>
+      <tr>
+        <th class="gantt-fixed-col th" style="left:0;">장비명 / Demo SN</th>
+        <th class="gantt-fixed-col th" style="left:${FIXED_COLS_W.sn}px;">Model name</th>
+        <th class="gantt-fixed-col th" style="left:${FIXED_COLS_W.sn+FIXED_COLS_W.model}px;">현재위치</th>
+        <th class="gantt-fixed-col th" style="left:${FIXED_COLS_W.sn+FIXED_COLS_W.model+FIXED_COLS_W.current}px;">담당자</th>
+        ${dateRow}
+        <th class="gantt-fixed-col th" style="right:0;"></th>
+      </tr>`;
+  }
+
+  // ── 바디 ──
+  const demoBody = document.getElementById('aioDemoBody');
+  if (demoBody) {
+  const todayIdx = dateIndexMap[todayStr];
+    const todayLine = todayIdx !== undefined
+      ? `<div class="gantt-today-line" style="left:${todayIdx * CELL_W + CELL_W / 2}px;"></div>`
+      : '';
+
+    // 같은 SN의 행이 여러 개면 schedules를 하나로 합침
+    const mergedRows = [];
+    aioDemoRows.forEach(row => {
+      const existing = mergedRows.find(r => r.sn === row.sn);
+      if (existing) {
+        (row.schedules || []).forEach(s => {
+          const dup = existing.schedules.find(es => es.start === s.start && es.customer === s.customer);
+          if (!dup) existing.schedules.push(s);
+        });
+      } else {
+        mergedRows.push({ ...row, schedules: [...(row.schedules || [])] });
+      }
+    });
+
+    // equipmentList의 AIO 장비 순서(AIO-1, AIO-2...) 기준으로 정렬
+    // 등록된 AIO 장비에 있는 것 먼저, 없는 것(직접 입력) 맨 아래
+    const aioEquipList = equipmentList.filter(e => String(e.cat || '').trim().toUpperCase() === 'AIO');
+    mergedRows.sort((a, b) => {
+      const findIdx = (row) => aioEquipList.findIndex(e =>
+        String(e.sn) === String(row.sn) ||
+        String(e.sn).endsWith(String(row.sn)) ||
+        e.name === row.sn
+      );
+      const ai = findIdx(a);
+      const bi = findIdx(b);
+      if (ai === -1 && bi === -1) return 0;   // 둘 다 직접입력 → 순서 유지
+      if (ai === -1) return 1;                  // a가 직접입력 → 아래로
+      if (bi === -1) return -1;                 // b가 직접입력 → 아래로
+      return ai - bi;                           // equipmentList 순서 기준
+    });
+
+    demoBody.innerHTML = mergedRows.map((row, idx) => {
+      const schedules = row.schedules || [];
+
+      // 담당자 배지 (row.operator 기준으로 강제)
+      const rowOp = row.operator || '승목';
+      const opBadges = `<span class="op-badge ${rowOp === '현수' ? 'op-pink' : 'op-sky'}" style="font-size:10px;padding:1px 6px;">${rowOp}</span>`;
+
+      // 장비명: equipmentList에서 SN 매칭
+      // 1) 완전 일치, 2) equipmentList의 sn이 row.sn을 끝에 포함, 3) 장비명 일치
+      const linkedEquip = equipmentList.find(e =>
+        String(e.sn) === String(row.sn) ||
+        String(e.sn).endsWith(String(row.sn)) ||
+        e.name === row.sn ||
+        e.current === row.current
+      );
+      const equipName = linkedEquip ? linkedEquip.name : '';
+      const snCell = equipName
+        ? `<div style="font-weight:700;font-size:12px;line-height:1.3;">${equipName}</div><div style="font-size:10px;color:#a0aec0;">${row.sn}</div>`
+        : `<div style="font-weight:700;font-size:12px;">${row.sn}</div>`;
+
+      // 간트 바 생성 — 색상은 담당자 기준으로 강제 고정, 반입완료/종료일 지난 일정 숨김
+      const barColor = rowOp === '현수' ? 'pink' : 'sky';
+      const bars = schedules.map((s, si) => {
+        // 반입완료이거나 종료일이 오늘보다 이전이면 달력에서 숨김
+        if (s.status === 'in' || s.actualRet) return '';
+        if (s.end && s.end < todayStr) return '';
+        const si_ = dateToIndex(s.start);
+        const ei_ = dateToIndexNext(s.end || s.start);
+        if (si_ < 0 || ei_ <= 0) return '';
+        const left = si_ * CELL_W;
+        const width = Math.max((ei_ - si_) * CELL_W - 2, 4);
+        const label = s.customer + (s.note ? ' · ' + s.note : '');
+        const topOffset = si * 26;
+        const realIdx = aioDemoRows.findIndex(r => r.sn === row.sn);
+        return `<div class="gantt-bar ${barColor}"
+          style="left:${left}px;width:${width}px;top:${4 + topOffset}px;"
+          onclick="openAioScheduleModal(${realIdx})"
+          title="${s.customer}${s.note ? ' — ' + s.note : ''} (${s.start}~${s.end})"
+          >${label}</div>`;
+      }).join('');
+
+      // 행 높이: 일정 수에 따라 동적으로
+      const rowH = Math.max(40, schedules.length * 26 + 8);
+      const timelineCell = `<td class="gantt-row-td" colspan="${aioDateHeaders.length}"
+        style="height:${rowH}px;width:${totalTimeline}px;min-width:${totalTimeline}px;">
+        <div class="gantt-timeline-wrap" style="height:${rowH}px;width:${totalTimeline}px;">
+          ${todayLine}
+          ${bars}
+        </div>
+      </td>`;
+
+      // aioDemoRows에서 실제 인덱스 찾기 (mergedRows 기준 idx와 다를 수 있음)
+      const rowRealIdx = aioDemoRows.findIndex(r => r.sn === row.sn);
+
+      return `
+        <tr>
+          <td class="gantt-fixed-col" style="left:0;">${snCell}</td>
+          <td class="gantt-fixed-col" style="left:${FIXED_COLS_W.sn}px;font-size:12px;">${row.model}</td>
+          <td class="gantt-fixed-col" style="left:${FIXED_COLS_W.sn+FIXED_COLS_W.model}px;font-size:12px;">${row.current}</td>
+          <td class="gantt-fixed-col" style="left:${FIXED_COLS_W.sn+FIXED_COLS_W.model+FIXED_COLS_W.current}px;">${opBadges}</td>
+          ${timelineCell}
+          <td class="gantt-fixed-col aio-actions-cell" style="right:0;">
+            <div class="aio-actions">
+              <button class="mini-btn primary" onclick="openAioScheduleModal(${rowRealIdx})">📅</button>
+              <button class="mini-btn" onclick="openAioEditModal('demo', ${rowRealIdx})">수정</button>
+              <button class="mini-btn danger" onclick="deleteAioDemoRow(${rowRealIdx})">삭제</button>
+            </div>
+          </td>
+        </tr>`;
+    }).join('');
+
+    // 가장 빠른 활성 스케줄 위치로 자동 스크롤
+    const scrollContainer = document.getElementById('aioDemoScroll');
+    if (scrollContainer) {
+      const targetScroll = scrollToIdx > 0 ? Math.max(0, scrollToIdx * CELL_W - 10) : 0;
+      setTimeout(() => { scrollContainer.scrollLeft = targetScroll; }, 80);
+    }
+  } // if (demoBody) 끝
+  const waitBody = document.getElementById('aioWaitBody');
+  if (waitBody) {
+    waitBody.innerHTML = aioWaitingRows.map((row, i) => `
+      <tr>
+        <td>${i + 1}</td>
+        <td>${row.title}</td>
+        <td>${row.note || '-'}</td>
+        <td class="aio-actions-cell">
+          <div class="aio-actions">
+            <button class="mini-btn primary" onclick="openAioEditModal('wait', ${i})">수정</button>
+            <button class="mini-btn danger" onclick="deleteAioWaitRow(${i})">삭제</button>
+          </div>
+        </td>
+      </tr>`).join('');
+  }
+
+  const aioEquip = equipmentList.filter(isAioEquipment);
+  const aioEquipBody = document.getElementById('aioEquipBody');
+  if (aioEquipBody) {
+    aioEquipBody.innerHTML = aioEquip.length
+      ? aioEquip.map((e, idx) => {
+          const opColor = e.operator === '현수' ? '#FC8181' : '#63B3ED';
+          const opBg    = e.operator === '현수' ? '#FFF5F5' : '#EBF8FF';
+          const opBadge = e.operator
+            ? `<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;background:${opBg};color:${opColor};margin-left:6px;">
+                <span style="width:7px;height:7px;border-radius:50%;background:${opColor};"></span>${e.operator}
+               </span>`
+            : '';
+          return `
+        <tr>
+          <td><span style="font-weight:600;">${e.name}</span>${opBadge}</td>
+          <td class="eq-tag">${e.sn}</td>
+          <td style="color:#4a5568;">${e.model || '-'}</td>
+          <td><span class="status ${statusClass[e.status]}">${statusLabel[e.status]}</span></td>
+          <td>${fmt(e.lastOut)}</td>
+          <td class="aio-actions-cell">
+            <div class="aio-actions">
+              <button class="mini-btn primary" onclick="openAioEquipmentEdit(${idx})">수정</button>
+              <button class="mini-btn" onclick="openAioScheduleAdd(\`${e.name}\`, \`${String(e.sn || '')}\`)">일정 추가</button>
+            </div>
+          </td>
+        </tr>`;
+        }).join('')
+      : `<tr><td colspan="5" style="color:#aaa;">등록된 AIO 장비가 없습니다.</td></tr>`;
+  }
+
+  renderAioAccessory();
+}
+
+function renderAioAccessory() {
+  const tbody = document.getElementById('aioAccessoryBody');
+  if (!tbody) return;
+
+  const todayStr = new Date().toISOString().substring(0, 10);
+  const accessoryNames = new Set(
+    equipmentList
+      .filter(e => String(e.cat || '').trim() === '악세서리')
+      .map(e => String(e.name || '').trim())
+  );
+
+  const accessoryEvents = events.filter(e => accessoryNames.has(String(e.name || '').trim()));
+
+  if (!accessoryEvents.length) {
+    tbody.innerHTML = '<tr><td colspan="7" style="color:#aaa;">등록된 악세서리가 없습니다.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = accessoryEvents.map((e, idx) => {
+    const realIdx = events.indexOf(e);
+    const canComplete = e.status === 'out' || e.status === 'reserved';
+    const btnReturn = canComplete
+      ? `<button class="btn-return" onclick="markReturned(${realIdx})">📥 반입완료</button>`
+      : `<span style="color:#c8d3df;font-size:12px;">—</span>`;
+    const retCell = e.ret ? `${fmt(e.ret)}` : `<span style="color:#c8d3df;">—</span>`;
+    const displayStatus = e.status === 'reserved' && e.out && e.out <= todayStr ? 'out' : e.status;
+    return `
+      <tr>
+        <td>${e.name}</td>
+        <td>${e.person || '-'}</td>
+        <td>${e.dest || '-'}</td>
+        <td>${fmt(e.out)}</td>
+        <td>${retCell}</td>
+        <td><span class="status ${statusClass[displayStatus]}">${statusLabel[displayStatus]}</span></td>
+        <td>
+          <div class="aio-actions">
+            ${btnReturn}
+            <button class="mini-btn primary" onclick="openEventEditModal(${realIdx})">✏️ 수정</button>
+          </div>
+        </td>
+      </tr>`;
+  }).join('');
+}
+
+let aioEditState = { type: 'demo', index: -1 };
+
+function parseCellNotes(text) {
+  const cells = {};
+  String(text || '').split(/\n+/).map(line => line.trim()).filter(Boolean).forEach(line => {
+    const parts = line.split('=');
+    if (parts.length >= 2) {
+      const key = parts.shift().trim();
+      const value = parts.join('=').trim();
+      if (key && value) cells[key] = value;
+    }
+  });
+  return cells;
+}
+
+function stringifyCellNotes(cells) {
+  if (!cells || typeof cells !== 'object') return '';
+  return Object.entries(cells).map(([k, v]) => `${k}=${v}`).join('\n');
+}
+
+function toggleAioEditType() {
+  const type = document.getElementById('aioEditType').value;
+  aioEditState.type = type;  // 구분 변경 시 state도 동기화
+  document.getElementById('aioDemoEditFields').style.display = type === 'demo' ? '' : 'none';
+  document.getElementById('aioWaitEditFields').style.display = type === 'wait' ? '' : 'none';
+}
+
+function openAioEditModal(type, index) {
+  aioEditState = { type, index };
+  document.getElementById('aioEditType').value = type;
+  toggleAioEditType();
+
+  if (type === 'demo') {
+    const row = aioDemoRows[index] || normalizeDemoRow({});
+    document.getElementById('aioEditModalTitle').textContent = 'AIO 진행 현황 수정';
+    // 수정 시에는 직접입력 모드로
+    setAioSnMode('direct');
+    document.getElementById('aioEditSn').value      = row.sn      || '';
+    document.getElementById('aioEditModel').value   = row.model   || '';
+    document.getElementById('aioEditCurrent').value = row.current || '';
+    document.getElementById('aioEditOperator').value = row.operator || '승목';
+    document.getElementById('aioEditStart').value   = row.start   || '';
+    document.getElementById('aioEditEnd').value     = row.end     || '';
+    document.getElementById('aioEditCells').value   = (row.schedules && row.schedules[0]) ? (row.schedules[0].customer || '') : '';
+  } else {
+    const row = aioWaitingRows[index] || normalizeWaitRow({});
+    document.getElementById('aioEditModalTitle').textContent = 'AIO 대기 항목 수정';
+    document.getElementById('aioWaitTitle').value = row.title || '';
+    document.getElementById('aioWaitNote').value  = row.note  || '';
+  }
+
+  document.getElementById('aioEditModal').classList.add('show');
+}
+
+function openAddAioWaitModal() {
+  aioEditState = { type: 'wait', index: -1 };
+  document.getElementById('aioEditType').value = 'wait';
+  // 구분 드롭다운을 보이게 해서 사용자가 선택 가능하게
+  document.getElementById('aioEditType').style.display = '';
+  document.querySelector('label[for="aioEditType"]') && (document.querySelector('label[for="aioEditType"]').style.display = '');
+  toggleAioEditType();
+  document.getElementById('aioEditModalTitle').textContent = 'AIO 항목 추가';
+  document.getElementById('aioWaitTitle').value = '';
+  document.getElementById('aioWaitNote').value = '';
+  document.getElementById('aioEditSn').value = '';
+  document.getElementById('aioEditModel').value = '';
+  document.getElementById('aioEditCurrent').value = '';
+  document.getElementById('aioEditStart').value = '';
+  document.getElementById('aioEditEnd').value = '';
+  document.getElementById('aioEditCells').value = '';
+  document.getElementById('aioEditModal').classList.add('show');
+}
+
+function openAioEquipmentEdit(index) {
+  const eq = equipmentList.filter(isAioEquipment)[index];
+  if (!eq) return;
+  const realIndex = equipmentList.indexOf(eq);
+  document.getElementById('newEquipName').value  = eq.name  || '';
+  document.getElementById('newEquipSN').value    = eq.sn    || '';
+  document.getElementById('newEquipModel').value = eq.model || '';
+  document.getElementById('newEquipCat').value   = 'AIO';
+  document.querySelectorAll('input[name="equipOperator"]').forEach(r => {
+    r.checked = (r.value === (eq.operator || ''));
+  });
+  toggleEquipOperatorField();
+  document.getElementById('addEquipModal').dataset.editIndex = String(realIndex);
+  document.querySelector('#addEquipModal .modal-title').textContent = 'AIO 장비 수정';
+  document.querySelector('#addEquipModal .modal-footer .btn.btn-primary').textContent = '저장';
+  document.getElementById('addEquipModal').classList.add('show');
+}
+
+function openAioScheduleAdd(name, sn) {
+  // 장비 목록의 "일정 추가" → AIO 탭으로 이동 후 해당 SN 행의 일정 모달 바로 오픈
+  let rowIndex = aioDemoRows.findIndex(r => r.sn === sn || r.sn === name);
+
+  if (rowIndex < 0) {
+    // 타임라인에 없으면 새 행 자동 생성
+    const eq = equipmentList.find(e => e.sn === sn || e.name === name);
+    const newRow = normalizeDemoRow({
+      sn: sn || name,
+      model: eq ? (eq.cat || 'AIO') : 'AIO',
+      current: name || sn,
+      operator: '승목',
+      schedules: [],
+    });
+    aioDemoRows.push(newRow);
+    saveAioRows();
+    rowIndex = aioDemoRows.length - 1;
+  }
+
+  // AIO 탭으로 전환 후 모달 오픈
+  const aioNavBtn = document.querySelector('.nav-item[onclick*="aio"]')
+    || document.querySelector('.mobile-nav-btn[onclick*="aio"]');
+  if (aioNavBtn) showPage('aio', aioNavBtn);
+  // 탭 렌더 완료 후 모달 오픈 (renderEquipTable 이후)
+  setTimeout(() => openAioScheduleModal(rowIndex), 80);
+}
+
+function resetAddEquipModalTitle() {
+  const modal = document.getElementById('addEquipModal');
+  if (!modal) return;
+  delete modal.dataset.editIndex;
+  const titleEl = modal.querySelector('.modal-title');
+  const saveBtn = modal.querySelector('.modal-footer .btn.btn-primary');
+  if (titleEl) titleEl.textContent = '장비 추가';
+  if (saveBtn) saveBtn.textContent = '추가';
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('show');
+  if (id === 'addEquipModal') {
+    resetAddEquipModalTitle();
+    document.querySelectorAll('input[name="newEquipOperator"]').forEach(r => r.checked = false);
+    updateOpLabel();
+  }
+}
+
+async function deleteAioDemoRow(index) {
+  const row = aioDemoRows[index];
+  if (!row) return;
+  const schedCount = Array.isArray(row.schedules) ? row.schedules.filter(s => s.status !== 'in').length : 0;
+  const msg = schedCount > 0
+    ? `"${row.current || row.sn}"의 스케줄 ${schedCount}개를 모두 삭제할까요?\n\n⚠️ 장비 행은 유지됩니다. 스케줄만 삭제됩니다.`
+    : `"${row.current || row.sn}"에 활성 스케줄이 없습니다.\n달력 표시를 초기화할까요?`;
+  if (!confirm(msg)) return;
+  row.schedules = [];
+  row.start = '';
+  row.end = '';
+  await saveAioRows();
+  renderEquipTable();
+}
+
+function deleteAioWaitRow(index) {
+  if (!confirm('이 대기 항목을 삭제할까요?')) return;
+  aioWaitingRows.splice(index, 1);
+  saveAioRows();
+  renderEquipTable();
+}
+
+/* ─────────────────────── equipmentList 상태 동기화 헬퍼 ─────────────────────── */
+function syncEquipListStatus(snOrName, status, lastOut) {
+  // sn 또는 name 으로 equipmentList 에서 해당 장비 찾아 상태 업데이트
+  const eq = equipmentList.find(e =>
+    e.sn === snOrName || e.name === snOrName
+  );
+  if (!eq) return;
+  eq.status  = status;
+  if (lastOut !== undefined) eq.lastOut = lastOut;
+}
+
+// AIO row의 schedules 전체를 보고 equipmentList 상태를 결정
+// 활성 일정(오늘 기준 진행 중)이 있으면 'out', 미래 예약만 있으면 'reserved', 없으면 'storage'
+function syncEquipStatusFromRow(row) {
+  const todayStr = new Date().toISOString().substring(0, 10);
+  const scheds = row.schedules || [];
+  let newStatus = 'storage';
+  let latestOut = '';
+
+  for (const s of scheds) {
+    if (!s.start) continue;
+    if (s.start > todayStr) {
+      if (newStatus === 'storage') newStatus = 'reserved';
+    } else if (!s.end || s.end >= todayStr) {
+      newStatus = 'out';
+    }
+    if (!latestOut || s.start > latestOut) latestOut = s.start;
+  }
+
+  // equipmentList에서 해당 장비 찾아 상태만 업데이트 (자동 추가 없음)
+  syncEquipListStatus(row.sn, newStatus, latestOut);
+}
+let aioSchedState = { rowIndex: -1, editSchedIndex: -1 };
+
+const COLOR_CLASSES = ['sky', 'pink', 'green', 'amber', 'purple'];
+const COLOR_LABELS  = { sky: '하늘', pink: '분홍', green: '초록', amber: '노랑', purple: '보라' };
+
+function openAioScheduleModal(rowIndex) {
+  aioSchedState = { rowIndex, editSchedIndex: -1 };
+  const row = aioDemoRows[rowIndex];
+  if (!row) return;
+
+  document.getElementById('aioScheduleModalTitle').textContent = `일정 관리 — SN ${row.sn || row.model}`;
+  document.getElementById('aioScheduleRowInfo').innerHTML =
+    `<strong>${row.sn}</strong> · ${row.model} · <span style="color:#718096;">${row.current}</span>`;
+
+  resetSchedForm();
+  renderScheduleList(rowIndex);
+  document.getElementById('aioScheduleModal').classList.add('show');
+}
+
+function renderScheduleList(rowIndex) {
+  const row = aioDemoRows[rowIndex];
+  const schedules = row?.schedules || [];
+  const container = document.getElementById('aioScheduleList');
+  const todayStr = new Date().toISOString().substring(0, 10);
+  if (schedules.length === 0) {
+    container.innerHTML = `<div style="color:#a0aec0; font-size:13px; padding:8px 0;">등록된 일정이 없습니다.</div>`;
+    return;
+  }
+  container.innerHTML = schedules.map((s, i) => {
+    const isCompleted = s.status === 'in';
+    const isExpired   = s.end && s.end < todayStr;
+    const statusBadge = isCompleted
+      ? `<span style="font-size:10px;background:#F0FFF4;color:#276749;padding:2px 7px;border-radius:20px;font-weight:700;">반입 완료</span>`
+      : isExpired
+        ? `<span style="font-size:10px;background:#F7FAFC;color:#718096;padding:2px 7px;border-radius:20px;font-weight:700;">종료</span>`
+        : '';
+    return `
+      <div class="schedule-item-row" style="${isCompleted || isExpired ? 'opacity:0.6;' : ''}">
+        <div class="schedule-item-info">
+          <div class="schedule-item-name">
+            <span class="sched-badge ${s.color || 'sky'}" style="cursor:default;">${s.customer}</span>
+            <span style="font-size:11px; color:#718096; font-weight:500;">${s.operator}</span>
+            ${statusBadge}
+          </div>
+          <div class="schedule-item-meta">${s.start || '?'} ~ ${s.end || '?'}${s.note ? ' · ' + s.note : ''}</div>
+        </div>
+        <div class="schedule-item-actions">
+          ${!isCompleted ? `<button class="mini-btn primary" onclick="editSchedEntry(${i})">수정</button>` : ''}
+          ${!isCompleted
+            ? `<button class="mini-btn" style="background:#F0FFF4;color:#276749;border-color:#c6f6d5;" onclick="completeSchedEntry(${i})">📥 반입완료</button>`
+            : ''}
+          <button class="mini-btn danger" onclick="deleteSchedEntry(${i})">삭제</button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function selectSchedColor(color, el) {
+  document.querySelectorAll('.color-opt').forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('schedColor').value = color;
+}
+
+function resetSchedForm() {
+  document.getElementById('schedCustomer').value = '';
+  document.getElementById('schedOperator').value = '승목';
+  document.getElementById('schedStart').value = '';
+  document.getElementById('schedEnd').value = '';
+  document.getElementById('schedNote').value = '';
+  document.getElementById('schedColor').value = 'sky';
+  document.getElementById('schedEditIndex').value = '-1';
+  document.querySelectorAll('.color-opt').forEach(e => {
+    e.classList.toggle('selected', e.dataset.color === 'sky');
+  });
+  document.getElementById('aioSchedFormTitle').textContent = '새 일정 추가';
+  document.getElementById('schedSaveBtn').textContent = '+ 일정 추가';
+}
+
+function cancelSchedEdit() {
+  aioSchedState.editSchedIndex = -1;
+  resetSchedForm();
+}
+
+function editSchedEntry(schedIndex) {
+  const row = aioDemoRows[aioSchedState.rowIndex];
+  const s = row?.schedules?.[schedIndex];
+  if (!s) return;
+  aioSchedState.editSchedIndex = schedIndex;
+  document.getElementById('schedCustomer').value = s.customer || '';
+  document.getElementById('schedOperator').value = s.operator || '승목';
+  document.getElementById('schedStart').value = s.start || '';
+  document.getElementById('schedEnd').value = s.end || '';
+  document.getElementById('schedNote').value = s.note || '';
+  document.getElementById('schedColor').value = s.color || 'sky';
+  document.getElementById('schedEditIndex').value = String(schedIndex);
+  document.querySelectorAll('.color-opt').forEach(e => {
+    e.classList.toggle('selected', e.dataset.color === (s.color || 'sky'));
+  });
+  document.getElementById('aioSchedFormTitle').textContent = '일정 수정';
+  document.getElementById('schedSaveBtn').textContent = '수정 저장';
+}
+
+async function completeSchedEntry(schedIndex) {
+  const row = aioDemoRows[aioSchedState.rowIndex];
+  if (!row?.schedules) return;
+  const s = row.schedules[schedIndex];
+  if (!s) return;
+  const today = new Date().toISOString().substring(0, 10);
+  if (!confirm(`"${s.customer}" 일정을 반입 완료 처리할까요?\n\n반출일: ${s.start}\n반입일: ${today}`)) return;
+
+  // ── 1. 일정에 반입완료 상태 + 반입일 기록
+  s.status = 'in';
+  s.actualRet = today;  // 실제 반입일 별도 보관
+
+  // ── 2. AIO 데모 데이터 저장 (schedules에 status:'in' 포함)
+  await saveAioRows();
+
+  // ── 3. events 배열에 이력 추가/업데이트
+  const linkedEquip = equipmentList.find(e =>
+    String(e.sn) === String(row.sn) ||
+    String(e.sn).endsWith(String(row.sn)) ||
+    e.name === row.sn
+  );
+  const equipName = linkedEquip ? linkedEquip.name : row.sn;
+
+  const ev = {
+    name:       equipName,
+    person:     s.operator,
+    dest:       s.customer + (s.note ? ' · ' + s.note : ''),
+    out:        s.start,
+    ret:        today,
+    status:     'in',
+    _aioLinked: true,
+  };
+
+  const linkedIdx = events.findIndex(e =>
+    (e.name === equipName || e.name === row.sn) &&
+    e.out === s.start
+  );
+  if (linkedIdx >= 0) {
+    events[linkedIdx] = { ...events[linkedIdx], ...ev };
+  } else {
+    events.unshift(ev);
+  }
+
+  // ── 4. Google Sheets events 시트 저장
+  showLoading('반입 완료 저장 중...');
+  try {
+    if (linkedIdx >= 0) {
+      // 기존 행 업데이트
+      await fetch(GAS_URL, {
+        method: 'POST', mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'updateStatus', name: equipName, out: s.start, status: 'in', ret: today })
+      });
+    } else {
+      // 새 행 추가
+      await fetch(GAS_URL, {
+        method: 'POST', mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'event', name: equipName, person: s.operator, dest: ev.dest, out: s.start, ret: today, status: 'in' })
+      });
+    }
+  } catch(err) { console.warn('이력 저장 실패:', err); }
+  hideLoading();
+
+  // ── 5. 화면 갱신
+  syncEquipStatusFromRow(row);
+  renderScheduleList(aioSchedState.rowIndex);
+  renderEquipTable();
+  renderDashboard();
+  renderList();
+  renderHistory();
+  alert(`✅ "${s.customer}" 반입 완료!\n반출일: ${s.start} → 반입일: ${today}`);
+}
+
+async function deleteSchedEntry(schedIndex) {
+  const row = aioDemoRows[aioSchedState.rowIndex];
+  if (!row?.schedules) return;
+  const s = row.schedules[schedIndex];
+  if (!confirm(`다음 일정을 삭제할까요?\n\n고객사: ${s?.customer || '-'}\n기간: ${s?.start || '?'} ~ ${s?.end || '?'}\n담당자: ${s?.operator || '-'}\n\n⚠️ 삭제하면 복구할 수 없습니다.`)) return;
+  const removedSched = row.schedules[schedIndex];
+  row.schedules.splice(schedIndex, 1);
+  syncRowPeriodFromSchedules(row);
+  await saveAioRows();
+  // ── events 동기화
+  if (removedSched) removeSchedFromEvents(row, removedSched);
+  // ── equipmentList 상태 동기화 + 자동 추가 + renderEquipTable
+  syncEquipStatusFromRow(row);
+  renderScheduleList(aioSchedState.rowIndex);
+  renderEquipTable();
+}
+
+async function saveScheduleEntry() {
+  const rowIndex = aioSchedState.rowIndex;
+  const row = aioDemoRows[rowIndex];
+  if (!row) return;
+
+  const customer = document.getElementById('schedCustomer').value.trim();
+  const operator = document.getElementById('schedOperator').value;
+  const start    = document.getElementById('schedStart').value;
+  const end      = document.getElementById('schedEnd').value;
+  const note     = document.getElementById('schedNote').value.trim();
+  const color    = document.getElementById('schedColor').value || 'sky';
+
+  if (!customer) { alert('고객사명을 입력해 주세요.'); return; }
+  if (!start)    { alert('시작일을 입력해 주세요.'); return; }
+
+  if (!Array.isArray(row.schedules)) row.schedules = [];
+
+  const entry = { customer, operator, start, end, note, color };
+  const editIdx = parseInt(document.getElementById('schedEditIndex').value, 10);
+
+  if (editIdx >= 0) {
+    row.schedules[editIdx] = entry;
+  } else {
+    row.schedules.push(entry);
+    // 색상 자동: 다음 입력을 위해 순환
+    const nextColor = COLOR_CLASSES[(COLOR_CLASSES.indexOf(color) + 1) % COLOR_CLASSES.length];
+    document.getElementById('schedColor').value = nextColor;
+    document.querySelectorAll('.color-opt').forEach(e => e.classList.toggle('selected', e.dataset.color === nextColor));
+  }
+
+  // row.start/end 동기화 (전체 span)
+  syncRowPeriodFromSchedules(row);
+  // 기존 cells 도 재생성
+  row.cells = {};
+  row.schedules.forEach(s => {
+    if (s.start) {
+      const lbl = isoToLabel(s.start);
+      if (lbl) row.cells[lbl] = s.customer + (s.note ? ' ' + s.note : '');
+    }
+  });
+  // operator: schedules 중 첫 번째 담당자로
+  if (row.schedules.length > 0) row.operator = row.schedules[0].operator;
+
+  await saveAioRows();
+  // ── events 양방향 동기화
+  syncSchedToEvents(row, entry, editIdx);
+  // ── equipmentList 상태 동기화
+  syncEquipStatusFromRow(row);
+  resetSchedForm();
+  renderScheduleList(rowIndex);
+  renderEquipTable();
+}
+
+function syncRowPeriodFromSchedules(row) {
+  const s = row.schedules || [];
+  const starts = s.map(x => x.start).filter(Boolean).sort();
+  const ends   = s.map(x => x.end).filter(Boolean).sort();
+  row.start = starts[0] || '';
+  row.end   = ends[ends.length - 1] || '';
+}
+
+function isoToLabel(isoDate) {
+  if (!isoDate) return '';
+  const parts = isoDate.split('-');
+  if (parts.length < 3) return '';
+  const m = parseInt(parts[1], 10);
+  const d = parseInt(parts[2], 10);
+  return `${m}/${d}`;
+}
+
+function setAioSnMode(mode) {
+  const isList = mode === 'list';
+  document.getElementById('aioSnFromList').style.display  = isList ? '' : 'none';
+  document.getElementById('aioSnDirect').style.display    = isList ? 'none' : '';
+  document.getElementById('aioSnModeBtnList').classList.toggle('active', isList);
+  document.getElementById('aioSnModeBtnDirect').classList.toggle('active', !isList);
+  if (!isList) {
+    document.getElementById('aioSelectedEquipInfo').style.display = 'none';
+    document.getElementById('aioEditSn').value = '';
+    document.getElementById('aioEditModel').value = '';
+  }
+}
+
+function populateAioDemoEquipSelect() {
+  const sel = document.getElementById('aioEquipSelect');
+  if (!sel) return;
+  const aioEquip = equipmentList.filter(e => String(e.cat || '').trim() === 'AIO');
+  sel.innerHTML = '<option value="">— 선택 —</option>' +
+    aioEquip.map(e => `<option value="${e.sn}" data-model="${e.model || ''}" data-name="${e.name || ''}" data-operator="${e.operator || ''}">${e.name} (SN: ${e.sn}${e.model ? ' / ' + e.model : ''})</option>`).join('');
+}
+
+function onAioEquipSelect() {
+  const sel = document.getElementById('aioEquipSelect');
+  const opt = sel.options[sel.selectedIndex];
+  if (!opt || !opt.value) {
+    document.getElementById('aioSelectedEquipInfo').style.display = 'none';
+    document.getElementById('aioEditSn').value    = '';
+    document.getElementById('aioEditModel').value = '';
+    return;
+  }
+  const sn       = opt.value;
+  const model    = opt.dataset.model    || '';
+  const name     = opt.dataset.name     || '';
+  const operator = opt.dataset.operator || '';
+  document.getElementById('aioEditSn').value    = sn;
+  document.getElementById('aioEditModel').value = model;
+  // 담당자 자동 세팅 — equipmentList에 등록된 담당자로
+  const opSel = document.getElementById('aioEditOperator');
+  if (opSel && operator) {
+    // 선택지에 해당 값이 있으면 세팅, 없으면 승목으로 기본값
+    const opExists = Array.from(opSel.options).some(o => o.value === operator);
+    opSel.value = opExists ? operator : '승목';
+  }
+  const infoEl = document.getElementById('aioSelectedEquipInfo');
+  document.getElementById('aioSelectedEquipText').textContent =
+    `선택: ${name}  |  SN: ${sn}${model ? '  |  Model: ' + model : ''}${operator ? '  |  담당: ' + operator : ''}`;
+  infoEl.style.display = '';
+}
+
+function openAddAioDemoRow() {
+  aioEditState = { type: 'demo', index: -1 };
+  document.getElementById('aioEditType').value = 'demo';
+  toggleAioEditType();
+  document.getElementById('aioEditModalTitle').textContent = 'AIO 진행 현황 추가';
+  // 장비 선택 모드 초기화
+  setAioSnMode('list');
+  populateAioDemoEquipSelect();
+  document.getElementById('aioEquipSelect').value = '';
+  document.getElementById('aioSelectedEquipInfo').style.display = 'none';
+  document.getElementById('aioEditSn').value    = '';
+  document.getElementById('aioEditModel').value = '';
+  document.getElementById('aioEditCurrent').value  = '';
+  document.getElementById('aioEditOperator').value = '승목';
+  document.getElementById('aioEditStart').value = '';
+  document.getElementById('aioEditEnd').value   = '';
+  document.getElementById('aioEditCells').value = '';
+  document.getElementById('aioEditModal').classList.add('show');
+}
+
+async function saveAioEdit() {
+  const type = document.getElementById('aioEditType').value;
+  if (type === 'demo') {
+    const sn = document.getElementById('aioEditSn').value.trim();
+    const model    = document.getElementById('aioEditModel').value.trim();
+    const current  = document.getElementById('aioEditCurrent').value.trim();
+    const operator = document.getElementById('aioEditOperator').value;
+    const start    = document.getElementById('aioEditStart').value;
+    const end      = document.getElementById('aioEditEnd').value;
+    const customer = document.getElementById('aioEditCells').value.trim(); // 달력 표시 고객사
+    if (!sn && !model && !current) {
+      alert('Demo SN, Model name, 현재위치 중 최소 하나는 입력해 주세요.');
+      return;
+    }
+    const target = aioEditState.index >= 0 ? aioDemoRows[aioEditState.index] : null;
+    const row = target || normalizeDemoRow({});
+    row.sn       = sn;
+    row.model    = model;
+    row.current  = current;
+    row.operator = operator;
+    row.start    = start;
+    row.end      = end;
+    row.cells    = {};  // cells는 더 이상 사용 안 함
+
+    // schedules: 고객사 + start~end 기간으로 단일 일정 생성/갱신
+    const color = operator === '현수' ? 'pink' : 'sky';
+    if (start && customer) {
+      if (Array.isArray(row.schedules) && row.schedules.length === 1) {
+        // 기존 단일 일정 업데이트
+        row.schedules[0].customer = customer;
+        row.schedules[0].operator = operator;
+        row.schedules[0].start    = start;
+        row.schedules[0].end      = end;
+        row.schedules[0].color    = color;
+      } else if (!Array.isArray(row.schedules) || row.schedules.length === 0) {
+        // 새 일정 생성
+        row.schedules = [{ customer, operator, start, end, note: '', color }];
+      }
+      // 다중 일정인 경우 건드리지 않음 (일정 모달에서 개별 수정)
+    } else if (start && !customer) {
+      // 고객사 미입력 시 current로 대체
+      if (!Array.isArray(row.schedules) || row.schedules.length === 0) {
+        row.schedules = [{ customer: current || sn, operator, start, end, note: '', color }];
+      }
+    }
+    if (aioEditState.index < 0) aioDemoRows.push(row);  // unshift → push (순서 유지)
+    saveAioRows();
+    renderEquipTable();
+    closeModal('aioEditModal');
+    return;
+  }
+
+  const title = document.getElementById('aioWaitTitle').value.trim();
+  const note = document.getElementById('aioWaitNote').value.trim();
+  if (!title) {
+    alert('항목을 입력해 주세요.');
+    return;
+  }
+  const target = aioEditState.index >= 0 ? aioWaitingRows[aioEditState.index] : null;
+  const row = target || normalizeWaitRow({});
+  row.title = title;
+  row.note = note;
+  if (aioEditState.index < 0) aioWaitingRows.unshift(row);
+  saveAioRows();
+  renderEquipTable();
+  closeModal('aioEditModal');
+}
+
+function openAddAioModal() {
+  document.getElementById('newEquipName').value  = '';
+  document.getElementById('newEquipSN').value    = '';
+  document.getElementById('newEquipModel').value = '';
+  document.getElementById('newEquipCat').value   = 'AIO';
+  document.querySelectorAll('input[name="equipOperator"]').forEach(r => r.checked = false);
+  toggleEquipOperatorField();
+  delete document.getElementById('addEquipModal').dataset.editIndex;
+  document.querySelector('#addEquipModal .modal-title').textContent = 'AIO 장비 추가';
+  document.querySelector('#addEquipModal .modal-footer .btn.btn-primary').textContent = '추가';
+  document.getElementById('addEquipModal').classList.add('show');
+}
+
+function openAddEquipModal() {
+  document.getElementById('newEquipName').value = '';
+  document.getElementById('newEquipSN').value = '';
+  document.getElementById('newEquipCat').value = '장비';
+  document.querySelectorAll('input[name="equipOperator"]').forEach(r => r.checked = false);
+  toggleEquipOperatorField();
+  delete document.getElementById('addEquipModal').dataset.editIndex;
+  document.querySelector('#addEquipModal .modal-title').textContent = '장비 추가';
+  document.querySelector('#addEquipModal .modal-footer .btn.btn-primary').textContent = '추가';
+  document.getElementById('addEquipModal').classList.add('show');
+}
+
+function toggleEquipOperatorField() {
+  const cat = document.getElementById('newEquipCat').value;
+  document.getElementById('equipOperatorGroup').style.display = cat === 'AIO' ? '' : 'none';
+}
+
+function updateOpLabel() {} // 레거시 호환용 빈 함수
 
 async function addEquipment() {
-  const name = document.getElementById('newEquipName').value.trim();
-  const sn   = document.getElementById('newEquipSN').value.trim();
-  const cat  = document.getElementById('newEquipCat').value;
+  const modal     = document.getElementById('addEquipModal');
+  const editIndex = modal.dataset.editIndex ? Number(modal.dataset.editIndex) : -1;
+  const name      = document.getElementById('newEquipName').value.trim();
+  const sn        = document.getElementById('newEquipSN').value.trim();
+  const model     = document.getElementById('newEquipModel').value.trim();
+  const cat       = document.getElementById('newEquipCat').value;
+  const opRadio   = document.querySelector('input[name="equipOperator"]:checked');
+  const operator  = cat === 'AIO' ? (opRadio ? opRadio.value : '') : '';
   if (!name || !sn) { alert('장비명과 시리얼 번호를 입력해 주세요.'); return; }
-  const eq = { name, sn, cat, status: 'storage', lastOut: '' };
-  showLoading('장비 추가 중...');
+  const eq = { name, sn, model, cat, status: 'storage', lastOut: '', operator };
+  showLoading(editIndex >= 0 ? '장비 수정 중...' : '장비 추가 중...');
   await saveEquipmentToSheet(eq);
-  equipmentList.push(eq);
+  if (editIndex >= 0 && equipmentList[editIndex]) {
+    equipmentList[editIndex] = eq;
+  } else {
+    equipmentList.push(eq);
+  }
   hideLoading();
   closeModal('addEquipModal');
   renderEquipTable();
   renderDashboard();
-  document.getElementById('newEquipName').value = '';
-  document.getElementById('newEquipSN').value = '';
-  alert(name + ' 이(가) 추가되었습니다.');
+  populateAioDemoEquipSelect();
+  delete modal.dataset.editIndex;
+  alert(name + ' 이(가) 저장되었습니다.');
 }
 
 /* ─────────────────────── 예약 선택지 ─────────────────────── */
@@ -892,9 +2675,11 @@ async function markReturned(idx) {
   e.status = 'in';
   e.ret = today;
 
-  // equipmentList 상태도 storage로 업데이트
-  const eq = equipmentList.find(eq => eq.name === e.name);
-  if (eq) eq.status = 'storage';
+  // equipmentList 상태도 storage로 업데이트 (name 또는 sn 매칭)
+  syncEquipListStatus(e.name, 'storage');
+  // AIO row에서 해당 SN 장비도 상태 재계산
+  const linkedRow = aioDemoRows.find(r => r.sn === e.name || r.linkedName === e.name);
+  if (linkedRow) syncEquipStatusFromRow(linkedRow);
 
   showLoading('반입 완료 처리 중...');
   // events 시트 업데이트
@@ -910,6 +2695,8 @@ async function markReturned(idx) {
     body: JSON.stringify({ type: 'updateEquipStatus', name: e.name, status: 'storage' })
   });
   hideLoading();
+  // ── AIO 타임라인 반입 완료 동기화
+  syncReturnToAio(e.name, e.out, today);
   renderDashboard();
   renderList();
   renderHistory();
@@ -943,6 +2730,8 @@ async function submitSetRet() {
     body: JSON.stringify({ type: 'updateStatus', name: e.name, out: e.out, status: e.status, ret: e.ret })
   });
   hideLoading();
+  // ── AIO 타임라인 반입 예정일 동기화
+  syncReturnToAio(e.name, e.out, newRet);
   closeModal('setRetModal');
   renderDashboard();
   renderList();
@@ -980,6 +2769,84 @@ function renderHistory() {
 
 /* ─────────────────────── Google Sheets 연동 ─────────────────────── */
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbxjvny8DI8h0POmxEosUsqCOLCHeMc9ZKRELvR9ceBO3Tp5Z7lCLMOmZyb34fo4Safg/exec';
+const CACHE_KEY = 'demoTracker_cache_v1';
+const CACHE_TTL = 5 * 60 * 1000; // 5분
+
+function saveToCache(json) {
+  try {
+    sessionStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data: json }));
+  } catch(e) {}
+}
+
+function loadFromCache() {
+  try {
+    const raw = sessionStorage.getItem(CACHE_KEY);
+    if (!raw) return null;
+    const { ts, data } = JSON.parse(raw);
+    if (Date.now() - ts > CACHE_TTL) return null;
+    return data;
+  } catch(e) { return null; }
+}
+
+function applySheetData(json) {
+  if (!json || json.status !== 'ok') return false;
+
+  events.length = 0;
+  (json.events || []).forEach(row => {
+    if (row.name) events.push({
+      name:   row.name   || '',
+      person: row.person || '',
+      dest:   row.dest   || '-',
+      out:    String(row.out  || '').substring(0, 10),
+      ret:    String(row.ret  || '').substring(0, 10),
+      status: row.status || 'reserved'
+    });
+  });
+  events.reverse();
+
+  equipmentList.length = 0;
+  (json.equipment || []).forEach(row => {
+    if (row.name) equipmentList.push({
+      name:     row.name     || '',
+      sn:       row.sn       || '',
+      model:    row.model    || '',
+      cat:      row.cat      || '장비',
+      status:   row.status   || 'storage',
+      lastOut:  String(row.lastOut  || '').substring(0, 10),
+      operator: row.operator || ''
+    });
+  });
+
+  if (json.aioDemo && json.aioDemo.length > 0) {
+    aioDemoRows = json.aioDemo.map(row => normalizeDemoRow({
+      sn:        String(row.sn       || ''),
+      model:     String(row.model    || ''),
+      current:   String(row.current  || ''),
+      operator:  String(row.operator || ''),
+      start:     String(row.start    || '').substring(0, 10),
+      end:       String(row.end      || '').substring(0, 10),
+      schedules: (() => {
+        try { return JSON.parse(row.schedules || '[]'); } catch(e) { return []; }
+      })()
+    })).filter(Boolean);
+  }
+
+  if (json.aioWaiting && json.aioWaiting.length > 0) {
+    aioWaitingRows = json.aioWaiting.map(row => normalizeWaitRow({
+      title: String(row.title || ''),
+      note:  String(row.note  || '')
+    })).filter(Boolean);
+  }
+  return true;
+}
+
+function renderAll() {
+  renderDashboard();
+  renderList();
+  populateEquipSelect();
+  populateAioDemoEquipSelect();
+  renderEquipTable();
+}
 
 function showLoading(msg) {
   let el = document.getElementById('loadingToast');
@@ -998,47 +2865,38 @@ function hideLoading() {
 }
 
 async function loadEventsFromSheet() {
+  // 1) 캐시가 있으면 즉시 표시
+  const cached = loadFromCache();
+  if (cached) {
+    applySheetData(cached);
+    renderAll();
+    // 2) 백그라운드에서 최신 데이터 fetch 후 갱신
+    fetch(GAS_URL)
+      .then(r => r.json())
+      .then(json => {
+        saveToCache(json);
+        if (applySheetData(json)) renderAll();
+      })
+      .catch(e => console.warn('백그라운드 갱신 실패:', e));
+    return;
+  }
+
+  // 3) 캐시 없으면 로딩 표시 후 fetch
   showLoading('데이터 불러오는 중...');
   try {
     const res = await fetch(GAS_URL);
     const json = await res.json();
-    if (json.status === 'ok') {
-      // 이벤트 로드
-      events.length = 0;
-      (json.events || []).forEach(row => {
-        if (row.name) events.push({
-          name:   row.name   || '',
-          person: row.person || '',
-          dest:   row.dest   || '-',
-          out:    String(row.out  || '').substring(0, 10),
-          ret:    String(row.ret  || '').substring(0, 10),
-          status: row.status || 'reserved'
-        });
-      });
-      events.reverse();
-
-      // 장비 목록 로드
-      equipmentList.length = 0;
-      (json.equipment || []).forEach(row => {
-        if (row.name) equipmentList.push({
-          name:    row.name    || '',
-          sn:      row.sn      || '',
-          cat:     row.cat     || '장비',
-          status:  row.status  || 'storage',
-          lastOut: String(row.lastOut || '').substring(0, 10)
-        });
-      });
-    }
+    saveToCache(json);
+    applySheetData(json);
   } catch(e) {
     console.error('Sheets 불러오기 실패:', e);
   }
   hideLoading();
-  renderDashboard();
-  renderList();
-  populateEquipSelect();
+  renderAll();
 }
 
 async function saveEventToSheet(ev) {
+  try { sessionStorage.removeItem(CACHE_KEY); } catch(e) {}
   await fetch(GAS_URL, {
     method: 'POST',
     mode: 'no-cors',
@@ -1067,9 +2925,32 @@ function getEquipName(mode, prefix) {
   }
 }
 
+function getSelectedEquipment(mode, prefix) {
+  if (mode === 'direct') {
+    const name = document.getElementById(prefix + 'DirectName').value.trim();
+    const snEl = document.getElementById(prefix + 'DirectSN');
+    const catEl = document.getElementById(prefix + 'DirectCat');
+    return {
+      name,
+      sn: snEl ? snEl.value.trim() : '',
+      cat: catEl ? catEl.value : '장비'
+    };
+  }
+
+  const sel = document.getElementById(prefix === 'page' ? 'reserveEquipSelect' : 'modalEquipSelect');
+  const name = sel.value.split(' (')[0];
+  const eq = equipmentList.find(item => item.name === name);
+  return {
+    name,
+    sn: eq ? eq.sn : '',
+    cat: eq ? eq.cat : '장비'
+  };
+}
+
 async function submitPageReservation() {
   const mode   = document.getElementById('pageModeBtnDirect').classList.contains('active') ? 'direct' : 'list';
-  const name   = getEquipName(mode, 'page');
+  const equip  = getSelectedEquipment(mode, 'page');
+  const name   = equip.name;
   const person = document.getElementById('pagePersonName').value.trim();
   const dest   = document.getElementById('pageDest').value.trim();
   const outD   = document.getElementById('pageOutDate').value;
@@ -1086,12 +2967,21 @@ async function submitPageReservation() {
 
   // equipmentList 상태 업데이트
   const eq = equipmentList.find(eq => eq.name === name);
-  if (eq) { eq.status = 'reserved'; eq.lastOut = outD; }
+  if (eq) {
+    eq.status = 'reserved';
+    eq.lastOut = outD;
+  } else if (mode === 'direct') {
+    equipmentList.unshift({ name, sn: equip.sn || '', cat: equip.cat || '장비', status: 'reserved', lastOut: outD });
+  }
   await fetch(GAS_URL, {
     method: 'POST', mode: 'no-cors',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ type: 'updateEquipStatus', name, status: 'reserved', lastOut: outD })
+    body: JSON.stringify({ type: 'updateEquipStatus', name, status: 'reserved', lastOut: outD, cat: equip.cat || '장비', sn: equip.sn || '' })
   });
+
+  if (String(equip.cat || '').trim().toUpperCase() === 'AIO') {
+    syncAioReservationToTable({ equipmentName: name, equipmentSn: equip.sn, person, outD, retD, purpose: dest || '-' });
+  }
 
   hideLoading();
   renderDashboard();
@@ -1103,7 +2993,8 @@ async function submitPageReservation() {
 
 async function submitModalReservation() {
   const mode   = document.getElementById('modalModeBtnDirect').classList.contains('active') ? 'direct' : 'list';
-  const name   = getEquipName(mode, 'modal');
+  const equip  = getSelectedEquipment(mode, 'modal');
+  const name   = equip.name;
   const person = document.getElementById('modalPersonName').value.trim();
   const outD   = document.getElementById('modalOutDate').value;
   const retD   = document.getElementById('modalRetDate').value;
@@ -1118,14 +3009,31 @@ async function submitModalReservation() {
   await saveEventToSheet(ev);
   events.unshift(ev);
 
-  // equipmentList 상태 업데이트
+  // equipmentList 상태 업데이트 — cat도 반드시 갱신
   const eq = equipmentList.find(eq => eq.name === name);
-  if (eq) { eq.status = 'reserved'; eq.lastOut = outD; }
-  await fetch(GAS_URL, {
-    method: 'POST', mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ type: 'updateEquipStatus', name, status: 'reserved', lastOut: outD })
-  });
+  if (eq) {
+    eq.status = 'reserved';
+    eq.lastOut = outD;
+    if (equip.cat) eq.cat = equip.cat; // 악세서리 등 cat 업데이트
+    // equipment 시트 상태 업데이트
+    await fetch(GAS_URL, {
+      method: 'POST', mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'updateEquipStatus', name, status: 'reserved', lastOut: outD, cat: equip.cat || eq.cat || '장비', sn: equip.sn || eq.sn || '' })
+    });
+  } else if (mode === 'direct') {
+    equipmentList.unshift({ name, sn: equip.sn || '', cat: equip.cat || '장비', status: 'reserved', lastOut: outD });
+    // 신규 장비 equipment 시트에 추가
+    await fetch(GAS_URL, {
+      method: 'POST', mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'equipment', name, sn: equip.sn || '', model: '', cat: equip.cat || '장비', status: 'reserved', lastOut: outD, operator: '' })
+    });
+  }
+
+  if (String(equip.cat || '').trim().toUpperCase() === 'AIO') {
+    syncAioReservationToTable({ equipmentName: name, equipmentSn: equip.sn, person, outD, retD, purpose: purpose || '-' });
+  }
 
   hideLoading();
   renderDashboard();
@@ -1151,11 +3059,91 @@ function resetPageForm() {
 }
 
 /* ─────────────────────── 모달 ─────────────────────── */
-function openModal() { populateEquipSelect(); setModalEquipMode('list'); document.getElementById('reserveModal').classList.add('show'); }
-function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+let reserveModalPreset = { title: '빠른 예약 신청', cat: '' };
+
+function openModal() {
+  reserveModalPreset = { title: '빠른 예약 신청', cat: '' };
+  populateEquipSelect();
+  setModalEquipMode('list');
+  document.querySelector('#reserveModal .modal-title').textContent = reserveModalPreset.title;
+  document.getElementById('reserveModal').classList.add('show');
+}
+
+function openAccessoryModal() {
+  reserveModalPreset = { title: 'AIO 데모악세서리', cat: '악세서리' };
+  populateEquipSelect();
+  setModalEquipMode('direct');
+  document.querySelector('#reserveModal .modal-title').textContent = reserveModalPreset.title;
+  document.getElementById('modalDirectCat').value = reserveModalPreset.cat;
+  document.getElementById('reserveModal').classList.add('show');
+}
+/* ─────────────────────── 자동 갱신 ─────────────────────── */
+let refreshTimer = null;
+let midnightTimer = null;
+
+function scheduleMidnightRefresh() {
+  if (midnightTimer) clearTimeout(midnightTimer);
+  const now = new Date();
+  const nextMidnight = new Date(now);
+  nextMidnight.setHours(24, 0, 0, 0);
+  midnightTimer = setTimeout(async () => {
+    await loadEventsFromSheet();
+    renderEquipTable();
+    scheduleMidnightRefresh();
+  }, nextMidnight - now);
+}
+
+function startAutoRefresh() {
+  if (refreshTimer) clearInterval(refreshTimer);
+  refreshTimer = setInterval(async () => {
+    await loadEventsFromSheet();
+    renderEquipTable();
+  }, 5 * 60 * 1000);
+
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+      loadEventsFromSheet();
+    }
+  });
+  window.addEventListener('focus', () => loadEventsFromSheet());
+  scheduleMidnightRefresh();
+}
 
 /* ─────────────────────── 초기화 ─────────────────────── */
-loadEventsFromSheet();
+function initAioToEventsSync() {
+  // 페이지 로드 시 AIO 일정을 events에 초기 반영 (중복 방지)
+  aioDemoRows.forEach(row => {
+    // ── equipmentList 상태도 AIO 일정 기준으로 초기 동기화
+    syncEquipStatusFromRow(row);
+
+    (row.schedules || []).forEach(sched => {
+      if (!sched.start) return;
+      const already = events.some(e =>
+        e._aioLinked &&
+        (e.name === row.sn || e.name === row.linkedName) &&
+        e.out === sched.start
+      );
+      if (!already) {
+        events.push({
+          name: row.sn,
+          person: sched.operator || row.operator || '-',
+          dest: sched.customer + (sched.note ? ' · ' + sched.note : ''),
+          out: sched.start,
+          ret: sched.end || '',
+          status: 'reserved',
+          _aioLinked: true,
+        });
+      }
+    });
+  });
+}
+
+loadEventsFromSheet().then(() => {
+  initAioToEventsSync();
+  renderDashboard();
+  renderList();
+});
+startAutoRefresh();
 </script>
 </body>
 </html>
