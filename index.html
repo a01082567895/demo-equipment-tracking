@@ -1268,10 +1268,7 @@ async function saveAioRows() {
   // 데이터 변경 시 캐시 무효화
   try { sessionStorage.removeItem(CACHE_KEY); } catch(e) {}
   try {
-    await fetch(GAS_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
+    await gasPost({
         type: 'saveAioDemo',
         rows: aioDemoRows.map(r => ({
           sn:        r.sn        || '',
@@ -1282,16 +1279,11 @@ async function saveAioRows() {
           end:       r.end       || '',
           schedules: JSON.stringify(r.schedules || [])
         }))
-      })
-    });
-    await fetch(GAS_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
+      });
+    await gasPost({
         type: 'saveAioWaiting',
         rows: aioWaitingRows.map(r => ({ title: r.title || '', note: r.note || '' }))
-      })
-    });
+      });
     // 저장 후 2초 대기 후 GAS에서 최신 데이터 받아 캐시 갱신
     setTimeout(() => refreshCacheFromSheet(), 2000);
   } catch (err) {
@@ -1606,11 +1598,7 @@ async function saveEventEdit() {
   // Google Sheets 업데이트
   showLoading('저장 중...');
   try {
-    await fetch(GAS_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: 'updateStatus', name: e.name, out: e.out, status: e.status, ret: e.ret })
-    });
+    await gasPost({ type: 'updateStatus', name: e.name, out: e.out, status: e.status, ret: e.ret });
   } catch(err) { console.warn('Sheets 업데이트 실패:', err); }
   hideLoading();
 
@@ -1658,11 +1646,7 @@ async function deleteEvent(idx) {
   // ── Google Sheets 삭제 요청 ──
   showLoading('삭제 중...');
   try {
-    await fetch(GAS_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: 'deleteEvent', name: evName, out: evOut })
-    });
+    await gasPost({ type: 'deleteEvent', name: evName, out: evOut });
   } catch(err) { console.warn('Sheets 삭제 실패:', err); }
   hideLoading();
 
@@ -2401,18 +2385,10 @@ async function completeSchedEntry(schedIndex) {
   try {
     if (linkedIdx >= 0) {
       // 기존 행 업데이트
-      await fetch(GAS_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: 'updateStatus', name: equipName, out: s.start, status: 'in', ret: today })
-      });
+      await gasPost({ type: 'updateStatus', name: equipName, out: s.start, status: 'in', ret: today });
     } else {
       // 새 행 추가
-      await fetch(GAS_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: 'event', name: equipName, person: s.operator, dest: ev.dest, out: s.start, ret: today, status: 'in' })
-      });
+      await gasPost({ type: 'event', name: equipName, person: s.operator, dest: ev.dest, out: s.start, ret: today, status: 'in' });
     }
   } catch(err) { console.warn('이력 저장 실패:', err); }
   hideLoading();
@@ -2757,16 +2733,8 @@ async function markReturned(idx) {
 
   showLoading('반입 완료 처리 중...');
   try { sessionStorage.removeItem(CACHE_KEY); } catch(err) {}
-  await fetch(GAS_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ type: 'updateStatus', name: e.name, out: e.out, status: 'in', ret: e.ret })
-  });
-  await fetch(GAS_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ type: 'updateEquipStatus', name: e.name, status: 'storage' })
-  });
+  await gasPost({ type: 'updateStatus', name: e.name, out: e.out, status: 'in', ret: e.ret });
+  await gasPost({ type: 'updateEquipStatus', name: e.name, status: 'storage' });
   // 저장 후 GAS에서 최신 데이터 받아 캐시 갱신 (2초 딜레이로 GAS 처리 대기)
   await new Promise(r => setTimeout(r, 2000));
   await refreshCacheFromSheet();
@@ -2794,11 +2762,7 @@ async function submitSetRet() {
 
   e.ret = newRet;
   showLoading('저장 중...');
-  await fetch(GAS_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ type: 'updateStatus', name: e.name, out: e.out, status: e.status, ret: e.ret })
-  });
+  await gasPost({ type: 'updateStatus', name: e.name, out: e.out, status: e.status, ret: e.ret });
   hideLoading();
   // ── AIO 타임라인 반입 예정일 동기화
   syncReturnToAio(e.name, e.out, newRet);
@@ -2857,6 +2821,20 @@ function loadFromCache() {
     if (Date.now() - ts > CACHE_TTL) return null;
     return data;
   } catch(e) { return null; }
+}
+
+// GAS POST 헬퍼 — text/plain + no-cors (GAS가 실제로 받을 수 있는 방식)
+async function gasPost(payload) {
+  try {
+    await fetch(GAS_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(payload)
+    });
+  } catch(e) {
+    console.warn('GAS POST 실패:', e);
+  }
 }
 
 // 저장 후 GAS에서 최신 데이터를 받아 캐시 갱신 (저장 확인용)
@@ -2976,11 +2954,7 @@ async function autoCompleteExpiredSchedules() {
       }
       // GAS events 시트에도 저장
       try {
-        await fetch(GAS_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ type: 'event', name: equipName, person: s.operator, dest: ev.dest, out: s.start, ret: s.end, status: 'in' })
-        });
+        await gasPost({ type: 'event', name: equipName, person: s.operator, dest: ev.dest, out: s.start, ret: s.end, status: 'in' });
       } catch(e) { console.warn('자동 이력 저장 실패:', e); }
     }
   }
@@ -3039,19 +3013,11 @@ async function loadEventsFromSheet() {
 
 async function saveEventToSheet(ev) {
   try { sessionStorage.removeItem(CACHE_KEY); } catch(e) {}
-  await fetch(GAS_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ type: 'event', ...ev })
-  });
+  await gasPost({ type: 'event', ...ev });
 }
 
 async function saveEquipmentToSheet(eq) {
-  await fetch(GAS_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ type: 'equipment', ...eq })
-  });
+  await gasPost({ type: 'equipment', ...eq });
 }
 
 /* ─────────────────────── 예약 제출 (실제 저장) ─────────────────────── */
@@ -3113,11 +3079,7 @@ async function submitPageReservation() {
   } else if (mode === 'direct') {
     equipmentList.unshift({ name, sn: equip.sn || '', cat: equip.cat || '장비', status: 'reserved', lastOut: outD });
   }
-  await fetch(GAS_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ type: 'updateEquipStatus', name, status: 'reserved', lastOut: outD, cat: equip.cat || '장비', sn: equip.sn || '' })
-  });
+  await gasPost({ type: 'updateEquipStatus', name, status: 'reserved', lastOut: outD, cat: equip.cat || '장비', sn: equip.sn || '' });
 
   if (String(equip.cat || '').trim().toUpperCase() === 'AIO') {
     syncAioReservationToTable({ equipmentName: name, equipmentSn: equip.sn, person, outD, retD, purpose: dest || '-' });
@@ -3156,19 +3118,11 @@ async function submitModalReservation() {
     eq.lastOut = outD;
     if (equip.cat) eq.cat = equip.cat; // 악세서리 등 cat 업데이트
     // equipment 시트 상태 업데이트
-    await fetch(GAS_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: 'updateEquipStatus', name, status: 'reserved', lastOut: outD, cat: equip.cat || eq.cat || '장비', sn: equip.sn || eq.sn || '' })
-    });
+    await gasPost({ type: 'updateEquipStatus', name, status: 'reserved', lastOut: outD, cat: equip.cat || eq.cat || '장비', sn: equip.sn || eq.sn || '' });
   } else if (mode === 'direct') {
     equipmentList.unshift({ name, sn: equip.sn || '', cat: equip.cat || '장비', status: 'reserved', lastOut: outD });
     // 신규 장비 equipment 시트에 추가
-    await fetch(GAS_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: 'equipment', name, sn: equip.sn || '', model: '', cat: equip.cat || '장비', status: 'reserved', lastOut: outD, operator: '' })
-    });
+    await gasPost({ type: 'equipment', name, sn: equip.sn || '', model: '', cat: equip.cat || '장비', status: 'reserved', lastOut: outD, operator: '' });
   }
 
   if (String(equip.cat || '').trim().toUpperCase() === 'AIO') {
