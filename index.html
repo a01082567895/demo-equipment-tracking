@@ -1266,7 +1266,6 @@ let aioWaitingRows = loadAioRows(AIO_WAIT_STORAGE_KEY, aioWaitingDefaults, norma
 
 async function saveAioRows() {
   // 데이터 변경 시 캐시 무효화
-  try { sessionStorage.removeItem(CACHE_KEY); } catch(e) {}
   try {
     await gasPost({
         type: 'saveAioDemo',
@@ -2831,24 +2830,8 @@ function renderHistory() {
 
 /* ─────────────────────── Google Sheets 연동 ─────────────────────── */
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbxjvny8DI8h0POmxEosUsqCOLCHeMc9ZKRELvR9ceBO3Tp5Z7lCLMOmZyb34fo4Safg/exec';
-const CACHE_KEY = 'demoTracker_cache_v1';
-const CACHE_TTL = 10 * 1000; // 10초: 재진입 시 더 빠르게 최신 반영
-
-function saveToCache(json) {
-  try {
-    sessionStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data: json }));
-  } catch(e) {}
-}
-
-function loadFromCache() {
-  try {
-    const raw = sessionStorage.getItem(CACHE_KEY);
-    if (!raw) return null;
-    const { ts, data } = JSON.parse(raw);
-    if (Date.now() - ts > CACHE_TTL) return null;
-    return data;
-  } catch(e) { return null; }
-}
+/* ─────────────────────── Google Sheets 연동 ─────────────────────── */
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbxjvny8DI8h0POmxEosUsqCOLCHeMc9ZKRELvR9ceBO3Tp5Z7lCLMOmZyb34fo4Safg/exec';
 
 // GAS POST 헬퍼 — text/plain + no-cors (GAS가 실제로 받을 수 있는 방식)
 async function gasPost(payload) {
@@ -2868,19 +2851,19 @@ async function gasPost(payload) {
   }
 }
 
-// 저장 후 GAS에서 최신 데이터를 받아 캐시 갱신 (저장 확인용)
+// 저장 후 GAS에서 최신 데이터를 다시 불러와 화면 갱신
 async function refreshCacheFromSheet() {
   try {
-    const res = await fetch(GAS_URL);
+    const res = await fetch(GAS_URL + '?_=' + Date.now(), { cache: 'no-store' });
     const json = await res.json();
-    saveToCache(json);
     applySheetData(json);
     renderAll();
-  } catch(e) {
-    console.warn('캐시 갱신 실패:', e);
+  } catch (e) {
+    console.warn('시트 재조회 실패:', e);
   }
 }
 
+function applySheetData(json) {
 function applySheetData(json) {
   if (!json || json.status !== 'ok') return false;
 
@@ -3005,37 +2988,13 @@ function showLoading(msg) {
   }
   el.textContent = msg;
   el.style.display = 'block';
-}
-function hideLoading() {
-  const el = document.getElementById('loadingToast');
-  if (el) el.style.display = 'none';
-}
-
 async function loadEventsFromSheet() {
-  // 1) 캐시가 있으면 즉시 표시
-  const cached = loadFromCache();
-  if (cached) {
-    applySheetData(cached);
-    renderAll();
-    // 2) 백그라운드에서 최신 데이터 fetch 후 갱신
-    fetch(GAS_URL)
-      .then(r => r.json())
-      .then(json => {
-        saveToCache(json);
-        if (applySheetData(json)) renderAll();
-      })
-      .catch(e => console.warn('백그라운드 갱신 실패:', e));
-    return;
-  }
-
-  // 3) 캐시 없으면 로딩 표시 후 fetch
   showLoading('데이터 불러오는 중...');
   try {
-    const res = await fetch(GAS_URL);
+    const res = await fetch(GAS_URL + '?_=' + Date.now(), { cache: 'no-store' });
     const json = await res.json();
-    saveToCache(json);
     applySheetData(json);
-  } catch(e) {
+  } catch (e) {
     console.error('Sheets 불러오기 실패:', e);
   }
   hideLoading();
@@ -3043,7 +3002,6 @@ async function loadEventsFromSheet() {
 }
 
 async function saveEventToSheet(ev) {
-  try { sessionStorage.removeItem(CACHE_KEY); } catch(e) {}
   await gasPost({ type: 'event', ...ev });
   await refreshCacheFromSheet();
 }
@@ -3052,6 +3010,7 @@ async function saveEquipmentToSheet(eq) {
   await gasPost({ type: 'equipment', ...eq });
 }
 
+/* ─────────────────────── 예약 제출 (실제 저장) ─────────────────────── */
 /* ─────────────────────── 예약 제출 (실제 저장) ─────────────────────── */
 function getEquipName(mode, prefix) {
   if (mode === 'direct') {
@@ -3225,73 +3184,11 @@ function populateAioOnlyEquipSelect() {
   const emptyMsg = '<option disabled>등록된 AIO 장비 없음</option>';
   document.getElementById('modalEquipSelect').innerHTML = opts || emptyMsg;
 }
-/* ─────────────────────── 자동 갱신 ─────────────────────── */
-let refreshTimer = null;
-let midnightTimer = null;
-
-function scheduleMidnightRefresh() {
-  if (midnightTimer) clearTimeout(midnightTimer);
-  const now = new Date();
-  const nextMidnight = new Date(now);
-  nextMidnight.setHours(24, 0, 0, 0);
-  midnightTimer = setTimeout(async () => {
-    await loadEventsFromSheet();
-    renderEquipTable();
-    scheduleMidnightRefresh();
-  }, nextMidnight - now);
-}
-
-function startAutoRefresh() {
-  if (refreshTimer) clearInterval(refreshTimer);
-  refreshTimer = setInterval(async () => {
-    await loadEventsFromSheet();
-    renderEquipTable();
-  }, 30 * 1000);
-
-  document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) {
-      loadEventsFromSheet();
-    }
-  });
-  window.addEventListener('focus', () => loadEventsFromSheet());
-  scheduleMidnightRefresh();
-}
-
-/* ─────────────────────── 초기화 ─────────────────────── */
-function initAioToEventsSync() {
-  // 페이지 로드 시 AIO 일정을 events에 초기 반영 (중복 방지)
-  aioDemoRows.forEach(row => {
-    // ── equipmentList 상태도 AIO 일정 기준으로 초기 동기화
-    syncEquipStatusFromRow(row);
-
-    (row.schedules || []).forEach(sched => {
-      if (!sched.start) return;
-      const already = events.some(e =>
-        e._aioLinked &&
-        (e.name === row.sn || e.name === row.linkedName) &&
-        e.out === sched.start
-      );
-      if (!already) {
-        events.push({
-          name: row.sn,
-          person: sched.operator || row.operator || '-',
-          dest: sched.customer + (sched.note ? ' · ' + sched.note : ''),
-          out: sched.start,
-          ret: sched.end || '',
-          status: 'reserved',
-          _aioLinked: true,
-        });
-      }
-    });
-  });
-}
-
 loadEventsFromSheet().then(() => {
   initAioToEventsSync();
   renderDashboard();
   renderList();
 });
-startAutoRefresh();
 
 // 화면 크기 변경 시 간트 재렌더링 (모바일 ↔ 데스크톱 전환)
 let resizeTimer = null;
