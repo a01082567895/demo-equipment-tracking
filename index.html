@@ -1292,6 +1292,8 @@ async function saveAioRows() {
         rows: aioWaitingRows.map(r => ({ title: r.title || '', note: r.note || '' }))
       })
     });
+    // 저장 후 2초 대기 후 GAS에서 최신 데이터 받아 캐시 갱신
+    setTimeout(() => refreshCacheFromSheet(), 2000);
   } catch (err) {
     console.warn('AIO Sheets save failed:', err);
   }
@@ -2749,32 +2751,27 @@ async function markReturned(idx) {
   e.status = 'in';
   e.ret = today;
 
-  // equipmentList 상태도 storage로 업데이트 (name 또는 sn 매칭)
   syncEquipListStatus(e.name, 'storage');
-  // AIO row에서 해당 SN 장비도 상태 재계산
   const linkedRow = aioDemoRows.find(r => r.sn === e.name || r.linkedName === e.name);
   if (linkedRow) syncEquipStatusFromRow(linkedRow);
 
   showLoading('반입 완료 처리 중...');
-  // events 시트 업데이트
+  try { sessionStorage.removeItem(CACHE_KEY); } catch(err) {}
   await fetch(GAS_URL, {
     method: 'POST', mode: 'no-cors',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ type: 'updateStatus', name: e.name, out: e.out, status: 'in', ret: e.ret })
   });
-  // equipment 시트 상태 업데이트
   await fetch(GAS_URL, {
     method: 'POST', mode: 'no-cors',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ type: 'updateEquipStatus', name: e.name, status: 'storage' })
   });
+  // 저장 후 GAS에서 최신 데이터 받아 캐시 갱신 (2초 딜레이로 GAS 처리 대기)
+  await new Promise(r => setTimeout(r, 2000));
+  await refreshCacheFromSheet();
   hideLoading();
-  // ── AIO 타임라인 반입 완료 동기화
   syncReturnToAio(e.name, e.out, today);
-  renderDashboard();
-  renderList();
-  renderHistory();
-  renderEquipTable();
   alert(`✅ "${e.name}" 반입 완료 처리되었습니다. (반입일: ${today})`);
 }
 
@@ -2845,7 +2842,7 @@ function renderHistory() {
 /* ─────────────────────── Google Sheets 연동 ─────────────────────── */
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbxjvny8DI8h0POmxEosUsqCOLCHeMc9ZKRELvR9ceBO3Tp5Z7lCLMOmZyb34fo4Safg/exec';
 const CACHE_KEY = 'demoTracker_cache_v1';
-const CACHE_TTL = 5 * 60 * 1000; // 5분
+const CACHE_TTL = 60 * 1000; // 1분으로 단축 (모바일 재접속 시 빠르게 최신화)
 
 function saveToCache(json) {
   try {
@@ -2861,6 +2858,19 @@ function loadFromCache() {
     if (Date.now() - ts > CACHE_TTL) return null;
     return data;
   } catch(e) { return null; }
+}
+
+// 저장 후 GAS에서 최신 데이터를 받아 캐시 갱신 (저장 확인용)
+async function refreshCacheFromSheet() {
+  try {
+    const res = await fetch(GAS_URL);
+    const json = await res.json();
+    saveToCache(json);
+    applySheetData(json);
+    renderAll();
+  } catch(e) {
+    console.warn('캐시 갱신 실패:', e);
+  }
 }
 
 function applySheetData(json) {
