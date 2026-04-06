@@ -631,12 +631,12 @@ tr:hover td { background: #fafcff; }
         </div>
       </div>
 
-      <!-- AIO 데모악세서리 -->
+      <!-- AIO 데모 -->
       <div class="section">
         <div class="section-header">
-          <div class="section-title">AIO 데모악세서리</div>
+          <div class="section-title">AIO 데모</div>
           <div class="aio-actions">
-            <button class="btn btn-primary" onclick="openAccessoryModal()">+ AIO 데모악세서리</button>
+            <button class="btn btn-primary" onclick="openAccessoryModal()">+ AIO 데모</button>
           </div>
         </div>
         <div style="padding: 0.75rem 1.25rem 0; font-size:12px; color:#718096; line-height:1.6;">
@@ -1990,16 +1990,20 @@ function renderAioAccessory() {
   if (!tbody) return;
 
   const todayStr = new Date().toISOString().substring(0, 10);
-  const accessoryNames = new Set(
+  // '악세서리' 뿐 아니라 'AIO' 카테고리도 포함
+  const aioRelatedNames = new Set(
     equipmentList
-      .filter(e => String(e.cat || '').trim() === '악세서리')
+      .filter(e => {
+        const cat = String(e.cat || '').trim().toUpperCase();
+        return cat === '악세서리' || cat === 'AIO';
+      })
       .map(e => String(e.name || '').trim())
   );
 
-  const accessoryEvents = events.filter(e => accessoryNames.has(String(e.name || '').trim()));
+  const accessoryEvents = events.filter(e => aioRelatedNames.has(String(e.name || '').trim()));
 
   if (!accessoryEvents.length) {
-    tbody.innerHTML = '<tr><td colspan="7" style="color:#aaa;">등록된 악세서리가 없습니다.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="7" style="color:#aaa;">등록된 항목이 없습니다.</td></tr>';
     return;
   }
 
@@ -2681,7 +2685,9 @@ async function addEquipment() {
 
 /* ─────────────────────── 예약 선택지 ─────────────────────── */
 function populateEquipSelect() {
-  const opts = equipmentList.map(e => {
+  // AIO 카테고리 장비는 예약/신청에서 제외 (AIO 데모장비 관리 탭에서만 예약)
+  const nonAioList = equipmentList.filter(e => String(e.cat || '').trim().toUpperCase() !== 'AIO');
+  const opts = nonAioList.map(e => {
     const label = e.status !== 'storage'
       ? `${e.name} (${e.sn}) — 반출 중`
       : `${e.name} (${e.sn})`;
@@ -2884,11 +2890,69 @@ function applySheetData(json) {
 }
 
 function renderAll() {
+  autoCompleteExpiredSchedules(); // 종료일 지난 일정 자동 반입완료
   renderDashboard();
   renderList();
   populateEquipSelect();
   populateAioDemoEquipSelect();
   renderEquipTable();
+}
+
+// 종료일이 오늘보다 이전인 활성 일정을 자동으로 반입완료 처리하고 전체 이력에 기록
+async function autoCompleteExpiredSchedules() {
+  const todayStr = new Date().toISOString().substring(0, 10);
+  let changed = false;
+
+  for (const row of aioDemoRows) {
+    if (!Array.isArray(row.schedules)) continue;
+    for (const s of row.schedules) {
+      // 이미 완료됐거나, 종료일 없거나, 종료일이 오늘 이후면 스킵
+      if (s.status === 'in' || s.actualRet) continue;
+      if (!s.end || s.end >= todayStr) continue;
+
+      // 종료일 지남 → 자동 반입완료
+      s.status    = 'in';
+      s.actualRet = s.end; // 실제 반입일 = 운용 종료일
+      changed = true;
+
+      // events에 이력 추가
+      const linkedEquip = equipmentList.find(e =>
+        String(e.sn) === String(row.sn) ||
+        String(e.sn).endsWith(String(row.sn)) ||
+        e.name === row.sn
+      );
+      const equipName = linkedEquip ? linkedEquip.name : row.sn;
+      const ev = {
+        name:       equipName,
+        person:     s.operator,
+        dest:       s.customer + (s.note ? ' · ' + s.note : ''),
+        out:        s.start,
+        ret:        s.end,
+        status:     'in',
+        _aioLinked: true,
+      };
+      const existIdx = events.findIndex(e =>
+        (e.name === equipName || e.name === row.sn) && e.out === s.start
+      );
+      if (existIdx >= 0) {
+        events[existIdx] = { ...events[existIdx], ...ev };
+      } else {
+        events.unshift(ev);
+      }
+      // GAS events 시트에도 저장
+      try {
+        await fetch(GAS_URL, {
+          method: 'POST', mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ type: 'event', name: equipName, person: s.operator, dest: ev.dest, out: s.start, ret: s.end, status: 'in' })
+        });
+      } catch(e) { console.warn('자동 이력 저장 실패:', e); }
+    }
+  }
+
+  if (changed) {
+    await saveAioRows(); // schedules status 변경사항 저장
+  }
 }
 
 function showLoading(msg) {
@@ -3113,7 +3177,7 @@ function openModal() {
 }
 
 function openAccessoryModal() {
-  reserveModalPreset = { title: 'AIO 데모악세서리', cat: '악세서리' };
+  reserveModalPreset = { title: 'AIO 데모', cat: '악세서리' };
   populateEquipSelect();
   setModalEquipMode('direct');
   document.querySelector('#reserveModal .modal-title').textContent = reserveModalPreset.title;
