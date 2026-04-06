@@ -2832,7 +2832,7 @@ function renderHistory() {
 /* ─────────────────────── Google Sheets 연동 ─────────────────────── */
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbxjvny8DI8h0POmxEosUsqCOLCHeMc9ZKRELvR9ceBO3Tp5Z7lCLMOmZyb34fo4Safg/exec';
 const CACHE_KEY = 'demoTracker_cache_v1';
-const CACHE_TTL = 60 * 1000; // 1분으로 단축 (모바일 재접속 시 빠르게 최신화)
+const CACHE_TTL = 10 * 1000; // 10초: 재진입 시 더 빠르게 최신 반영
 
 function saveToCache(json) {
   try {
@@ -3246,7 +3246,7 @@ function startAutoRefresh() {
   refreshTimer = setInterval(async () => {
     await loadEventsFromSheet();
     renderEquipTable();
-  }, 5 * 60 * 1000);
+  }, 30 * 1000);
 
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden) {
