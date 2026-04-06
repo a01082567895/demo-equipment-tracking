@@ -1269,7 +1269,7 @@ async function saveAioRows() {
   try { sessionStorage.removeItem(CACHE_KEY); } catch(e) {}
   try {
     await fetch(GAS_URL, {
-      method: 'POST', mode: 'no-cors',
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         type: 'saveAioDemo',
@@ -1285,7 +1285,7 @@ async function saveAioRows() {
       })
     });
     await fetch(GAS_URL, {
-      method: 'POST', mode: 'no-cors',
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         type: 'saveAioWaiting',
@@ -1607,7 +1607,7 @@ async function saveEventEdit() {
   showLoading('저장 중...');
   try {
     await fetch(GAS_URL, {
-      method: 'POST', mode: 'no-cors',
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ type: 'updateStatus', name: e.name, out: e.out, status: e.status, ret: e.ret })
     });
@@ -1659,7 +1659,7 @@ async function deleteEvent(idx) {
   showLoading('삭제 중...');
   try {
     await fetch(GAS_URL, {
-      method: 'POST', mode: 'no-cors',
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ type: 'deleteEvent', name: evName, out: evOut })
     });
@@ -2402,14 +2402,14 @@ async function completeSchedEntry(schedIndex) {
     if (linkedIdx >= 0) {
       // 기존 행 업데이트
       await fetch(GAS_URL, {
-        method: 'POST', mode: 'no-cors',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type: 'updateStatus', name: equipName, out: s.start, status: 'in', ret: today })
       });
     } else {
       // 새 행 추가
       await fetch(GAS_URL, {
-        method: 'POST', mode: 'no-cors',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type: 'event', name: equipName, person: s.operator, dest: ev.dest, out: s.start, ret: today, status: 'in' })
       });
@@ -2758,12 +2758,12 @@ async function markReturned(idx) {
   showLoading('반입 완료 처리 중...');
   try { sessionStorage.removeItem(CACHE_KEY); } catch(err) {}
   await fetch(GAS_URL, {
-    method: 'POST', mode: 'no-cors',
+    method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ type: 'updateStatus', name: e.name, out: e.out, status: 'in', ret: e.ret })
   });
   await fetch(GAS_URL, {
-    method: 'POST', mode: 'no-cors',
+    method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ type: 'updateEquipStatus', name: e.name, status: 'storage' })
   });
@@ -2796,7 +2796,6 @@ async function submitSetRet() {
   showLoading('저장 중...');
   await fetch(GAS_URL, {
     method: 'POST',
-    mode: 'no-cors',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ type: 'updateStatus', name: e.name, out: e.out, status: e.status, ret: e.ret })
   });
@@ -2978,7 +2977,7 @@ async function autoCompleteExpiredSchedules() {
       // GAS events 시트에도 저장
       try {
         await fetch(GAS_URL, {
-          method: 'POST', mode: 'no-cors',
+          method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ type: 'event', name: equipName, person: s.operator, dest: ev.dest, out: s.start, ret: s.end, status: 'in' })
         });
@@ -3042,7 +3041,6 @@ async function saveEventToSheet(ev) {
   try { sessionStorage.removeItem(CACHE_KEY); } catch(e) {}
   await fetch(GAS_URL, {
     method: 'POST',
-    mode: 'no-cors',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ type: 'event', ...ev })
   });
@@ -3051,7 +3049,6 @@ async function saveEventToSheet(ev) {
 async function saveEquipmentToSheet(eq) {
   await fetch(GAS_URL, {
     method: 'POST',
-    mode: 'no-cors',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ type: 'equipment', ...eq })
   });
@@ -3117,7 +3114,7 @@ async function submitPageReservation() {
     equipmentList.unshift({ name, sn: equip.sn || '', cat: equip.cat || '장비', status: 'reserved', lastOut: outD });
   }
   await fetch(GAS_URL, {
-    method: 'POST', mode: 'no-cors',
+    method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ type: 'updateEquipStatus', name, status: 'reserved', lastOut: outD, cat: equip.cat || '장비', sn: equip.sn || '' })
   });
@@ -3160,7 +3157,7 @@ async function submitModalReservation() {
     if (equip.cat) eq.cat = equip.cat; // 악세서리 등 cat 업데이트
     // equipment 시트 상태 업데이트
     await fetch(GAS_URL, {
-      method: 'POST', mode: 'no-cors',
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ type: 'updateEquipStatus', name, status: 'reserved', lastOut: outD, cat: equip.cat || eq.cat || '장비', sn: equip.sn || eq.sn || '' })
     });
@@ -3168,7 +3165,7 @@ async function submitModalReservation() {
     equipmentList.unshift({ name, sn: equip.sn || '', cat: equip.cat || '장비', status: 'reserved', lastOut: outD });
     // 신규 장비 equipment 시트에 추가
     await fetch(GAS_URL, {
-      method: 'POST', mode: 'no-cors',
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ type: 'equipment', name, sn: equip.sn || '', model: '', cat: equip.cat || '장비', status: 'reserved', lastOut: outD, operator: '' })
     });
