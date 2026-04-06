@@ -1585,6 +1585,7 @@ function openEventEditModal(idx) {
 async function saveEventEdit() {
   const e = events[_eventEditIdx];
   if (!e) return;
+
   const oldOut  = e.out;
   const oldName = e.name;
   e.name   = document.getElementById('evEditName').value.trim();
@@ -1594,16 +1595,23 @@ async function saveEventEdit() {
   e.ret    = document.getElementById('evEditRet').value;
   e.status = document.getElementById('evEditStatus').value;
 
-  // Google Sheets 업데이트
   showLoading('저장 중...');
   try {
-    await gasPost({ type: 'updateStatus', name: e.name, out: e.out, status: e.status, ret: e.ret });
-  } catch(err) { console.warn('Sheets 업데이트 실패:', err); }
-  hideLoading();
+    await gasPost({
+      type: 'updateStatus',
+      name: oldName,
+      out: oldOut,
+      status: e.status,
+      ret: e.ret
+    });
+    await refreshCacheFromSheet();
+  } catch(err) {
+    console.warn('Sheets 업데이트 실패:', err);
+  } finally {
+    hideLoading();
+  }
 
-  // AIO 타임라인 동기화 — _aioLinked 여부 무관하게 이름+날짜 기준 매칭
   syncReturnToAio(oldName, oldOut, e.ret);
-
   closeModal('eventEditModal');
   renderDashboard();
   renderList();
@@ -2342,7 +2350,10 @@ async function completeSchedEntry(schedIndex) {
   const s = row.schedules[schedIndex];
   if (!s) return;
   const today = new Date().toISOString().substring(0, 10);
-  if (!confirm(`"${s.customer}" 일정을 반입 완료 처리할까요?\n\n반출일: ${s.start}\n반입일: ${today}`)) return;
+  if (!confirm(`"${s.customer}" 일정을 반입 완료 처리할까요?
+
+반출일: ${s.start}
+반입일: ${today}`)) return;
 
   // ── 1. 일정에 반입완료 상태 + 반입일 기록
   s.status = 'in';
@@ -2383,12 +2394,11 @@ async function completeSchedEntry(schedIndex) {
   showLoading('반입 완료 저장 중...');
   try {
     if (linkedIdx >= 0) {
-      // 기존 행 업데이트
       await gasPost({ type: 'updateStatus', name: equipName, out: s.start, status: 'in', ret: today });
     } else {
-      // 새 행 추가
       await gasPost({ type: 'event', name: equipName, person: s.operator, dest: ev.dest, out: s.start, ret: today, status: 'in' });
     }
+    await refreshCacheFromSheet();
   } catch(err) { console.warn('이력 저장 실패:', err); }
   hideLoading();
 
@@ -2399,7 +2409,8 @@ async function completeSchedEntry(schedIndex) {
   renderDashboard();
   renderList();
   renderHistory();
-  alert(`✅ "${s.customer}" 반입 완료!\n반출일: ${s.start} → 반입일: ${today}`);
+  alert(`✅ "${s.customer}" 반입 완료!
+반출일: ${s.start} → 반입일: ${today}`);
 }
 
 async function deleteSchedEntry(schedIndex) {
@@ -2724,25 +2735,33 @@ async function markReturned(idx) {
 
   const today = new Date().toISOString().substring(0, 10);
 
-  // ── 1. 로컬 데이터 즉시 업데이트
+  // 1) 로컬 데이터 즉시 업데이트
   e.status = 'in';
   e.ret = today;
   syncEquipListStatus(e.name, 'storage');
+
   const linkedRow = aioDemoRows.find(r => r.sn === e.name || r.linkedName === e.name);
   if (linkedRow) syncEquipStatusFromRow(linkedRow);
 
-  // ── 2. 화면 즉시 갱신
-  try { sessionStorage.removeItem(CACHE_KEY); } catch(err) {}
+  // 2) 서버 저장을 기다림
+  showLoading('반입 완료 저장 중...');
+  try {
+    await gasPost({ type: 'updateStatus', name: e.name, out: e.out, status: 'in', ret: today });
+    await gasPost({ type: 'updateEquipStatus', name: e.name, status: 'storage' });
+    syncReturnToAio(e.name, e.out, today);
+    await refreshCacheFromSheet();
+  } catch (err) {
+    console.warn('반입완료 저장 실패:', err);
+    alert('저장에 실패했습니다. 잠시 후 다시 시도해 주세요.');
+  } finally {
+    hideLoading();
+  }
+
   renderDashboard();
   renderList();
   renderHistory();
   renderEquipTable();
   alert(`✅ "${e.name}" 반입 완료! (반입일: ${today})`);
-
-  // ── 3. GAS 저장은 백그라운드에서 (화면과 무관)
-  gasPost({ type: 'updateStatus', name: e.name, out: e.out, status: 'in', ret: today });
-  gasPost({ type: 'updateEquipStatus', name: e.name, status: 'storage' });
-  syncReturnToAio(e.name, e.out, today);
 }
 
 /* ─────────────────────── 반입 예정일 입력/수정 ─────────────────────── */
@@ -2764,9 +2783,15 @@ async function submitSetRet() {
 
   e.ret = newRet;
   showLoading('저장 중...');
-  await gasPost({ type: 'updateStatus', name: e.name, out: e.out, status: e.status, ret: e.ret });
-  hideLoading();
-  // ── AIO 타임라인 반입 예정일 동기화
+  try {
+    await gasPost({ type: 'updateStatus', name: e.name, out: e.out, status: e.status, ret: e.ret });
+    await refreshCacheFromSheet();
+  } catch (err) {
+    console.warn('반입 예정일 저장 실패:', err);
+  } finally {
+    hideLoading();
+  }
+
   syncReturnToAio(e.name, e.out, newRet);
   closeModal('setRetModal');
   renderDashboard();
@@ -2827,21 +2852,20 @@ function loadFromCache() {
 
 // GAS POST 헬퍼 — text/plain + no-cors (GAS가 실제로 받을 수 있는 방식)
 async function gasPost(payload) {
-  return new Promise(function(resolve) {
-    try {
-      const params = encodeURIComponent(JSON.stringify(payload));
-      const url = GAS_URL + '?action=post&data=' + params;
-      // Image 태그 방식: 리다이렉트 후에도 파라미터 전달됨
-      const img = new Image();
-      img.onload = img.onerror = function() { resolve(); };
-      img.src = url;
-      // 3초 후 타임아웃
-      setTimeout(resolve, 3000);
-    } catch(e) {
-      console.warn('gasPost 오류:', e);
-      resolve();
-    }
-  });
+  try {
+    await fetch(GAS_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'text/plain;charset=UTF-8'
+      },
+      body: JSON.stringify(payload)
+    });
+    return { ok: true };
+  } catch (e) {
+    console.warn('gasPost 오류:', e);
+    return { ok: false, error: e };
+  }
 }
 
 // 저장 후 GAS에서 최신 데이터를 받아 캐시 갱신 (저장 확인용)
@@ -3021,6 +3045,7 @@ async function loadEventsFromSheet() {
 async function saveEventToSheet(ev) {
   try { sessionStorage.removeItem(CACHE_KEY); } catch(e) {}
   await gasPost({ type: 'event', ...ev });
+  await refreshCacheFromSheet();
 }
 
 async function saveEquipmentToSheet(eq) {
@@ -3075,24 +3100,30 @@ async function submitPageReservation() {
 
   const ev = { name, person, dest: dest || '-', out: outD, ret: retD || '', status: 'reserved' };
   showLoading('저장 중...');
-  await saveEventToSheet(ev);
-  events.unshift(ev);
+  try {
+    await saveEventToSheet(ev);
+    events.unshift(ev);
 
-  // equipmentList 상태 업데이트
-  const eq = equipmentList.find(eq => eq.name === name);
-  if (eq) {
-    eq.status = 'reserved';
-    eq.lastOut = outD;
-  } else if (mode === 'direct') {
-    equipmentList.unshift({ name, sn: equip.sn || '', cat: equip.cat || '장비', status: 'reserved', lastOut: outD });
+    const eq = equipmentList.find(eq => eq.name === name);
+    if (eq) {
+      eq.status = 'reserved';
+      eq.lastOut = outD;
+    } else if (mode === 'direct') {
+      equipmentList.unshift({ name, sn: equip.sn || '', cat: equip.cat || '장비', status: 'reserved', lastOut: outD });
+    }
+    await gasPost({ type: 'updateEquipStatus', name, status: 'reserved', lastOut: outD, cat: equip.cat || '장비', sn: equip.sn || '' });
+
+    if (String(equip.cat || '').trim().toUpperCase() === 'AIO') {
+      syncAioReservationToTable({ equipmentName: name, equipmentSn: equip.sn, person, outD, retD, purpose: dest || '-' });
+    }
+
+    await refreshCacheFromSheet();
+  } catch (err) {
+    console.warn('예약 저장 실패:', err);
+  } finally {
+    hideLoading();
   }
-  await gasPost({ type: 'updateEquipStatus', name, status: 'reserved', lastOut: outD, cat: equip.cat || '장비', sn: equip.sn || '' });
 
-  if (String(equip.cat || '').trim().toUpperCase() === 'AIO') {
-    syncAioReservationToTable({ equipmentName: name, equipmentSn: equip.sn, person, outD, retD, purpose: dest || '-' });
-  }
-
-  hideLoading();
   renderDashboard();
   renderList();
   renderEquipTable();
@@ -3115,28 +3146,32 @@ async function submitModalReservation() {
 
   const ev = { name, person, dest: purpose || '-', out: outD, ret: retD || '', status: 'reserved' };
   showLoading('저장 중...');
-  await saveEventToSheet(ev);
-  events.unshift(ev);
+  try {
+    await saveEventToSheet(ev);
+    events.unshift(ev);
 
-  // equipmentList 상태 업데이트 — cat도 반드시 갱신
-  const eq = equipmentList.find(eq => eq.name === name);
-  if (eq) {
-    eq.status = 'reserved';
-    eq.lastOut = outD;
-    if (equip.cat) eq.cat = equip.cat; // 악세서리 등 cat 업데이트
-    // equipment 시트 상태 업데이트
-    await gasPost({ type: 'updateEquipStatus', name, status: 'reserved', lastOut: outD, cat: equip.cat || eq.cat || '장비', sn: equip.sn || eq.sn || '' });
-  } else if (mode === 'direct') {
-    equipmentList.unshift({ name, sn: equip.sn || '', cat: equip.cat || '장비', status: 'reserved', lastOut: outD });
-    // 신규 장비 equipment 시트에 추가
-    await gasPost({ type: 'equipment', name, sn: equip.sn || '', model: '', cat: equip.cat || '장비', status: 'reserved', lastOut: outD, operator: '' });
+    const eq = equipmentList.find(eq => eq.name === name);
+    if (eq) {
+      eq.status = 'reserved';
+      eq.lastOut = outD;
+      if (equip.cat) eq.cat = equip.cat;
+      await gasPost({ type: 'updateEquipStatus', name, status: 'reserved', lastOut: outD, cat: equip.cat || eq.cat || '장비', sn: equip.sn || eq.sn || '' });
+    } else if (mode === 'direct') {
+      equipmentList.unshift({ name, sn: equip.sn || '', cat: equip.cat || '장비', status: 'reserved', lastOut: outD });
+      await gasPost({ type: 'equipment', name, sn: equip.sn || '', model: '', cat: equip.cat || '장비', status: 'reserved', lastOut: outD, operator: '' });
+    }
+
+    if (String(equip.cat || '').trim().toUpperCase() === 'AIO') {
+      syncAioReservationToTable({ equipmentName: name, equipmentSn: equip.sn, person, outD, retD, purpose: purpose || '-' });
+    }
+
+    await refreshCacheFromSheet();
+  } catch (err) {
+    console.warn('예약 저장 실패:', err);
+  } finally {
+    hideLoading();
   }
 
-  if (String(equip.cat || '').trim().toUpperCase() === 'AIO') {
-    syncAioReservationToTable({ equipmentName: name, equipmentSn: equip.sn, person, outD, retD, purpose: purpose || '-' });
-  }
-
-  hideLoading();
   renderDashboard();
   renderList();
   renderEquipTable();
@@ -3267,4 +3302,3 @@ window.addEventListener('resize', () => {
 </script>
 </body>
 </html>
-
