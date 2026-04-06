@@ -2827,16 +2827,21 @@ function loadFromCache() {
 
 // GAS POST 헬퍼 — text/plain + no-cors (GAS가 실제로 받을 수 있는 방식)
 async function gasPost(payload) {
-  try {
-    // GET 방식으로 데이터 전송 (no-cors POST body 문제 우회)
-    const params = encodeURIComponent(JSON.stringify(payload));
-    await fetch(GAS_URL + '?action=post&data=' + params, {
-      method: 'GET',
-      mode: 'no-cors'
-    });
-  } catch(e) {
-    console.warn('GAS POST 실패:', e);
-  }
+  return new Promise(function(resolve) {
+    try {
+      const params = encodeURIComponent(JSON.stringify(payload));
+      const url = GAS_URL + '?action=post&data=' + params;
+      // Image 태그 방식: 리다이렉트 후에도 파라미터 전달됨
+      const img = new Image();
+      img.onload = img.onerror = function() { resolve(); };
+      img.src = url;
+      // 3초 후 타임아웃
+      setTimeout(resolve, 3000);
+    } catch(e) {
+      console.warn('gasPost 오류:', e);
+      resolve();
+    }
+  });
 }
 
 // 저장 후 GAS에서 최신 데이터를 받아 캐시 갱신 (저장 확인용)
@@ -3262,3 +3267,4 @@ window.addEventListener('resize', () => {
 </script>
 </body>
 </html>
+
