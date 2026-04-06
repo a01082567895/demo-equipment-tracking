@@ -1170,38 +1170,51 @@ function normalizeDemoRow(row) {
     schedules = row.schedules.map(s => ({
       customer: String(s?.customer || '').trim(),
       operator: String(s?.operator || op || '승목').trim(),
-      start: String(s?.start || '').trim(),
-      end: String(s?.end || '').trim(),
-      note: String(s?.note || '').trim(),
-      color: String(s?.color || 'sky').trim(),
+      start:    String(s?.start || '').trim(),
+      end:      String(s?.end   || '').trim(),
+      note:     String(s?.note  || '').trim(),
+      color:    String(s?.color || 'sky').trim(),
+      status:   s?.status   || '',
+      actualRet:s?.actualRet|| '',
     })).filter(s => s.customer || s.start);
   }
-  // 하위호환: cells + start/end 가 있고 schedules 가 비어있으면 자동 마이그레이션
+
   const baseStart = String(row?.start || '').trim();
-  const baseEnd   = String(row?.end || '').trim();
+  const baseEnd   = String(row?.end   || '').trim();
+
+  // ★ 핵심 수정: 시트의 start/end 컬럼이 schedules[0]과 다르면 schedules[0]에 반영
+  // (시트에서 직접 날짜를 수정했을 때 달력에 반영되게)
+  if (schedules.length === 1 && baseStart) {
+    if (schedules[0].start !== baseStart) schedules[0].start = baseStart;
+    if (schedules[0].end   !== baseEnd)   schedules[0].end   = baseEnd;
+  }
+
+  // 하위호환: schedules가 비어있고 baseStart가 있으면 자동 생성
   if (schedules.length === 0 && baseStart) {
     const cells = row?.cells && typeof row.cells === 'object' ? row.cells : {};
-    // cells 에서 메모를 첫 번째 일정의 고객사명으로
     const firstNote = Object.values(cells)[0] || '';
     schedules.push({
-      customer: firstNote || String(row?.current || '').trim(),
-      operator: op || '승목',
-      start: baseStart,
-      end: baseEnd,
-      note: '',
-      color: (op === '현수') ? 'pink' : 'sky',
+      customer:  firstNote || String(row?.current || '').trim(),
+      operator:  op || '승목',
+      start:     baseStart,
+      end:       baseEnd,
+      note:      '',
+      color:     (op === '현수') ? 'pink' : 'sky',
+      status:    '',
+      actualRet: '',
     });
   }
+
   return {
-    sn: String(row?.sn || '').trim(),
-    model: String(row?.model || '').trim(),
-    current: String(row?.current || '').trim(),
-    operator: op || '승목',
-    start: baseStart,
-    end: baseEnd,
-    cells: row?.cells && typeof row.cells === 'object' ? row.cells : {},
+    sn:         String(row?.sn         || '').trim(),
+    model:      String(row?.model      || '').trim(),
+    current:    String(row?.current    || '').trim(),
+    operator:   op || '승목',
+    start:      baseStart,
+    end:        baseEnd,
+    cells:      row?.cells && typeof row.cells === 'object' ? row.cells : {},
     linkedName: String(row?.linkedName || '').trim(),
-    linkedSn: String(row?.linkedSn || '').trim(),
+    linkedSn:   String(row?.linkedSn   || '').trim(),
     schedules,
   };
 }
