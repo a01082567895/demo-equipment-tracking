@@ -3203,12 +3203,24 @@ function openModal() {
 }
 
 function openAccessoryModal() {
-  reserveModalPreset = { title: 'AIO 데모', cat: '악세서리' };
-  populateEquipSelect();
-  setModalEquipMode('direct');
+  reserveModalPreset = { title: 'AIO 데모', cat: 'AIO' };
+  // AIO 카테고리 장비만 선택 목록에 채우기
+  populateAioOnlyEquipSelect();
+  setModalEquipMode('list');
   document.querySelector('#reserveModal .modal-title').textContent = reserveModalPreset.title;
-  document.getElementById('modalDirectCat').value = reserveModalPreset.cat;
   document.getElementById('reserveModal').classList.add('show');
+}
+
+function populateAioOnlyEquipSelect() {
+  const aioList = equipmentList.filter(e => String(e.cat || '').trim().toUpperCase() === 'AIO');
+  const opts = aioList.map(e => {
+    const label = e.status !== 'storage'
+      ? `${e.name} (${e.sn}) — 반출 중`
+      : `${e.name} (${e.sn})`;
+    return `<option value="${e.name} (${e.sn})">${label}</option>`;
+  }).join('');
+  const emptyMsg = '<option disabled>등록된 AIO 장비 없음</option>';
+  document.getElementById('modalEquipSelect').innerHTML = opts || emptyMsg;
 }
 /* ─────────────────────── 자동 갱신 ─────────────────────── */
 let refreshTimer = null;
