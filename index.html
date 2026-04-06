@@ -1284,8 +1284,7 @@ async function saveAioRows() {
         type: 'saveAioWaiting',
         rows: aioWaitingRows.map(r => ({ title: r.title || '', note: r.note || '' }))
       });
-    // 저장 후 2초 대기 후 GAS에서 최신 데이터 받아 캐시 갱신
-    setTimeout(() => refreshCacheFromSheet(), 2000);
+    // 저장은 백그라운드 처리 (화면은 이미 로컬 데이터로 갱신됨)
   } catch (err) {
     console.warn('AIO Sheets save failed:', err);
   }
@@ -2724,23 +2723,26 @@ async function markReturned(idx) {
   if (!confirm(`"${e.name}" 을(를) 반입 완료로 변경할까요?`)) return;
 
   const today = new Date().toISOString().substring(0, 10);
+
+  // ── 1. 로컬 데이터 즉시 업데이트
   e.status = 'in';
   e.ret = today;
-
   syncEquipListStatus(e.name, 'storage');
   const linkedRow = aioDemoRows.find(r => r.sn === e.name || r.linkedName === e.name);
   if (linkedRow) syncEquipStatusFromRow(linkedRow);
 
-  showLoading('반입 완료 처리 중...');
+  // ── 2. 화면 즉시 갱신
   try { sessionStorage.removeItem(CACHE_KEY); } catch(err) {}
-  await gasPost({ type: 'updateStatus', name: e.name, out: e.out, status: 'in', ret: e.ret });
-  await gasPost({ type: 'updateEquipStatus', name: e.name, status: 'storage' });
-  // 저장 후 GAS에서 최신 데이터 받아 캐시 갱신 (2초 딜레이로 GAS 처리 대기)
-  await new Promise(r => setTimeout(r, 2000));
-  await refreshCacheFromSheet();
-  hideLoading();
+  renderDashboard();
+  renderList();
+  renderHistory();
+  renderEquipTable();
+  alert(`✅ "${e.name}" 반입 완료! (반입일: ${today})`);
+
+  // ── 3. GAS 저장은 백그라운드에서 (화면과 무관)
+  gasPost({ type: 'updateStatus', name: e.name, out: e.out, status: 'in', ret: today });
+  gasPost({ type: 'updateEquipStatus', name: e.name, status: 'storage' });
   syncReturnToAio(e.name, e.out, today);
-  alert(`✅ "${e.name}" 반입 완료 처리되었습니다. (반입일: ${today})`);
 }
 
 /* ─────────────────────── 반입 예정일 입력/수정 ─────────────────────── */
@@ -2826,11 +2828,11 @@ function loadFromCache() {
 // GAS POST 헬퍼 — text/plain + no-cors (GAS가 실제로 받을 수 있는 방식)
 async function gasPost(payload) {
   try {
-    await fetch(GAS_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify(payload)
+    // GET 방식으로 데이터 전송 (no-cors POST body 문제 우회)
+    const params = encodeURIComponent(JSON.stringify(payload));
+    await fetch(GAS_URL + '?action=post&data=' + params, {
+      method: 'GET',
+      mode: 'no-cors'
     });
   } catch(e) {
     console.warn('GAS POST 실패:', e);
