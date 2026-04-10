@@ -553,7 +553,7 @@ tr:hover td { background: #fafcff; }
       <div id="page-history" class="view-page">
         <div class="section">
           <div class="section-header">
-            <div class="section-title">전체 반입·반출 이력</div>
+            <div class="section-title">전체 반입·반출 이력 (AIO 제외)</div>
             <div class="controls-row">
               <input type="text" class="filter-select" id="historySearch" placeholder="장비명·담당자 검색..." style="width:170px;" oninput="renderHistory()">
               <select class="filter-select" id="historyStatusFilter" onchange="renderHistory()">
@@ -573,21 +573,15 @@ tr:hover td { background: #fafcff; }
           <div id="historyEmpty" style="display:none; padding:2rem; text-align:center; font-size:13px; color:#aaa;">검색 결과가 없습니다.</div>
         </div>
 
-        <!-- AIO 데모 (전체 이력 탭) -->
+        <!-- AIO 카테고리 반입 반출 이력 (전체 이력 탭) -->
         <div class="section">
           <div class="section-header">
-            <div class="section-title">AIO 데모</div>
-            <div class="aio-actions">
-              <button class="btn btn-primary" onclick="openAccessoryModal()">+ AIO 데모</button>
-            </div>
-          </div>
-          <div style="padding: 0.75rem 1.25rem 0; font-size:12px; color:#718096; line-height:1.6;">
-            악세서리도 장비처럼 예약, 반출, 반입 완료를 관리합니다.
+            <div class="section-title">AIO 카테고리 반입 반출 이력</div>
           </div>
           <div style="overflow-x:auto;">
             <table>
               <thead>
-                <tr><th>악세서리명</th><th>담당자</th><th>고객사</th><th>반출일</th><th>반입 예정</th><th>상태</th><th>액션</th></tr>
+                <tr><th>장비명</th><th>담당자</th><th>고객사</th><th>반출일</th><th>반입일</th><th>상태</th></tr>
               </thead>
               <tbody id="aioAccessoryBodyHistory"></tbody>
             </table>
@@ -612,8 +606,7 @@ tr:hover td { background: #fafcff; }
               <div class="aio-actions">
                 <button class="btn btn-primary" onclick="openAddAioModal()">+ AIO 장비 추가</button>
                 <button class="btn" style="background:linear-gradient(135deg,#38A169,#276749);color:#fff;border-color:transparent;" onclick="openAddAioDemoRow()">+ 진행 현황 추가</button>
-                <button class="btn" onclick="renderEquipTable()">↻ 새로고침</button>
-                <button class="btn" style="color:#C53030; border-color:#fed7d7;" onclick="resetAioDefaults()">초기화</button>
+                <button class="btn" onclick="forceReloadFromGAS()">↻ 새로고침</button>                <button class="btn" style="color:#C53030; border-color:#fed7d7;" onclick="resetAioDefaults()">초기화</button>
               </div>
             </div>
           </div>
@@ -642,7 +635,7 @@ tr:hover td { background: #fafcff; }
           <div class="section-header">
             <div class="section-title">등록된 AIO 장비 목록</div>
             <div class="aio-actions">
-              <button class="btn" onclick="renderEquipTable()">↻ 새로고침</button>
+              <button class="btn" onclick="forceReloadFromGAS()">↻ 새로고침</button>
             </div>
           </div>
           <table>
@@ -655,17 +648,14 @@ tr:hover td { background: #fafcff; }
         <div class="section">
           <div class="section-header">
             <div class="section-title">AIO 데모</div>
-            <div class="aio-actions">
-              <button class="btn btn-primary" onclick="openAccessoryModal()">+ AIO 데모</button>
-            </div>
           </div>
           <div style="padding: 0.75rem 1.25rem 0; font-size:12px; color:#718096; line-height:1.6;">
-            악세서리도 장비처럼 예약, 반출, 반입 완료를 관리합니다.
+            위 "+ 진행 현황 추가" 버튼으로 일정을 추가하세요.
           </div>
           <div style="overflow-x:auto;">
             <table>
               <thead>
-                <tr><th>악세서리명</th><th>담당자</th><th>고객사</th><th>반출일</th><th>반입 예정</th><th>상태</th><th>액션</th></tr>
+                <tr><th>장비명</th><th>담당자</th><th>고객사</th><th>반출일</th><th>반입 예정</th><th>상태</th><th>액션</th></tr>
               </thead>
               <tbody id="aioAccessoryBody"></tbody>
             </table>
@@ -709,7 +699,7 @@ tr:hover td { background: #fafcff; }
               <div class="form-group">
                 <label class="form-label">카테고리</label>
                 <select class="form-input" id="pageDirectCat">
-                  <option>장비</option><option>AIO</option><option>악세서리</option><option>기타</option>
+                  <option>장비</option><option>AIO</option><option>악세서리</option><option>AIO 악세서리</option><option>기타</option>
                 </select>
               </div>
               <p class="direct-hint">※ 직접 입력한 장비는 신청 후 관리자가 장비 목록에 추가할 수 있습니다.</p>
@@ -791,7 +781,7 @@ tr:hover td { background: #fafcff; }
         <div class="form-group">
           <label class="form-label">카테고리</label>
           <select class="form-input" id="modalDirectCat">
-            <option>장비</option><option>AIO</option><option>악세서리</option><option>기타</option>
+            <option>장비</option><option>AIO</option><option>악세서리</option><option>AIO 악세서리</option><option>기타</option>
           </select>
         </div>
         <p class="direct-hint" style="margin-bottom:0.75rem;">※ 목록에 없는 장비를 직접 입력할 수 있습니다.</p>
@@ -922,19 +912,31 @@ tr:hover td { background: #fafcff; }
               <input class="form-input" id="aioEditModel" type="text">
             </div>
           </div>
+          <div class="form-group">
+            <label class="form-label">카테고리</label>
+            <select class="form-input" id="aioEditCat">
+              <option value="AIO">AIO</option>
+              <option value="AIO 악세서리">AIO 악세서리</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">운용 담당자 직접 입력 <span style="font-size:11px;color:#a0aec0;">(승목/현수 외 노란색 표시)</span></label>
+            <input class="form-input" id="aioEditOperatorDirect" type="text" placeholder="예: 홍길동">
+          </div>
         </div>
+        <!-- 목록 선택 시 sn/model 저장용 hidden 필드 -->
+        <input type="hidden" id="aioEditSnHidden">
+        <input type="hidden" id="aioEditModelHidden">
         <!-- 선택된 장비 정보 표시 (목록 선택 시) -->
         <div id="aioSelectedEquipInfo" style="display:none; font-size:12px; color:#3182CE; background:#EBF8FF; border-radius:8px; padding:8px 12px; margin-bottom:10px;">
           <span id="aioSelectedEquipText"></span>
         </div>
-        <!-- 숨겨진 실제 sn/model 값 (목록 선택 시 자동 세팅) -->
-        <input type="hidden" id="aioEditSn">
-        <input type="hidden" id="aioEditModel">
-        <div class="form-group">
+        <!-- 숨겨진 실제 sn/model 값 (목록 선택 시 자동 세팅) -->        <div class="form-group">
           <label class="form-label">현재위치</label>
           <input class="form-input" id="aioEditCurrent" type="text">
         </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <!-- 운용 담당자 select: 목록선택 모드일 때만 표시 -->
+        <div id="aioOperatorSelectGroup" style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
           <div class="form-group">
             <label class="form-label">운용 담당자</label>
             <select class="form-input" id="aioEditOperator">
@@ -945,6 +947,13 @@ tr:hover td { background: #fafcff; }
           <div class="form-group">
             <label class="form-label">운용기간 시작</label>
             <input class="form-input" id="aioEditStart" type="date">
+          </div>
+        </div>
+        <!-- 직접입력 모드일 때 시작일 단독 표시 -->
+        <div id="aioStartOnlyGroup" style="display:none;">
+          <div class="form-group">
+            <label class="form-label">운용기간 시작</label>
+            <input class="form-input" id="aioEditStartDirect" type="date">
           </div>
         </div>
         <div class="form-group">
@@ -988,7 +997,7 @@ tr:hover td { background: #fafcff; }
       </div>
       <div class="form-group"><label class="form-label">카테고리</label>
         <select class="form-input" id="newEquipCat" onchange="toggleEquipOperatorField()">
-          <option>장비</option><option>AIO</option><option>악세서리</option><option>기타</option>
+          <option>장비</option><option>AIO</option><option>악세서리</option><option>AIO 악세서리</option><option>기타</option>
         </select>
       </div>
       <!-- 담당자: AIO 카테고리일 때만 표시 -->
@@ -1098,6 +1107,7 @@ const equipmentList = [];
    반입·반출 이벤트 데이터 — Google Sheets 'events' 시트에서 자동 로드
 ================================================================ */
 const events = [];
+const aioEvents = []; // AIO_events 시트 데이터
 
 /* ================================================================
    AIO 전용 페이지 데이터 (필요하면 여기만 수정)
@@ -1106,74 +1116,57 @@ const aioTimelineYear = 2026;
 const AIO_DEMO_STORAGE_KEY = 'aioDemoRows_v4';
 const AIO_WAIT_STORAGE_KEY = 'aioWaitingRows_v4';
 
-const aioDateHeaders = [
-  { label: '3/1',  dow: '일', date: '2026-03-01' },
-  { label: '3/2',  dow: '월', date: '2026-03-02' },
-  { label: '3/3',  dow: '화', date: '2026-03-03' },
-  { label: '3/4',  dow: '수', date: '2026-03-04' },
-  { label: '3/5',  dow: '목', date: '2026-03-05' },
-  { label: '3/6',  dow: '금', date: '2026-03-06' },
-  { label: '3/9',  dow: '월', date: '2026-03-09' },
-  { label: '3/10', dow: '화', date: '2026-03-10' },
-  { label: '3/11', dow: '수', date: '2026-03-11' },
-  { label: '3/12', dow: '목', date: '2026-03-12' },
-  { label: '3/13', dow: '금', date: '2026-03-13' },
-  { label: '3/16', dow: '월', date: '2026-03-16' },
-  { label: '3/17', dow: '화', date: '2026-03-17' },
-  { label: '3/18', dow: '수', date: '2026-03-18' },
-  { label: '3/19', dow: '목', date: '2026-03-19' },
-  { label: '3/20', dow: '금', date: '2026-03-20' },
-  { label: '3/23', dow: '월', date: '2026-03-23' },
-  { label: '3/24', dow: '화', date: '2026-03-24' },
-  { label: '3/25', dow: '수', date: '2026-03-25' },
-  { label: '3/26', dow: '목', date: '2026-03-26' },
-  { label: '3/27', dow: '금', date: '2026-03-27' },
-  { label: '3/30', dow: '월', date: '2026-03-30' },
-  { label: '3/31', dow: '화', date: '2026-03-31' },
-  { label: '4/1',  dow: '수', date: '2026-04-01' },
-  { label: '4/2',  dow: '목', date: '2026-04-02' },
-  { label: '4/3',  dow: '금', date: '2026-04-03' },
-  { label: '4/6',  dow: '월', date: '2026-04-06' },
-  { label: '4/7',  dow: '화', date: '2026-04-07' },
-  { label: '4/8',  dow: '수', date: '2026-04-08' },
-  { label: '4/9',  dow: '목', date: '2026-04-09' },
-  { label: '4/10', dow: '금', date: '2026-04-10' },
-  { label: '4/13', dow: '월', date: '2026-04-13' },
-  { label: '4/14', dow: '화', date: '2026-04-14' },
-  { label: '4/15', dow: '수', date: '2026-04-15' },
-  { label: '4/16', dow: '목', date: '2026-04-16' },
-  { label: '4/17', dow: '금', date: '2026-04-17' },
-  { label: '4/20', dow: '월', date: '2026-04-20' },
-  { label: '4/21', dow: '화', date: '2026-04-21' },
-  { label: '4/22', dow: '수', date: '2026-04-22' },
-  { label: '4/23', dow: '목', date: '2026-04-23' },
-  { label: '4/24', dow: '금', date: '2026-04-24' },
-  { label: '4/27', dow: '월', date: '2026-04-27' },
-  { label: '4/28', dow: '화', date: '2026-04-28' },
-  { label: '4/29', dow: '수', date: '2026-04-29' },
-  { label: '4/30', dow: '목', date: '2026-04-30' },
-  { label: '5/1',  dow: '금', date: '2026-05-01' },
-  { label: '5/4',  dow: '월', date: '2026-05-04' },
-  { label: '5/7',  dow: '목', date: '2026-05-07' },
-  { label: '5/11', dow: '월', date: '2026-05-11' },
-  { label: '5/14', dow: '목', date: '2026-05-14' },
-  { label: '5/18', dow: '월', date: '2026-05-18' },
-  { label: '5/21', dow: '목', date: '2026-05-21' },
-  { label: '5/25', dow: '월', date: '2026-05-25' },
-  { label: '5/29', dow: '금', date: '2026-05-29' },
-  { label: '6/1',  dow: '월', date: '2026-06-01' },
-  { label: '6/5',  dow: '금', date: '2026-06-05' },
-  { label: '6/12', dow: '금', date: '2026-06-12' },
-  { label: '6/19', dow: '금', date: '2026-06-19' },
-  { label: '6/26', dow: '금', date: '2026-06-26' },
-  { label: '6/30', dow: '화', date: '2026-06-30' },
-  { label: '7/31', dow: '금', date: '2026-07-31' },
-  { label: '8/31', dow: '월', date: '2026-08-31' },
-  { label: '9/30', dow: '수', date: '2026-09-30' },
-  { label: '10/30',dow: '금', date: '2026-10-30' },
-  { label: '11/30',dow: '월', date: '2026-11-30' },
-  { label: '12/31',dow: '목', date: '2026-12-31' },
-];
+// aioDateHeaders는 renderEquipTable 시 동적 생성 (실제 일정 범위 기준)
+let aioDateHeaders = [];
+
+function buildDateHeaders() {
+  const todayStr = new Date().toISOString().substring(0, 10);
+  let minDate = '', maxDate = '';
+  aioDemoRows.forEach(row => {
+    // AIO 악세서리는 간트에 표시 안 하므로 범위 계산에서도 제외
+    const cat = String(row.cat || 'AIO').trim();
+    if (cat === 'AIO 악세서리') return;
+    (row.schedules || []).forEach(s => {
+      if (s.status === 'in' || s.actualRet) return;
+      if (s.start) { if (!minDate || s.start < minDate) minDate = s.start; }
+      if (s.end)   { if (!maxDate || s.end   > maxDate) maxDate = s.end;   }
+    });
+  });
+
+  // 일정 없으면 오늘 기준 ±5일
+  if (!minDate) { const d = new Date(); d.setDate(d.getDate()-5); minDate = d.toISOString().substring(0,10); }
+  if (!maxDate) { const d = new Date(); d.setDate(d.getDate()+5); maxDate = d.toISOString().substring(0,10); }
+
+  // 앞뒤 평일 2일 여유
+  const addWeekdays = (dateStr, days) => {
+    const d = new Date(dateStr);
+    let count = 0;
+    const dir = days > 0 ? 1 : -1;
+    while (count < Math.abs(days)) {
+      d.setDate(d.getDate() + dir);
+      if (d.getDay() !== 0 && d.getDay() !== 6) count++;
+    }
+    return d;
+  };
+
+  const start = addWeekdays(minDate, -2);
+  const end   = addWeekdays(maxDate,  2);
+
+  const dowLabels = ['일','월','화','수','목','금','토'];
+  const headers = [];
+  const cur = new Date(start);
+  while (cur <= end) {
+    const dow = cur.getDay();
+    if (dow !== 0 && dow !== 6) {
+      const yyyy = cur.getFullYear();
+      const mm   = String(cur.getMonth()+1).padStart(2,'0');
+      const dd   = String(cur.getDate()).padStart(2,'0');
+      headers.push({ label:`${cur.getMonth()+1}/${cur.getDate()}`, dow:dowLabels[dow], date:`${yyyy}-${mm}-${dd}` });
+    }
+    cur.setDate(cur.getDate()+1);
+  }
+  aioDateHeaders = headers;
+}
 
 const aioDemoDefaults = [];
 
@@ -1203,11 +1196,12 @@ function normalizeDemoRow(row) {
   const baseStart = String(row?.start || '').trim();
   const baseEnd   = String(row?.end   || '').trim();
 
-  // ★ 핵심 수정: 시트의 start/end 컬럼이 schedules[0]과 다르면 schedules[0]에 반영
-  // (시트에서 직접 날짜를 수정했을 때 달력에 반영되게)
-  if (schedules.length === 1 && baseStart) {
-    if (schedules[0].start !== baseStart) schedules[0].start = baseStart;
-    if (schedules[0].end   !== baseEnd)   schedules[0].end   = baseEnd;
+  // 시트의 start/end는 하위호환용 보조값으로만 사용
+  // schedules가 있는 경우에는 개별 일정 값을 우선하고,
+  // 값이 비어 있을 때만 start/end로 채운다.
+  if (schedules.length >= 1) {
+    if (!schedules[0].start && baseStart) schedules[0].start = baseStart;
+    if (!schedules[0].end && baseEnd) schedules[0].end = baseEnd;
   }
 
   // 하위호환: schedules가 비어있고 baseStart가 있으면 자동 생성
@@ -1231,6 +1225,7 @@ function normalizeDemoRow(row) {
     model:      String(row?.model      || '').trim(),
     current:    String(row?.current    || '').trim(),
     operator:   op || '승목',
+    cat:        String(row?.cat        || 'AIO').trim(),
     start:      baseStart,
     end:        baseEnd,
     cells:      row?.cells && typeof row.cells === 'object' ? row.cells : {},
@@ -1264,11 +1259,49 @@ function resetAioDefaults() {
 let aioDemoRows = loadAioRows(AIO_DEMO_STORAGE_KEY, aioDemoDefaults, normalizeDemoRow);
 let aioWaitingRows = loadAioRows(AIO_WAIT_STORAGE_KEY, aioWaitingDefaults, normalizeWaitRow);
 
-async function saveAioRows() {
-  // 데이터 변경 시 캐시 무효화
-  try { sessionStorage.removeItem(CACHE_KEY); } catch(e) {}
+function buildAioCachePayload(base = null) {
+  const cached = base && typeof base === 'object' ? { ...base } : {};
+  cached.aioDemo = aioDemoRows.map(r => ({
+    sn:        r.sn        || '',
+    model:     r.model     || '',
+    current:   r.current   || '',
+    operator:  r.operator  || '',
+    start:     r.start     || '',
+    end:       r.end       || '',
+    schedules: JSON.stringify(r.schedules || [])
+  }));
+  cached.aioWaiting = aioWaitingRows.map(r => ({ title: r.title || '', note: r.note || '' }));
+  return cached;
+}
+
+function refreshAioCache() {
   try {
-    await gasPost({
+    const cached = loadFromCache();
+    if (cached) saveToCache(buildAioCachePayload(cached));
+  } catch(e) {}
+}
+
+async function saveAioRows() {
+  // ★ 중복 name 제거: 같은 name의 행이 여러 개면 schedules 합치고 하나로 통합
+  const getSnName = (sn) => { const p = String(sn||'').split('-'); return p.length > 1 ? p[0] : sn; };
+  const deduped = [];
+  aioDemoRows.forEach(row => {
+    const key = getSnName(row.sn);
+    const ex = deduped.find(r => getSnName(r.sn) === key);
+    if (ex) {
+      (row.schedules || []).forEach(s => {
+        const dup = ex.schedules.find(es => es.start === s.start && es.customer === s.customer);
+        if (!dup) ex.schedules.push(s);
+      });
+    } else {
+      deduped.push(row);
+    }
+  });
+  aioDemoRows.length = 0;
+  deduped.forEach(r => aioDemoRows.push(r));
+
+  try {
+    await gasPostJson({
         type: 'saveAioDemo',
         rows: aioDemoRows.map(r => ({
           sn:        r.sn        || '',
@@ -1277,16 +1310,31 @@ async function saveAioRows() {
           operator:  r.operator  || '',
           start:     r.start     || '',
           end:       r.end       || '',
-          schedules: JSON.stringify(r.schedules || [])
+          schedules: JSON.stringify(r.schedules || []),
+          cat:       r.cat       || 'AIO'
         }))
       });
-    await gasPost({
+    await gasPostJson({
         type: 'saveAioWaiting',
         rows: aioWaitingRows.map(r => ({ title: r.title || '', note: r.note || '' }))
       });
-    // 저장은 백그라운드 처리 (화면은 이미 로컬 데이터로 갱신됨)
+    refreshAioCache();
   } catch (err) {
     console.warn('AIO Sheets save failed:', err);
+  }
+}
+
+// ★ fetch POST 방식 GAS 전송 (큰 payload용 — saveAioDemo, saveAioWaiting 전용)
+async function gasPostJson(payload) {
+  try {
+    await fetch(GAS_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      body: JSON.stringify(payload)
+    });
+  } catch(e) {
+    console.warn('gasPostJson fetch 실패, Image fallback:', e);
+    await gasPost(payload);
   }
 }
 
@@ -1376,28 +1424,26 @@ function syncAioReservationToTable({ equipmentName, equipmentSn, person, outD, r
 
 /* ── AIO 일정 → events 동기화 ── */
 function syncSchedToEvents(row, sched, editIdx) {
-  // events에서 같은 장비+시작일로 연동된 항목 찾기
-  const snKey = row.sn;
+  const snParts = String(row.sn || '').split('-');
+  const equipName = snParts.length > 1 ? snParts[0] : row.sn;
+
   const linkedIdx = events.findIndex(e =>
-    (e.name === snKey || e.name === row.current || e.name === row.linkedName) &&
-    e.out === sched.start && e._aioLinked
+    e.name === equipName && e.out === sched.start && e._aioLinked
   );
 
   const ev = {
-    name: row.sn,
-    person: sched.operator,
-    dest: sched.customer + (sched.note ? ' · ' + sched.note : ''),
-    out: sched.start,
-    ret: sched.end || '',
-    status: 'reserved',
+    name:       equipName,
+    person:     sched.operator,
+    dest:       sched.customer + (sched.note ? ' · ' + sched.note : ''),
+    out:        sched.start,
+    ret:        sched.end || '',
+    status:     'reserved',
     _aioLinked: true,
   };
 
   if (linkedIdx >= 0) {
-    // 수정
     events[linkedIdx] = ev;
   } else {
-    // 새로 추가
     events.unshift(ev);
   }
   renderList();
@@ -1405,10 +1451,10 @@ function syncSchedToEvents(row, sched, editIdx) {
 }
 
 function removeSchedFromEvents(row, sched) {
-  const snKey = row.sn;
+  const snParts = String(row.sn || '').split('-');
+  const equipName = snParts.length > 1 ? snParts[0] : row.sn;
   const idx = events.findIndex(e =>
-    (e.name === snKey || e.name === row.linkedName) &&
-    e.out === sched.start && e._aioLinked
+    e.name === equipName && e.out === sched.start && e._aioLinked
   );
   if (idx >= 0) {
     events.splice(idx, 1);
@@ -1729,13 +1775,14 @@ function isAioEquipment(e) {
 function renderEquipTable() {
   const isMobile = window.innerWidth <= 768;
   const CELL_W = isMobile ? 22 : 36;
-  const BAR_H  = isMobile ? 20 : 26; // 바 한 개당 차지하는 높이
+  const BAR_H  = isMobile ? 20 : 26;
   const FIXED_COLS_W = isMobile
-    ? { sn: 75, model: 50, current: 60, op: 42, actions: 48 }
-    : { sn: 140, model: 90, current: 110, op: 72, actions: 116 };
+    ? { sn: 75, model: 50, current: 60, actions: 48 }
+    : { sn: 140, model: 90, current: 110, actions: 116 };
   const todayStr = new Date().toISOString().substring(0, 10);
 
-  // 활성 스케줄(반입완료 아니고 종료일 안 지난 것) 중 가장 빠른 시작일 계산
+  // ★ 실제 일정 범위 기준으로 날짜 헤더 동적 생성
+  buildDateHeaders();
   let earliestDate = null;
   aioDemoRows.forEach(row => {
     (row.schedules || []).forEach(s => {
@@ -1820,7 +1867,6 @@ function renderEquipTable() {
         <th class="gantt-fixed-col th" style="width:${FIXED_COLS_W.sn}px;min-width:${FIXED_COLS_W.sn}px;left:0;">${isMobile ? '장비' : '장비명'}</th>
         <th class="gantt-fixed-col th" style="width:${FIXED_COLS_W.model}px;min-width:${FIXED_COLS_W.model}px;left:${FIXED_COLS_W.sn}px;">Model</th>
         <th class="gantt-fixed-col th" style="width:${FIXED_COLS_W.current}px;min-width:${FIXED_COLS_W.current}px;left:${FIXED_COLS_W.sn+FIXED_COLS_W.model}px;">${isMobile ? '위치' : '현재위치'}</th>
-        <th class="gantt-fixed-col th" style="width:${FIXED_COLS_W.op}px;min-width:${FIXED_COLS_W.op}px;left:${FIXED_COLS_W.sn+FIXED_COLS_W.model+FIXED_COLS_W.current}px;">담당</th>
         ${dowRow}
         <th class="gantt-fixed-col th" style="width:${FIXED_COLS_W.actions}px;min-width:${FIXED_COLS_W.actions}px;right:0;">액션</th>
       </tr>
@@ -1828,7 +1874,6 @@ function renderEquipTable() {
         <th class="gantt-fixed-col th" style="left:0;">${isMobile ? 'SN' : '장비명 / Demo SN'}</th>
         <th class="gantt-fixed-col th" style="left:${FIXED_COLS_W.sn}px;">${isMobile ? 'Model' : 'Model name'}</th>
         <th class="gantt-fixed-col th" style="left:${FIXED_COLS_W.sn+FIXED_COLS_W.model}px;">${isMobile ? '위치' : '현재위치'}</th>
-        <th class="gantt-fixed-col th" style="left:${FIXED_COLS_W.sn+FIXED_COLS_W.model+FIXED_COLS_W.current}px;">담당자</th>
         ${dateRow}
         <th class="gantt-fixed-col th" style="right:0;"></th>
       </tr>`;
@@ -1842,10 +1887,23 @@ function renderEquipTable() {
       ? `<div class="gantt-today-line" style="left:${todayIdx * CELL_W + CELL_W / 2}px;"></div>`
       : '';
 
-    // 같은 SN의 행이 여러 개면 schedules를 하나로 합침
+    // ── name-sn 형식 파싱 헬퍼
+    const getRowName = (row) => {
+      const parts = String(row.sn || '').split('-');
+      return parts.length > 1 ? parts[0] : '';
+    };
+    const getRowCoreSn = (row) => {
+      const parts = String(row.sn || '').split('-');
+      return parts.length > 1 ? parts.slice(1).join('-') : row.sn;
+    };
+
+    // 같은 name 기준으로 병합 (#있으면 name 기준, 없으면 sn 그대로)
+    // cat='AIO 악세서리'는 간트 표시 제외
     const mergedRows = [];
     aioDemoRows.forEach(row => {
-      const existing = mergedRows.find(r => r.sn === row.sn);
+      if (String(row.cat || 'AIO') === 'AIO 악세서리') return; // 간트 제외
+      const rowName = getRowName(row) || row.sn;
+      const existing = mergedRows.find(r => (getRowName(r) || r.sn) === rowName);
       if (existing) {
         (row.schedules || []).forEach(s => {
           const dup = existing.schedules.find(es => es.start === s.start && es.customer === s.customer);
@@ -1856,47 +1914,29 @@ function renderEquipTable() {
       }
     });
 
-    // equipmentList의 AIO 장비 순서(AIO-1, AIO-2...) 기준으로 정렬
-    // 등록된 AIO 장비에 있는 것 먼저, 없는 것(직접 입력) 맨 아래
-    const aioEquipList = equipmentList.filter(e => String(e.cat || '').trim().toUpperCase() === 'AIO');
+    // 정렬: # 숫자 오름차순, # 없으면 맨 아래
     mergedRows.sort((a, b) => {
-      const findIdx = (row) => aioEquipList.findIndex(e =>
-        String(e.sn) === String(row.sn) ||
-        String(e.sn).endsWith(String(row.sn)) ||
-        e.name === row.sn
-      );
-      const ai = findIdx(a);
-      const bi = findIdx(b);
-      if (ai === -1 && bi === -1) return 0;   // 둘 다 직접입력 → 순서 유지
-      if (ai === -1) return 1;                  // a가 직접입력 → 아래로
-      if (bi === -1) return -1;                 // b가 직접입력 → 아래로
-      return ai - bi;                           // equipmentList 순서 기준
+      const na = getRowName(a), nb = getRowName(b);
+      const aH = na.startsWith('#'), bH = nb.startsWith('#');
+      if (!aH && !bH) return 0;
+      if (!aH) return 1;
+      if (!bH) return -1;
+      return (parseInt(na.replace('#',''))||0) - (parseInt(nb.replace('#',''))||0);
     });
 
     demoBody.innerHTML = mergedRows.map((row, idx) => {
       const schedules = row.schedules || [];
+      const rowName  = getRowName(row);
+      const coreSn   = getRowCoreSn(row);
+      const hasHash  = rowName.startsWith('#');
 
-      // 담당자 배지 (row.operator 기준으로 강제)
-      const rowOp = row.operator || '승목';
-      const opBadges = `<span class="op-badge ${rowOp === '현수' ? 'op-pink' : 'op-sky'}" style="font-size:10px;padding:1px 6px;">${rowOp}</span>`;
-
-      // 장비명: equipmentList에서 SN 매칭
-      // 1) 완전 일치, 2) equipmentList의 sn이 row.sn을 끝에 포함, 3) 장비명 일치
-      const linkedEquip = equipmentList.find(e =>
-        String(e.sn) === String(row.sn) ||
-        String(e.sn).endsWith(String(row.sn)) ||
-        e.name === row.sn ||
-        e.current === row.current
-      );
-      const equipName = linkedEquip ? linkedEquip.name : '';
-      const snCell = equipName
-        ? `<div style="font-weight:700;font-size:12px;line-height:1.3;">${equipName}</div><div style="font-size:10px;color:#a0aec0;">${row.sn}</div>`
+      // 장비명: name-sn 형식 표시 (#있으면 name-coreSn, 없으면 sn 그대로)
+      const snCell = hasHash
+        ? `<div style="font-weight:700;font-size:12px;line-height:1.3;">${rowName}-${coreSn}</div>`
         : `<div style="font-weight:700;font-size:12px;">${row.sn}</div>`;
 
-      // 간트 바 생성 — 색상은 담당자 기준으로 강제 고정, 반입완료/종료일 지난 일정 숨김
-      const barColor = rowOp === '현수' ? 'pink' : 'sky';
+      // 간트 바: 각 schedule의 operator로 색상 결정 (현수=pink, 나머지=sky)
       const bars = schedules.map((s, si) => {
-        // 반입완료이거나 종료일이 오늘보다 이전이면 달력에서 숨김
         if (s.status === 'in' || s.actualRet) return '';
         if (s.end && s.end < todayStr) return '';
         const si_ = dateToIndex(s.start);
@@ -1906,12 +1946,12 @@ function renderEquipTable() {
         const width = Math.max((ei_ - si_) * CELL_W - 2, 4);
         const label = s.customer + (s.note ? ' · ' + s.note : '');
         const topOffset = si * BAR_H;
-        // ★ 인덱스 대신 SN 키 사용 (렌더 후 인덱스 변동 버그 수정)
-        const rowSnEsc = row.sn.replace(/'/g, "\\'");
+        const barColor = (s.operator === '현수') ? 'pink' : (s.operator === '승목') ? 'sky' : 'amber';
+        const rowSnEsc = row.sn.replace(/'/g, "\'");
         return `<div class="gantt-bar ${barColor}"
-          style="left:${left}px;width:${width}px;top:${4 + topOffset}px;"
-          onclick="openAioScheduleModal('${rowSnEsc}')"
-          title="${s.customer}${s.note ? ' — ' + s.note : ''} (${s.start}~${s.end})"
+          style="left:${left}px;width:${width}px;top:${4 + topOffset}px;cursor:pointer;"
+          onclick="openAioScheduleModalAtIndex('${rowSnEsc}', ${si})"
+          title="${s.customer}${s.note ? ' — ' + s.note : ''} (${s.start}~${s.end}) [${s.operator||'승목'}]"
           >${label}</div>`;
       }).join('');
 
@@ -1933,7 +1973,6 @@ function renderEquipTable() {
           <td class="gantt-fixed-col" style="left:0;">${snCell}</td>
           <td class="gantt-fixed-col" style="left:${FIXED_COLS_W.sn}px;font-size:12px;">${row.model}</td>
           <td class="gantt-fixed-col" style="left:${FIXED_COLS_W.sn+FIXED_COLS_W.model}px;font-size:12px;">${row.current}</td>
-          <td class="gantt-fixed-col" style="left:${FIXED_COLS_W.sn+FIXED_COLS_W.model+FIXED_COLS_W.current}px;">${opBadges}</td>
           ${timelineCell}
           <td class="gantt-fixed-col aio-actions-cell" style="right:0;">
             <div class="aio-actions">
@@ -2002,51 +2041,77 @@ function renderEquipTable() {
 
 function renderAioAccessory() {
   const todayStr = new Date().toISOString().substring(0, 10);
-  const aioRelatedNames = new Set(
-    equipmentList
-      .filter(e => {
-        const cat = String(e.cat || '').trim().toUpperCase();
-        return cat === '악세서리' || cat === 'AIO';
-      })
-      .map(e => String(e.name || '').trim())
-  );
+  const emptyHtml = '<tr><td colspan="6" style="color:#aaa;">이력이 없습니다.</td></tr>';
+  const emptyHtmlActive = '<tr><td colspan="7" style="color:#aaa;">등록된 항목이 없습니다.</td></tr>';
 
-  const accessoryEvents = events.filter(e => aioRelatedNames.has(String(e.name || '').trim()));
+  // AIO탭: cat가 AIO 또는 AIO 악세서리인 활성 일정
+  const activeRows = [];
+  aioDemoRows.forEach(row => {
+    const cat = String(row.cat || 'AIO').trim();
+    if (cat !== 'AIO' && cat !== 'AIO 악세서리') return;
+    const snParts = String(row.sn || '').split('-');
+    const equipName = snParts.length > 1 ? snParts[0] : row.sn;
+    (row.schedules || []).forEach((s, si) => {
+      const isCompleted = s.status === 'in' || !!s.actualRet;
+      const isExpired   = s.end && s.end < todayStr;
+      if (!isCompleted && !isExpired) {
+        activeRows.push({
+          name:     equipName,
+          person:   s.operator || row.operator || '-',
+          dest:     s.customer + (s.note ? ' · ' + s.note : ''),
+          out:      s.start || '',
+          ret:      s.end   || '',
+          cat:      cat,
+          rowSn:    row.sn,
+          schedIdx: si,
+        });
+      }
+    });
+  });
 
-  const emptyHtml = '<tr><td colspan="7" style="color:#aaa;">등록된 항목이 없습니다.</td></tr>';
+  // 전체이력탭: aioEvents 시트에서
+  const historyRows = [...aioEvents].sort((a, b) => (b.start > a.start ? 1 : -1));
 
-  const toRow = (e) => {
-    // ★ name+out 키로 버튼 연결 (인덱스 변동 버그 수정)
-    const eName = e.name.replace(/'/g, "\\'");
-    const eOut  = (e.out || '').replace(/'/g, "\\'");
-    const canComplete = e.status === 'out' || e.status === 'reserved';
-    const btnReturn = canComplete
-      ? `<button class="btn-return" onclick="markReturned('${eName}','${eOut}')">📥 반입완료</button>`
-      : `<span style="color:#c8d3df;font-size:12px;">—</span>`;
-    const retCell = e.ret ? `${fmt(e.ret)}` : `<span style="color:#c8d3df;">—</span>`;
-    const displayStatus = e.status === 'reserved' && e.out && e.out <= todayStr ? 'out' : e.status;
+  activeRows.sort((a, b) => (b.out > a.out ? 1 : -1));
+
+  const toActiveRow = (e) => {
+    const snEsc = (e.rowSn || '').replace(/'/g, "\\'");
+    const si    = e.schedIdx;
+    const displayStatus = e.out && e.out <= todayStr ? 'out' : 'reserved';
+    const catBadge = e.cat === 'AIO 악세서리'
+      ? `<span style="font-size:10px;background:#EBF8FF;color:#2B6CB0;padding:1px 6px;border-radius:10px;margin-left:4px;">악세서리</span>`
+      : '';
     return `
       <tr>
-        <td>${e.name}</td>
-        <td>${e.person || '-'}</td>
-        <td>${e.dest || '-'}</td>
+        <td>${e.name}${catBadge}</td>
+        <td>${e.person}</td>
+        <td>${e.dest}</td>
         <td>${fmt(e.out)}</td>
-        <td>${retCell}</td>
+        <td>${e.ret ? fmt(e.ret) : '<span style="color:#c8d3df;">—</span>'}</td>
         <td><span class="status ${statusClass[displayStatus]}">${statusLabel[displayStatus]}</span></td>
         <td>
           <div class="aio-actions">
-            ${btnReturn}
-            <button class="mini-btn primary" onclick="openEventEditModal('${eName}','${eOut}')">✏️ 수정</button>
+            <button class="btn-return" onclick="completeSchedBySnIdx('${snEsc}',${si})">📥 반입완료</button>
+            <button class="mini-btn primary" onclick="openAioScheduleModalAtIndex('${snEsc}',${si})">✏️ 수정</button>
           </div>
         </td>
       </tr>`;
   };
 
-  // AIO 탭과 전체이력 탭 두 군데 모두 업데이트
+  const toHistoryRow = (e) => `
+    <tr>
+      <td>${e.name}</td>
+      <td>${e.operator || '-'}</td>
+      <td>${e.customer + (e.note ? ' · ' + e.note : '')}</td>
+      <td>${fmt(e.start)}</td>
+      <td>${e.ret ? fmt(e.ret) : '<span style="color:#c8d3df;">—</span>'}</td>
+      <td><span class="status ${statusClass['in']}">${statusLabel['in']}</span></td>
+    </tr>`;
+
   const tbody1 = document.getElementById('aioAccessoryBody');
   const tbody2 = document.getElementById('aioAccessoryBodyHistory');
-  if (tbody1) tbody1.innerHTML = accessoryEvents.length ? accessoryEvents.slice(0, 10).map(toRow).join('') : emptyHtml;
-  if (tbody2) tbody2.innerHTML = accessoryEvents.length ? accessoryEvents.map(toRow).join('') : emptyHtml;
+  if (tbody1) tbody1.innerHTML = activeRows.length ? activeRows.slice(0, 10).map(toActiveRow).join('') : emptyHtmlActive;
+  if (tbody2) tbody2.innerHTML = historyRows.length ? historyRows.map(toHistoryRow).join('') : emptyHtml;
 }
 
 // ★ SN 기반 래퍼 함수 (간트 버튼에서 호출, 인덱스 변동 버그 방지)
@@ -2261,10 +2326,14 @@ const COLOR_CLASSES = ['sky', 'pink', 'green', 'amber', 'purple'];
 const COLOR_LABELS  = { sky: '하늘', pink: '분홍', green: '초록', amber: '노랑', purple: '보라' };
 
 function getAioRowBySn(sn) {
-  return aioDemoRows.find(r => r.sn === sn);
+  // 완전 일치 우선, name 부분 일치도 허용
+  return aioDemoRows.find(r => r.sn === sn) ||
+    aioDemoRows.find(r => r.sn.endsWith('-' + sn) || r.sn.startsWith(sn + '-'));
 }
 function getAioRowIdxBySn(sn) {
-  return aioDemoRows.findIndex(r => r.sn === sn);
+  const exact = aioDemoRows.findIndex(r => r.sn === sn);
+  if (exact >= 0) return exact;
+  return aioDemoRows.findIndex(r => r.sn.endsWith('-' + sn) || r.sn.startsWith(sn + '-'));
 }
 
 function openAioScheduleModal(rowSn) {
@@ -2279,6 +2348,16 @@ function openAioScheduleModal(rowSn) {
   resetSchedForm();
   renderScheduleList(rowSn);
   document.getElementById('aioScheduleModal').classList.add('show');
+}
+
+// 달력 바 클릭 시 해당 인덱스 일정 수정 폼 자동 오픈
+function openAioScheduleModalAtIndex(rowSn, schedIndex) {
+  openAioScheduleModal(rowSn);
+  setTimeout(() => {
+    editSchedEntry(schedIndex);
+    const formTitle = document.getElementById('aioSchedFormTitle');
+    if (formTitle) formTitle.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 150);
 }
 
 function renderScheduleList(rowSn) {
@@ -2364,6 +2443,14 @@ function editSchedEntry(schedIndex) {
   document.getElementById('schedSaveBtn').textContent = '수정 저장';
 }
 
+// AIO 데모 테이블에서 반입완료 버튼 클릭 시 호출
+async function completeSchedBySnIdx(rowSn, schedIndex) {
+  // aioSchedState를 임시로 설정해서 completeSchedEntry 재사용
+  aioSchedState = { rowSn, editSchedIndex: -1 };
+  await completeSchedEntry(schedIndex);
+  renderAioAccessory();
+}
+
 async function completeSchedEntry(schedIndex) {
   const row = getAioRowBySn(aioSchedState.rowSn);
   if (!row?.schedules) return;
@@ -2372,61 +2459,44 @@ async function completeSchedEntry(schedIndex) {
   const today = new Date().toISOString().substring(0, 10);
   if (!confirm(`"${s.customer}" 일정을 반입 완료 처리할까요?\n\n반출일: ${s.start}\n반입일: ${today}`)) return;
 
-  // ── 1. 일정에 반입완료 상태 + 반입일 기록
-  s.status = 'in';
-  s.actualRet = today;  // 실제 반입일 별도 보관
+  // name-sn 형식에서 name 추출
+  const snParts = String(row.sn || '').split('-');
+  const equipName = snParts.length > 1 ? snParts[0] : row.sn;
 
-  // ── 2. AIO 데모 데이터 저장 (schedules에 status:'in' 포함)
-  await saveAioRows();
-
-  // ── 3. events 배열에 이력 추가/업데이트
-  const linkedEquip = equipmentList.find(e =>
-    String(e.sn) === String(row.sn) ||
-    String(e.sn).endsWith(String(row.sn)) ||
-    e.name === row.sn
-  );
-  const equipName = linkedEquip ? linkedEquip.name : row.sn;
-
-  const ev = {
-    name:       equipName,
-    person:     s.operator,
-    dest:       s.customer + (s.note ? ' · ' + s.note : ''),
-    out:        s.start,
-    ret:        today,
-    status:     'in',
-    _aioLinked: true,
-  };
-
-  const linkedIdx = events.findIndex(e =>
-    (e.name === equipName || e.name === row.sn) &&
-    e.out === s.start
-  );
-  if (linkedIdx >= 0) {
-    events[linkedIdx] = { ...events[linkedIdx], ...ev };
-  } else {
-    events.unshift(ev);
+  // ── 1. 스케줄을 AIO_demo에서 완전 삭제
+  row.schedules.splice(schedIndex, 1);
+  if (row.schedules.length === 0) {
+    const rowIdx = aioDemoRows.indexOf(row);
+    if (rowIdx >= 0) aioDemoRows.splice(rowIdx, 1);
   }
 
-  // ── 4. Google Sheets events 시트 저장
+  // ── 2. AIO_demo 시트 저장 (삭제 반영)
   showLoading('반입 완료 저장 중...');
-  try {
-    if (linkedIdx >= 0) {
-      // 기존 행 업데이트
-      await gasPost({ type: 'updateStatus', name: equipName, out: s.start, status: 'in', ret: today });
-    } else {
-      // 새 행 추가
-      await gasPost({ type: 'event', name: equipName, person: s.operator, dest: ev.dest, out: s.start, ret: today, status: 'in' });
-    }
-  } catch(err) { console.warn('이력 저장 실패:', err); }
+  await saveAioRows();
+
+  // ── 3. AIO_events 이력 추가
+  const aioEv = {
+    name:     equipName,
+    operator: s.operator || '',
+    customer: s.customer || '',
+    note:     s.note     || '',
+    start:    s.start    || '',
+    end:      s.end      || '',
+    ret:      today,
+    cat:      row.cat    || 'AIO',
+  };
+  aioEvents.unshift(aioEv);
+  await gasPost({ type: 'saveAioEvent', ...aioEv });
   hideLoading();
 
-  // ── 5. 화면 갱신
+  // ── 4. 화면 갱신
   syncEquipStatusFromRow(row);
-  renderScheduleList(aioSchedState.rowSn);
+  closeModal('aioScheduleModal');
   renderEquipTable();
   renderDashboard();
   renderList();
   renderHistory();
+  renderAioAccessory();
   alert(`✅ "${s.customer}" 반입 완료!\n반출일: ${s.start} → 반입일: ${today}`);
 }
 
@@ -2519,14 +2589,18 @@ function isoToLabel(isoDate) {
 
 function setAioSnMode(mode) {
   const isList = mode === 'list';
-  document.getElementById('aioSnFromList').style.display  = isList ? '' : 'none';
-  document.getElementById('aioSnDirect').style.display    = isList ? 'none' : '';
+  document.getElementById('aioSnFromList').style.display      = isList ? '' : 'none';
+  document.getElementById('aioSnDirect').style.display        = isList ? 'none' : '';
   document.getElementById('aioSnModeBtnList').classList.toggle('active', isList);
   document.getElementById('aioSnModeBtnDirect').classList.toggle('active', !isList);
+  // 목록선택: operator select + 시작일 같이, 직접입력: select 숨기고 시작일 단독
+  document.getElementById('aioOperatorSelectGroup').style.display = isList ? '' : 'none';
+  document.getElementById('aioStartOnlyGroup').style.display      = isList ? 'none' : '';
   if (!isList) {
     document.getElementById('aioSelectedEquipInfo').style.display = 'none';
-    document.getElementById('aioEditSn').value = '';
+    document.getElementById('aioEditSn').value    = '';
     document.getElementById('aioEditModel').value = '';
+    document.getElementById('aioEditOperatorDirect').value = '';
   }
 }
 
@@ -2543,26 +2617,20 @@ function onAioEquipSelect() {
   const opt = sel.options[sel.selectedIndex];
   if (!opt || !opt.value) {
     document.getElementById('aioSelectedEquipInfo').style.display = 'none';
-    document.getElementById('aioEditSn').value    = '';
-    document.getElementById('aioEditModel').value = '';
+    document.getElementById('aioEditSnHidden').value    = '';
+    document.getElementById('aioEditModelHidden').value = '';
     return;
   }
-  const sn       = opt.value;
-  const model    = opt.dataset.model    || '';
-  const name     = opt.dataset.name     || '';
-  const operator = opt.dataset.operator || '';
-  document.getElementById('aioEditSn').value    = sn;
-  document.getElementById('aioEditModel').value = model;
-  // 담당자 자동 세팅 — equipmentList에 등록된 담당자로
-  const opSel = document.getElementById('aioEditOperator');
-  if (opSel && operator) {
-    // 선택지에 해당 값이 있으면 세팅, 없으면 승목으로 기본값
-    const opExists = Array.from(opSel.options).some(o => o.value === operator);
-    opSel.value = opExists ? operator : '승목';
-  }
+  const sn    = opt.value;
+  const model = opt.dataset.model || '';
+  const name  = opt.dataset.name  || '';
+  // ★ name-sn 형식으로 hidden 필드에 저장
+  const nameSn = name ? (name + '-' + sn) : sn;
+  document.getElementById('aioEditSnHidden').value    = nameSn;
+  document.getElementById('aioEditModelHidden').value = model;
   const infoEl = document.getElementById('aioSelectedEquipInfo');
   document.getElementById('aioSelectedEquipText').textContent =
-    `선택: ${name}  |  SN: ${sn}${model ? '  |  Model: ' + model : ''}${operator ? '  |  담당: ' + operator : ''}`;
+    `선택: ${name}  |  SN: ${sn}${model ? '  |  Model: ' + model : ''}`;
   infoEl.style.display = '';
 }
 
@@ -2589,13 +2657,43 @@ function openAddAioDemoRow() {
 async function saveAioEdit() {
   const type = document.getElementById('aioEditType').value;
   if (type === 'demo') {
-    const sn = document.getElementById('aioEditSn').value.trim();
-    const model    = document.getElementById('aioEditModel').value.trim();
     const current  = document.getElementById('aioEditCurrent').value.trim();
-    const operator = document.getElementById('aioEditOperator').value;
-    const start    = document.getElementById('aioEditStart').value;
     const end      = document.getElementById('aioEditEnd').value;
-    const customer = document.getElementById('aioEditCells').value.trim(); // 달력 표시 고객사
+    const customer = document.getElementById('aioEditCells').value.trim();
+
+    // 직접입력 모드 여부 판단
+    const isDirect = document.getElementById('aioSnModeBtnDirect')?.classList.contains('active');
+
+    // sn/model: 직접입력이면 aioEditSn/aioEditModel, 목록선택이면 hidden 필드
+    const rawSn = isDirect
+      ? document.getElementById('aioEditSn').value.trim()
+      : document.getElementById('aioEditSnHidden').value.trim();
+    const model = isDirect
+      ? document.getElementById('aioEditModel').value.trim()
+      : document.getElementById('aioEditModelHidden').value.trim();
+    const start = isDirect
+      ? (document.getElementById('aioEditStartDirect')?.value || '')
+      : document.getElementById('aioEditStart').value;
+
+    // operator: 직접입력 모드면 텍스트 입력값, 목록 선택이면 select값
+    const operator = isDirect
+      ? (document.getElementById('aioEditOperatorDirect')?.value.trim() || '승목')
+      : document.getElementById('aioEditOperator').value;
+
+    // cat: 직접입력이면 select, 목록 선택이면 AIO 고정
+    const cat = isDirect
+      ? (document.getElementById('aioEditCat')?.value || 'AIO')
+      : 'AIO';
+
+    // name-sn 형식으로 저장 (목록 선택 시 name 포함)
+    let sn = rawSn;
+    if (!isDirect && rawSn) {
+      const sel = document.getElementById('aioEquipSelect');
+      const opt = sel?.options[sel.selectedIndex];
+      const name = opt?.dataset?.name || '';
+      if (name && !rawSn.startsWith(name + '-')) sn = name + '-' + rawSn;
+    }
+
     if (!sn && !model && !current) {
       alert('Demo SN, Model name, 현재위치 중 최소 하나는 입력해 주세요.');
       return;
@@ -2606,34 +2704,26 @@ async function saveAioEdit() {
     row.model    = model;
     row.current  = current;
     row.operator = operator;
-    row.start    = start;
-    row.end      = end;
-    row.cells    = {};  // cells는 더 이상 사용 안 함
+    row.cat      = cat;
+    row.cells    = {};
 
-    // schedules: 고객사 + start~end 기간으로 단일 일정 생성/갱신
-    const color = operator === '현수' ? 'pink' : 'sky';
-    if (start && customer) {
-      if (Array.isArray(row.schedules) && row.schedules.length === 1) {
-        // 기존 단일 일정 업데이트
-        row.schedules[0].customer = customer;
-        row.schedules[0].operator = operator;
-        row.schedules[0].start    = start;
-        row.schedules[0].end      = end;
-        row.schedules[0].color    = color;
-      } else if (!Array.isArray(row.schedules) || row.schedules.length === 0) {
-        // 새 일정 생성
-        row.schedules = [{ customer, operator, start, end, note: '', color }];
-      }
-      // 다중 일정인 경우 건드리지 않음 (일정 모달에서 개별 수정)
-    } else if (start && !customer) {
-      // 고객사 미입력 시 current로 대체
+    // 바 색상: 현수=pink, 승목=sky, 기타=amber
+    const color = operator === '현수' ? 'pink' : operator === '승목' ? 'sky' : 'amber';
+    if (start) {
+      const custVal = customer || current || sn;
+      const primary = { customer: custVal, operator, start, end, note: '', color };
       if (!Array.isArray(row.schedules) || row.schedules.length === 0) {
-        row.schedules = [{ customer: current || sn, operator, start, end, note: '', color }];
+        row.schedules = [primary];
+      } else {
+        row.schedules[0] = { ...(row.schedules[0] || {}), ...primary };
       }
     }
-    if (aioEditState.index < 0) aioDemoRows.push(row);  // unshift → push (순서 유지)
-    syncRowPeriodFromSchedules(row);  // ★ schedules 기반 period 동기화
-    aioEditState = { type: 'demo', index: -1 };  // ★ 상태 초기화 (재수정 시 이전 인덱스 참조 방지)
+
+    // schedules 기준으로 row.start/end 동기화 (시트에 정확한 날짜 저장)
+    syncRowPeriodFromSchedules(row);
+
+    if (aioEditState.index < 0) aioDemoRows.push(row);
+    aioEditState = { type: 'demo', index: -1 };
     await saveAioRows();
     renderEquipTable();
     closeModal('aioEditModal');
@@ -2857,6 +2947,22 @@ function loadFromCache() {
   } catch(e) { return null; }
 }
 
+// ★ 새로고침 버튼: 캐시 무시하고 GAS에서 강제 재로드
+async function forceReloadFromGAS() {
+  try { sessionStorage.removeItem(CACHE_KEY); } catch(e) {}
+  showLoading('최신 데이터 불러오는 중...');
+  try {
+    const res = await fetch(GAS_URL);
+    const json = await res.json();
+    saveToCache(json);
+    applySheetData(json);
+    renderAll();
+  } catch(e) {
+    alert('데이터 불러오기 실패. 잠시 후 다시 시도해주세요.');
+  }
+  hideLoading();
+}
+
 // GAS POST 헬퍼 — text/plain + no-cors (GAS가 실제로 받을 수 있는 방식)
 async function gasPost(payload) {
   return new Promise(function(resolve) {
@@ -2918,32 +3024,51 @@ function applySheetData(json) {
     });
   });
 
-  if (json.aioDemo && json.aioDemo.length > 0) {
-    aioDemoRows = json.aioDemo.map(row => normalizeDemoRow({
-      sn:        String(row.sn       || ''),
-      model:     String(row.model    || ''),
-      current:   String(row.current  || ''),
-      operator:  String(row.operator || ''),
-      start:     String(row.start    || '').substring(0, 10),
-      end:       String(row.end      || '').substring(0, 10),
-      schedules: (() => {
-        try { return JSON.parse(row.schedules || '[]'); } catch(e) { return []; }
-      })()
-    })).filter(Boolean);
-  }
+  // AIO_events 시트 로드
+  aioEvents.length = 0;
+  (json.aioEvents || []).forEach(row => {
+    if (row.name) aioEvents.push({
+      name:     String(row.name     || ''),
+      operator: String(row.operator || ''),
+      customer: String(row.customer || ''),
+      note:     String(row.note     || ''),
+      start:    String(row.start    || '').substring(0, 10),
+      end:      String(row.end      || '').substring(0, 10),
+      ret:      String(row.ret      || '').substring(0, 10),
+      cat:      String(row.cat      || 'AIO'),
+    });
+  });
 
-  if (json.aioWaiting && json.aioWaiting.length > 0) {
-    aioWaitingRows = json.aioWaiting.map(row => normalizeWaitRow({
-      title: String(row.title || ''),
-      note:  String(row.note  || '')
-    })).filter(Boolean);
+  // ★ 모달 열려있으면 aioDemoRows 덮어쓰기 차단 (수정 중 데이터 날아가는 버그 방지)
+  const modalOpen = !!document.querySelector('.modal-overlay.show');
+  if (!modalOpen) {
+    if (json.aioDemo && json.aioDemo.length > 0) {
+      aioDemoRows = json.aioDemo.map(row => normalizeDemoRow({
+        sn:        String(row.sn       || ''),
+        model:     String(row.model    || ''),
+        current:   String(row.current  || ''),
+        operator:  String(row.operator || ''),
+        cat:       String(row.cat      || 'AIO'),
+        start:     String(row.start    || '').substring(0, 10),
+        end:       String(row.end      || '').substring(0, 10),
+        schedules: (() => {
+          try { return JSON.parse(row.schedules || '[]'); } catch(e) { return []; }
+        })()
+      })).filter(Boolean);
+    }
+
+    if (json.aioWaiting && json.aioWaiting.length > 0) {
+      aioWaitingRows = json.aioWaiting.map(row => normalizeWaitRow({
+        title: String(row.title || ''),
+        note:  String(row.note  || '')
+      })).filter(Boolean);
+    }
   }
   return true;
 }
 
 function renderAll() {
-  initAioToEventsSync();            // ★ AIO 일정 → events 동기화 (매 갱신마다 실행)
-  autoCompleteExpiredSchedules();   // 종료일 지난 일정 자동 반입완료
+  initAioToEventsSync();
   renderDashboard();
   renderList();
   populateEquipSelect();
@@ -2958,49 +3083,49 @@ async function autoCompleteExpiredSchedules() {
 
   for (const row of aioDemoRows) {
     if (!Array.isArray(row.schedules)) continue;
-    for (const s of row.schedules) {
-      // 이미 완료됐거나, 종료일 없거나, 종료일이 오늘 이후면 스킵
+    // 역순으로 순회해야 splice 인덱스 안 꼬임
+    for (let i = row.schedules.length - 1; i >= 0; i--) {
+      const s = row.schedules[i];
       if (s.status === 'in' || s.actualRet) continue;
       if (!s.end || s.end >= todayStr) continue;
 
-      // 종료일 지남 → 자동 반입완료
-      s.status    = 'in';
-      s.actualRet = s.end; // 실제 반입일 = 운용 종료일
-      changed = true;
+      // name-sn 형식에서 name 추출
+      const snParts = String(row.sn || '').split('-');
+      const equipName = snParts.length > 1 ? snParts[0] : row.sn;
 
-      // events에 이력 추가
-      const linkedEquip = equipmentList.find(e =>
-        String(e.sn) === String(row.sn) ||
-        String(e.sn).endsWith(String(row.sn)) ||
-        e.name === row.sn
-      );
-      const equipName = linkedEquip ? linkedEquip.name : row.sn;
-      const ev = {
-        name:       equipName,
-        person:     s.operator,
-        dest:       s.customer + (s.note ? ' · ' + s.note : ''),
-        out:        s.start,
-        ret:        s.end,
-        status:     'in',
-        _aioLinked: true,
-      };
-      const existIdx = events.findIndex(e =>
-        (e.name === equipName || e.name === row.sn) && e.out === s.start
-      );
-      if (existIdx >= 0) {
-        events[existIdx] = { ...events[existIdx], ...ev };
-      } else {
-        events.unshift(ev);
+      // AIO_events 이력 추가 (중복 방지)
+      const alreadyInAioEvents = aioEvents.some(e => e.name === equipName && e.start === s.start);
+      if (!alreadyInAioEvents) {
+        const aioEv = {
+          name:     equipName,
+          operator: s.operator || row.operator || '',
+          customer: s.customer || '',
+          note:     s.note     || '',
+          start:    s.start    || '',
+          end:      s.end      || '',
+          ret:      s.end      || '',
+          cat:      row.cat    || 'AIO',
+        };
+        aioEvents.unshift(aioEv);
+        await gasPost({ type: 'saveAioEvent', ...aioEv });
       }
-      // GAS events 시트에도 저장
-      try {
-        await gasPost({ type: 'event', name: equipName, person: s.operator, dest: ev.dest, out: s.start, ret: s.end, status: 'in' });
-      } catch(e) { console.warn('자동 이력 저장 실패:', e); }
+
+      // ★ 스케줄을 AIO_demo에서 완전 삭제
+      row.schedules.splice(i, 1);
+      changed = true;
+    }
+  }
+
+  // 스케줄 없는 행도 aioDemoRows에서 제거
+  for (let i = aioDemoRows.length - 1; i >= 0; i--) {
+    if ((aioDemoRows[i].schedules || []).length === 0) {
+      aioDemoRows.splice(i, 1);
+      changed = true;
     }
   }
 
   if (changed) {
-    await saveAioRows(); // schedules status 변경사항 저장
+    await saveAioRows(); // AIO_demo 시트에서 완전 삭제 반영
   }
 }
 
@@ -3021,12 +3146,11 @@ function hideLoading() {
 }
 
 async function loadEventsFromSheet() {
-  // 1) 캐시가 있으면 즉시 표시
   const cached = loadFromCache();
   if (cached) {
     applySheetData(cached);
     renderAll();
-    // 2) 백그라운드에서 최신 데이터 fetch 후 갱신
+    // 백그라운드에서 최신 데이터 fetch - aioDemoRows 덮어쓰기 없이 렌더만
     fetch(GAS_URL)
       .then(r => r.json())
       .then(json => {
@@ -3037,7 +3161,6 @@ async function loadEventsFromSheet() {
     return;
   }
 
-  // 3) 캐시 없으면 로딩 표시 후 fetch
   showLoading('데이터 불러오는 중...');
   try {
     const res = await fetch(GAS_URL);
@@ -3257,36 +3380,23 @@ function startAutoRefresh() {
 
 /* ─────────────────────── 초기화 ─────────────────────── */
 function initAioToEventsSync() {
-  // 페이지 로드 시 AIO 일정을 events에 초기 반영 (중복 방지)
+  // AIO 장비 상태만 동기화, events에는 추가하지 않음 (AIO 이력은 aioEvents로 별도 관리)
   aioDemoRows.forEach(row => {
-    // ── equipmentList 상태도 AIO 일정 기준으로 초기 동기화
     syncEquipStatusFromRow(row);
-
-    (row.schedules || []).forEach(sched => {
-      if (!sched.start) return;
-      const already = events.some(e =>
-        e._aioLinked &&
-        (e.name === row.sn || e.name === row.linkedName) &&
-        e.out === sched.start
-      );
-      if (!already) {
-        events.push({
-          name: row.sn,
-          person: sched.operator || row.operator || '-',
-          dest: sched.customer + (sched.note ? ' · ' + sched.note : ''),
-          out: sched.start,
-          ret: sched.end || '',
-          status: 'reserved',
-          _aioLinked: true,
-        });
-      }
-    });
   });
 }
 
 loadEventsFromSheet().then(() => {
-  // renderAll() 내부에서 이미 initAioToEventsSync 포함 모든 렌더가 수행되므로
-  // 여기서는 추가 호출 없이 자동 갱신 시작만 함
+  // 기존 데이터 row.start/end 동기화 (schedules 기준으로 맞춤)
+  let needsSave = false;
+  aioDemoRows.forEach(row => {
+    const before = row.start + row.end;
+    syncRowPeriodFromSchedules(row);
+    if (row.start + row.end !== before) needsSave = true;
+  });
+  if (needsSave) saveAioRows();
+  // 초기 로드 완료 후 1회만 자동 반입완료 처리
+  autoCompleteExpiredSchedules();
 });
 startAutoRefresh();
 
